@@ -18,7 +18,7 @@ export function isLpToken(tokenAddress: Address, network: string): bool {
   const lpToken = UniswapRouterContract.bind(tokenAddress);
   let isFactoryAvailable = utils.readValue(
     lpToken.try_factory(),
-    constants.ZERO_ADDRESS
+    constants.ZERO_ADDRESS,
   );
 
   if (isFactoryAvailable.toHex() == constants.ZERO_ADDRESS_STRING) {
@@ -29,7 +29,7 @@ export function isLpToken(tokenAddress: Address, network: string): bool {
 
 export function getPriceUsdc(
   tokenAddress: Address,
-  network: string
+  network: string,
 ): CustomPriceType {
   if (isLpToken(tokenAddress, network)) {
     return getLpTokenPriceUsdc(tokenAddress, network);
@@ -39,19 +39,19 @@ export function getPriceUsdc(
 
 export function getPriceFromRouterUsdc(
   tokenAddress: Address,
-  network: string
+  network: string,
 ): CustomPriceType {
   return getPriceFromRouter(
     tokenAddress,
     constants.WHITELIST_TOKENS_MAP.get(network)!.get("USDC")!,
-    network
+    network,
   );
 }
 
 export function getPriceFromRouter(
   token0Address: Address,
   token1Address: Address,
-  network: string
+  network: string,
 ): CustomPriceType {
   let ethAddress = constants.WHITELIST_TOKENS_MAP.get(network)!.get("ETH")!;
   let wethAddress = constants.WHITELIST_TOKENS_MAP.get(network)!.get("WETH")!;
@@ -87,12 +87,10 @@ export function getPriceFromRouter(
   let token0Decimals = utils.getTokenDecimals(token0Address);
   let amountIn = BigInt.fromI32(10).pow(token0Decimals.toI32() as u8);
 
-  let routerAddressV1 = constants.UNISWAP_ROUTER_CONTRACT_ADDRESSES.get(
-    network
-  )!.get("routerV1");
-  let routerAddressV2 = constants.UNISWAP_ROUTER_CONTRACT_ADDRESSES.get(
-    network
-  )!.get("routerV2");
+  let routerAddressV1 =
+    constants.UNISWAP_ROUTER_CONTRACT_ADDRESSES.get(network)!.get("routerV1");
+  let routerAddressV2 =
+    constants.UNISWAP_ROUTER_CONTRACT_ADDRESSES.get(network)!.get("routerV2");
 
   let amountOutArray: ethereum.CallResult<BigInt[]>;
   if (routerAddressV1) {
@@ -123,17 +121,17 @@ export function getPriceFromRouter(
 
 export function getLpTokenPriceUsdc(
   tokenAddress: Address,
-  network: string
+  network: string,
 ): CustomPriceType {
   const uniSwapPair = UniswapPairContract.bind(tokenAddress);
 
   let totalLiquidity: CustomPriceType = getLpTokenTotalLiquidityUsdc(
     tokenAddress,
-    network
+    network,
   );
   let totalSupply = utils.readValue<BigInt>(
     uniSwapPair.try_totalSupply(),
-    constants.BIGINT_ZERO
+    constants.BIGINT_ZERO,
   );
   if (totalSupply == constants.BIGINT_ZERO || totalLiquidity.reverted) {
     return new CustomPriceType();
@@ -157,17 +155,17 @@ export function getLpTokenPriceUsdc(
 
 export function getLpTokenTotalLiquidityUsdc(
   tokenAddress: Address,
-  network: string
+  network: string,
 ): CustomPriceType {
   const uniSwapPair = UniswapPairContract.bind(tokenAddress);
 
   let token0Address = utils.readValue<Address>(
     uniSwapPair.try_token0(),
-    constants.ZERO_ADDRESS
+    constants.ZERO_ADDRESS,
   );
   let token1Address = utils.readValue<Address>(
     uniSwapPair.try_token1(),
-    constants.ZERO_ADDRESS
+    constants.ZERO_ADDRESS,
   );
 
   if (
@@ -182,7 +180,7 @@ export function getLpTokenTotalLiquidityUsdc(
 
   let reserves = utils.readValue<UniswapPair__getReservesResult>(
     uniSwapPair.try_getReserves(),
-    constants.UNISWAP_DEFAULT_RESERVE_CALL
+    constants.UNISWAP_DEFAULT_RESERVE_CALL,
   );
 
   let token0Price = getPriceUsdc(token0Address, network);

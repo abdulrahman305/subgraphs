@@ -8,44 +8,38 @@ Edit the chart [here](https://excalidraw.com/#json=8pcmLXt3KH0HR1BmvGgc4,xXC-0PZ
 
 ## Useful Links
 
-* Bancor V3: [https://try.bancor.network/](https://try.bancor.network/)
-* Bancor V3 Proposal Document: 
-* Bancor V3 Technical Docs: [Bancor V3 Technical Docs](https://docs.bancor.network/about-bancor-network/bancor-v3)
-* Introducing Bancor V3: [Introducing Bancor 3](https://blog.bancor.network/introducing-bancor-3-962a3c601c25)
-* Bancor V3 Useful Resources: [Resources - Bancor V3 Technical Docs](https://docs.bancor.network/about-bancor-network/resources)
-* Bancor V3 Presentation by Mark Richardson (Head of Bancor Research): https://www.youtube.com/watch?v=qi1geks1n8A
-
+- Bancor V3: [https://try.bancor.network/](https://try.bancor.network/)
+- Bancor V3 Proposal Document:
+- Bancor V3 Technical Docs: [Bancor V3 Technical Docs](https://docs.bancor.network/about-bancor-network/bancor-v3)
+- Introducing Bancor V3: [Introducing Bancor 3](https://blog.bancor.network/introducing-bancor-3-962a3c601c25)
+- Bancor V3 Useful Resources: [Resources - Bancor V3 Technical Docs](https://docs.bancor.network/about-bancor-network/resources)
+- Bancor V3 Presentation by Mark Richardson (Head of Bancor Research): https://www.youtube.com/watch?v=qi1geks1n8A
 
 ## Bancor V3 Deployment
 
 **Last Update: 13/05/22**
 
-Bancor V3 was deployed on the 11th May 2022 on the Ethereum mainnet. 
+Bancor V3 was deployed on the 11th May 2022 on the Ethereum mainnet.
 
 This is currently the only chain where Bancor V3 is deployed.
 
 All metrics in this document are for** _Ethereum mainnet_** only.
 
-
-## 
-
+##
 
 ## Usage Metrics
 
 **Active Users, Total Unique Users & Daily Transaction Count**
 
-Bancor V3 has a number of transactions that users can execute. 
+Bancor V3 has a number of transactions that users can execute.
 
 The transactions of interest according to the Usage Metrics guidelines are:
 
-
-
-* Swapping tokens using liquidity pools
-* Providing liquidity using liquidity pools (adding and removing liquidity)
-* Flashloan trading
+- Swapping tokens using liquidity pools
+- Providing liquidity using liquidity pools (adding and removing liquidity)
+- Flashloan trading
 
 These transactions are explained in the table below.
-
 
 <table>
   <tr>
@@ -90,24 +84,19 @@ These transactions are explained in the table below.
   </tr>
 </table>
 
-
-
 ### Usage Metrics Definitions
 
 Any address that executes one of the transaction types listed in the table above (Swap, Add/Remove Liquidity or Flashloan) should be considered a user of the protocol.
 
 The core usage metrics of interest are:
 
-
-
-* Active Users
-* Total Unique Users
-* Daily Transaction Count
+- Active Users
+- Total Unique Users
+- Daily Transaction Count
 
 These metrics are defined and explained in the table below.
 
 **Core Usage Metrics Table**
-
 
 <table>
   <tr>
@@ -196,21 +185,17 @@ The daily transaction count in this case would be 4
   </tr>
 </table>
 
-
 There are additional breakdowns that may facilitate further drill-down analysis if required. These suggested metrics are listed below:
 
-
-
-* Active Traders
-* Unique Traders
-* Daily Swap Transactions
-* Active Liquidity Providers
-* Total Unique Liquidity Providers
-* Daily Liquidity Actions Count
-* Active Flashloaners
-* Unique Flashloaners
-* Daily Flashloaners Count
-
+- Active Traders
+- Unique Traders
+- Daily Swap Transactions
+- Active Liquidity Providers
+- Total Unique Liquidity Providers
+- Daily Liquidity Actions Count
+- Active Flashloaners
+- Unique Flashloaners
+- Daily Flashloaners Count
 
 ## Financial Metrics
 
@@ -226,14 +211,12 @@ Let’s assume that there are 4 liquidity pools in the Bancor V3 protocol which 
 
 The pools have the following TVL USD each:
 
+- ETH: $1,000,000 USD
+- BNT: $1,800,000 USD
+- DAI: $2,000,000 USD
+- LINK: $1,500,000 USD
 
-
-* ETH: $1,000,000 USD
-* BNT: $1,800,000 USD
-* DAI: $2,000,000 USD
-* LINK: $1,500,000 USD
-
-In this case, the Total Value Locked USD for the protocol would be: 
+In this case, the Total Value Locked USD for the protocol would be:
 
 _TVL USD = ETH TVL USD + BNT TVL USD + DAI TVL USD + LINK TVL USD = $6,300,000_
 
@@ -267,12 +250,10 @@ BancorNetworkInfo: https://etherscan.io/address/0x8E303D296851B320e6a697bAcB979d
 
 Reference links
 
-
-
-* Dune Analytics Dashboard: [https://dune.com/Bancor/Bancor-3-Beta](https://dune.com/Bancor/bancor_1)
-* Dune Analytics BNT Value Locked Forever Query: [https://dune.com/queries/30032/73935](https://dune.com/queries/30032/73935)
-* Bancor Vortex Burner: [Bancor Vortex Burner](https://docs.bancor.network/guides/triggering-the-bancor-vortex-burner)
-* Bancor V3 Proposal Document - see Bancor Vortex section: [Bancor V3 Proposal Document](https://docs.google.com/document/d/11UeMYaI_1CWdf_Nu6veUO-vNB5uX-FcVRqTSU-ziDRk/edit#)
+- Dune Analytics Dashboard: [https://dune.com/Bancor/Bancor-3-Beta](https://dune.com/Bancor/bancor_1)
+- Dune Analytics BNT Value Locked Forever Query: [https://dune.com/queries/30032/73935](https://dune.com/queries/30032/73935)
+- Bancor Vortex Burner: [Bancor Vortex Burner](https://docs.bancor.network/guides/triggering-the-bancor-vortex-burner)
+- Bancor V3 Proposal Document - see Bancor Vortex section: [Bancor V3 Proposal Document](https://docs.google.com/document/d/11UeMYaI_1CWdf_Nu6veUO-vNB5uX-FcVRqTSU-ziDRk/edit#)
 
 **Total Revenue USD**
 
@@ -289,14 +270,13 @@ _Total Supply Side Revenue USD = Total BNT to TKN Trading Fees USD + Total TKN t
 
 _Protocol Revenue USD = Total Exit Fees from Liquidity Pools USD + Total Flash Loan Fees USD + Total Vortex Fees USD_
 
-
 ## Pool-Level Metrics
 
 **Pool Total Value Locked USD**
 
 Pool Total Value Locked USD is calculated summing the total USD value of the tokens in a given liquidity pool
 
-_Pool Total Value Locked USD = Number of tokens in liquidity pool * price of token in USD_
+_Pool Total Value Locked USD = Number of tokens in liquidity pool \* price of token in USD_
 
 Example:
 
@@ -314,19 +294,19 @@ Breakdown of total BNT rewards:
 
 **BNT Pool Reward Token Emissions**
 
-In Bancor V3 there will be a maximum of 40,000,000 BNT that will be distributed over an infinite time period. 
+In Bancor V3 there will be a maximum of 40,000,000 BNT that will be distributed over an infinite time period.
 
 The start date and end date of the rewards is still to be decided.
 
 The distribution rate of the rewards will follow an _exponential decay curve_.
 
-See the “Rewards Schedules” section of the [Bancor 3 Proposal document](https://docs.google.com/document/d/11UeMYaI_1CWdf_Nu6veUO-vNB5uX-FcVRqTSU-ziDRk/edit#) for more information and examples. 
+See the “Rewards Schedules” section of the [Bancor 3 Proposal document](https://docs.google.com/document/d/11UeMYaI_1CWdf_Nu6veUO-vNB5uX-FcVRqTSU-ziDRk/edit#) for more information and examples.
 
 **Third Party Reward Token Emissions**
 
 For third party reward token emissions, the third party can use the same mechanism (_exponential decay curve)_ as described in the “BNT Pool Reward Token Emissions”. The only difference being the rewards will be in TKN rather than BNT.
 
-There will also be a Flat Alternative emissions program where project teams may not wish to use the exponential decay function equation as described above. 
+There will also be a Flat Alternative emissions program where project teams may not wish to use the exponential decay function equation as described above.
 
 In this case, a constant emissions rate will be possible similar to what is currently done on Bancor V 2.1 (a constant rate of emissions over a period of time).
 
@@ -334,9 +314,9 @@ For more detailed information see “Third Party TKN Staking Rewards” in the [
 
 **Non-Identical TKN Emission Programs**
 
-In the case where the incentivised asset is being rewarded with the asset of the same type (e.g BNT rewards for BNT LPs) then the above described emission programs would work. 
+In the case where the incentivised asset is being rewarded with the asset of the same type (e.g BNT rewards for BNT LPs) then the above described emission programs would work.
 
-If however the rewarded asset is different to the asset that is being incentivised then the above will not work. 
+If however the rewarded asset is different to the asset that is being incentivised then the above will not work.
 
 Bancor V3 has addressed this by allowing users to manually claim rewards.
 

@@ -9,7 +9,11 @@ import {
   createWithdraw,
 } from "../entities/event";
 import { getOrCreateTrove, getOrCreateTroveToken } from "../entities/trove";
-import { addProtocolSideRevenue, incrementProtocolWithdrawCount, updateUsageMetrics } from "../entities/protocol";
+import {
+  addProtocolSideRevenue,
+  incrementProtocolWithdrawCount,
+  updateUsageMetrics,
+} from "../entities/protocol";
 import { bigIntToBigDecimal } from "../utils/numbers";
 import { getUSDPriceWithoutDecimals } from "../utils/price";
 
@@ -47,14 +51,14 @@ export function handleTroveUpdated(event: TroveUpdated): void {
       const depositAmount = amount.minus(troveToken.collateral);
       const depositAmountUSD = getUSDPriceWithoutDecimals(
         token,
-        depositAmount.toBigDecimal()
+        depositAmount.toBigDecimal(),
       );
       createDeposit(event, depositAmount, depositAmountUSD, borrower, token);
     } else if (amount < troveToken.collateral) {
       const withdrawAmount = troveToken.collateral.minus(amount);
       const withdrawAmountUSD = getUSDPriceWithoutDecimals(
         token,
-        withdrawAmount.toBigDecimal()
+        withdrawAmount.toBigDecimal(),
       );
       createWithdraw(event, withdrawAmount, withdrawAmountUSD, borrower, token);
     }
@@ -70,12 +74,10 @@ export function handleTroveUpdated(event: TroveUpdated): void {
     const repayAmountYUSD = trove.debt.minus(newDebt);
     const repayAmountUSD = bigIntToBigDecimal(repayAmountYUSD);
     createRepay(event, repayAmountYUSD, repayAmountUSD, borrower);
-    
   }
 
   trove.debt = newDebt;
   trove.save();
   updateUsageMetrics(event, borrower);
   incrementProtocolWithdrawCount(event);
-
 }

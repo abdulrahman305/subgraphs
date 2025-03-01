@@ -528,9 +528,8 @@ export function updateRevenue(
 
   let financialMetrics = getOrCreateFinancialsDailySnapshot(event);
   financialMetrics.dailyTotalRevenueUSD = financialMetrics.dailyTotalRevenueUSD.plus(newTotalRevenueUSD);
-  financialMetrics.dailyProtocolSideRevenueUSD = financialMetrics.dailyProtocolSideRevenueUSD.plus(
-    newProtocolRevenueUSD,
-  );
+  financialMetrics.dailyProtocolSideRevenueUSD =
+    financialMetrics.dailyProtocolSideRevenueUSD.plus(newProtocolRevenueUSD);
   financialMetrics.dailySupplySideRevenueUSD = financialMetrics.dailyTotalRevenueUSD.minus(
     financialMetrics.dailyProtocolSideRevenueUSD,
   );

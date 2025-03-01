@@ -900,9 +900,7 @@
     "type": "function"
   },
   {
-    "inputs": [
-      { "internalType": "address", "name": "account", "type": "address" }
-    ],
+    "inputs": [{ "internalType": "address", "name": "account", "type": "address" }],
     "name": "detailedLiquidity",
     "outputs": [
       {
@@ -949,36 +947,28 @@
     "type": "function"
   },
   {
-    "inputs": [
-      { "internalType": "address", "name": "account", "type": "address" }
-    ],
+    "inputs": [{ "internalType": "address", "name": "account", "type": "address" }],
     "name": "getAverageLiquidity",
     "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
     "stateMutability": "nonpayable",
     "type": "function"
   },
   {
-    "inputs": [
-      { "internalType": "address", "name": "account", "type": "address" }
-    ],
+    "inputs": [{ "internalType": "address", "name": "account", "type": "address" }],
     "name": "getAverageLiquidityDelegateAccount",
     "outputs": [{ "internalType": "address", "name": "", "type": "address" }],
     "stateMutability": "view",
     "type": "function"
   },
   {
-    "inputs": [
-      { "internalType": "address", "name": "account", "type": "address" }
-    ],
+    "inputs": [{ "internalType": "address", "name": "account", "type": "address" }],
     "name": "getAverageLiquidityWithDelegate",
     "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
     "stateMutability": "nonpayable",
     "type": "function"
   },
   {
-    "inputs": [
-      { "internalType": "address", "name": "underlying", "type": "address" }
-    ],
+    "inputs": [{ "internalType": "address", "name": "underlying", "type": "address" }],
     "name": "getPrice",
     "outputs": [
       { "internalType": "uint256", "name": "twap", "type": "uint256" },
@@ -988,9 +978,7 @@
     "type": "function"
   },
   {
-    "inputs": [
-      { "internalType": "address", "name": "underlying", "type": "address" }
-    ],
+    "inputs": [{ "internalType": "address", "name": "underlying", "type": "address" }],
     "name": "getPriceFull",
     "outputs": [
       { "internalType": "uint256", "name": "twap", "type": "uint256" },
@@ -1001,9 +989,7 @@
     "type": "function"
   },
   {
-    "inputs": [
-      { "internalType": "address", "name": "account", "type": "address" }
-    ],
+    "inputs": [{ "internalType": "address", "name": "account", "type": "address" }],
     "name": "liquidity",
     "outputs": [
       {
@@ -1079,9 +1065,7 @@
     "type": "function"
   },
   {
-    "inputs": [
-      { "internalType": "uint256", "name": "subAccountId", "type": "uint256" }
-    ],
+    "inputs": [{ "internalType": "uint256", "name": "subAccountId", "type": "uint256" }],
     "name": "unTrackAverageLiquidity",
     "outputs": [],
     "stateMutability": "nonpayable",

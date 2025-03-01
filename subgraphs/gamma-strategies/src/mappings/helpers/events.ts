@@ -18,7 +18,7 @@ export function createDeposit(event: DepositEvent): void {
     event.transaction.hash
       .toHex()
       .concat("-")
-      .concat(event.logIndex.toString())
+      .concat(event.logIndex.toString()),
   );
   deposit.hash = event.transaction.hash.toHex();
   deposit.logIndex = event.logIndex.toI32();
@@ -38,7 +38,7 @@ export function createDeposit(event: DepositEvent): void {
     Address.fromString(underlyingToken.token1),
     event.params.amount0,
     event.params.amount1,
-    event.block.number
+    event.block.number,
   );
 
   deposit.save();
@@ -53,7 +53,7 @@ export function createWithdraw(event: WithdrawEvent): void {
     event.transaction.hash
       .toHex()
       .concat("-")
-      .concat(event.logIndex.toString())
+      .concat(event.logIndex.toString()),
   );
   withdrawal.hash = event.transaction.hash.toHex();
   withdrawal.logIndex = event.logIndex.toI32();
@@ -73,7 +73,7 @@ export function createWithdraw(event: WithdrawEvent): void {
     Address.fromString(underlyingToken.token1),
     event.params.amount0,
     event.params.amount1,
-    event.block.number
+    event.block.number,
   );
 
   withdrawal.save();
@@ -88,7 +88,7 @@ export function createRebalance(event: RebalanceEvent): void {
     event.transaction.hash
       .toHex()
       .concat("-")
-      .concat(event.logIndex.toString())
+      .concat(event.logIndex.toString()),
   );
   rebalance.hash = event.transaction.hash.toHex();
   rebalance.logIndex = event.logIndex.toI32();
@@ -108,7 +108,7 @@ export function createRebalance(event: RebalanceEvent): void {
     Address.fromString(underlyingToken.token1),
     event.params.feeAmount0,
     event.params.feeAmount1,
-    event.block.number
+    event.block.number,
   );
 
   rebalance.save();

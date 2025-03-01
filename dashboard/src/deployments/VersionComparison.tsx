@@ -319,4 +319,3 @@ function VersionComparison({ protocolsToQuery, getData }: VersionComparisonProps
 }
 
 export default VersionComparison;
-

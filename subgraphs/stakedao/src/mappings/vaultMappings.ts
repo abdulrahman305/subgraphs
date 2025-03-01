@@ -7,7 +7,11 @@ import { _Deposit } from "../modules/Deposit";
 import { _Withdraw } from "../modules/Withdraw";
 import { Vault as VaultStore } from "../../generated/schema";
 import { Gauge as GaugeTemplate } from "../../generated/templates";
-import { updateFinancials, updateUsageMetrics, updateVaultSnapshots } from "../modules/Metrics";
+import {
+  updateFinancials,
+  updateUsageMetrics,
+  updateVaultSnapshots,
+} from "../modules/Metrics";
 
 export function handleDeposit(call: DepositCall): void {
   const vaultAddress = call.to;
@@ -29,13 +33,7 @@ export function handleWithdraw(call: WithdrawCall): void {
   if (vault) {
     let _sharesBurnt = call.inputs._shares;
 
-    _Withdraw(
-      call.to,
-      call.transaction,
-      call.block,
-      vault,
-      _sharesBurnt
-    );
+    _Withdraw(call.to, call.transaction, call.block, vault, _sharesBurnt);
   }
   updateFinancials(call.block);
   updateUsageMetrics(call.block, call.from);

@@ -5,13 +5,13 @@ import { ChainLinkContract } from "../../../generated/Booster-v1/ChainLinkContra
 
 export function getChainLinkContract(network: string): ChainLinkContract {
   return ChainLinkContract.bind(
-    constants.CHAIN_LINK_CONTRACT_ADDRESS.get(network)
+    constants.CHAIN_LINK_CONTRACT_ADDRESS.get(network),
   );
 }
 
 export function getTokenPriceFromChainLink(
   tokenAddr: Address,
-  network: string
+  network: string,
 ): CustomPriceType {
   const chainLinkContract = getChainLinkContract(network);
 
@@ -21,13 +21,13 @@ export function getTokenPriceFromChainLink(
 
   const result = chainLinkContract.try_latestRoundData(
     tokenAddr,
-    constants.CHAIN_LINK_USD_ADDRESS
+    constants.CHAIN_LINK_USD_ADDRESS,
   );
 
   if (!result.reverted) {
     const decimals = chainLinkContract.try_decimals(
       tokenAddr,
-      constants.CHAIN_LINK_USD_ADDRESS
+      constants.CHAIN_LINK_USD_ADDRESS,
     );
 
     if (decimals.reverted) {
@@ -36,7 +36,7 @@ export function getTokenPriceFromChainLink(
 
     return CustomPriceType.initialize(
       result.value.value1.toBigDecimal(),
-      decimals.value
+      decimals.value,
     );
   }
 

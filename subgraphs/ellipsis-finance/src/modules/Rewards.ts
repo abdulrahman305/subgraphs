@@ -18,7 +18,7 @@ import { StakingV2 as StakingContractV2 } from "../../generated/StakingV2/Stakin
 
 export function handleStakingV1(poolId: BigInt, block: ethereum.Block): void {
   const stakingContract = StakingContract.bind(
-    Address.fromString(constants.STAKING_V1)
+    Address.fromString(constants.STAKING_V1),
   );
   const poolInfoCall = stakingContract.try_poolInfo(poolId);
   if (poolInfoCall.reverted) {
@@ -41,14 +41,14 @@ export function handleStakingV1(poolId: BigInt, block: ethereum.Block): void {
   const totalAllocPoint = utils
     .readValue<BigInt>(
       stakingContract.try_totalAllocPoint(),
-      constants.BIGINT_ZERO
+      constants.BIGINT_ZERO,
     )
     .toBigDecimal();
   if (totalAllocPoint.equals(constants.BIGDECIMAL_ZERO)) return;
 
   const contractRewardsPerSecond = utils.readValue<BigInt>(
     stakingContract.try_rewardsPerSecond(),
-    constants.BIGINT_ZERO
+    constants.BIGINT_ZERO,
   );
 
   const rewardsPerSecond = allocPoint
@@ -58,20 +58,20 @@ export function handleStakingV1(poolId: BigInt, block: ethereum.Block): void {
     block.timestamp,
     block.number,
     rewardsPerSecond,
-    constants.RewardIntervalType.TIMESTAMP
+    constants.RewardIntervalType.TIMESTAMP,
   );
 
   updateRewardTokenEmissions(
     constants.EPS_ADDRESS,
     poolAddress,
     BigInt.fromString(rewardTokensPerDay.truncate(0).toString()),
-    block
+    block,
   );
 }
 
 export function handleStakingV2(
   lpTokenAddress: Address,
-  block: ethereum.Block
+  block: ethereum.Block,
 ): void {
   const poolAddress = utils.getMinterFromLpToken(lpTokenAddress);
   if (poolAddress == constants.ADDRESS_ZERO) {
@@ -79,7 +79,7 @@ export function handleStakingV2(
   }
 
   const stakingContractV2 = StakingContractV2.bind(
-    Address.fromString(constants.STAKING_V2)
+    Address.fromString(constants.STAKING_V2),
   );
   const pool = getOrCreateLiquidityPool(poolAddress, block);
 
@@ -87,25 +87,25 @@ export function handleStakingV2(
   const poolInfoCall = stakingContractV2.try_poolInfo(lpTokenAddress);
   if (poolInfoCall.reverted) return;
   const rewardsPerSecond = BigDecimal.fromString(
-    poolInfoCall.value.getRewardsPerSecond().toString()
+    poolInfoCall.value.getRewardsPerSecond().toString(),
   );
   const adjustedSupply = poolInfoCall.value.getAdjustedSupply();
-  if(adjustedSupply){
-  pool.stakedOutputTokenAmount = adjustedSupply;
-  pool.save();
+  if (adjustedSupply) {
+    pool.stakedOutputTokenAmount = adjustedSupply;
+    pool.save();
   }
   const rewardTokensPerDay = getRewardsPerDay(
     block.timestamp,
     block.number,
     rewardsPerSecond,
-    constants.RewardIntervalType.TIMESTAMP
+    constants.RewardIntervalType.TIMESTAMP,
   );
 
   updateRewardTokenEmissions(
     constants.EPX_ADDRESS,
     poolAddress,
     BigInt.fromString(rewardTokensPerDay.truncate(0).toString()),
-    block
+    block,
   );
 }
 
@@ -113,8 +113,8 @@ export function updateRewardTokenEmissions(
   rewardTokenAddress: Address,
   poolAddress: Address,
   rewardTokenPerDay: BigInt,
-  
-  block: ethereum.Block
+
+  block: ethereum.Block,
 ): void {
   const pool = getOrCreateLiquidityPool(poolAddress, block);
   getOrCreateRewardToken(rewardTokenAddress, block);

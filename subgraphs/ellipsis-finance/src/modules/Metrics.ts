@@ -1,10 +1,4 @@
-import {
-  
-  BigInt,
-  Address,
-  ethereum,
-  BigDecimal,
-} from "@graphprotocol/graph-ts";
+import { BigInt, Address, ethereum, BigDecimal } from "@graphprotocol/graph-ts";
 import {
   ActiveAccount,
   LiquidityPool as LiquidityPoolStore,
@@ -65,18 +59,18 @@ export function updateUsageMetrics(block: ethereum.Block, from: Address): void {
 
 export function updatePoolSnapshots(
   poolAddress: Address,
-  block: ethereum.Block
+  block: ethereum.Block,
 ): void {
   const pool = LiquidityPoolStore.load(poolAddress.toHexString());
   if (!pool) return;
 
   const poolDailySnapshots = getOrCreateLiquidityPoolDailySnapshots(
     poolAddress.toHexString(),
-    block
+    block,
   );
   const poolHourlySnapshots = getOrCreateLiquidityPoolHourlySnapshots(
     poolAddress.toHexString(),
-    block
+    block,
   );
 
   poolDailySnapshots.totalValueLockedUSD = pool.totalValueLockedUSD;
@@ -157,21 +151,24 @@ export function updateTokenVolume(
   tokenAmount: BigInt,
   tokenAmountUSD: BigDecimal,
   block: ethereum.Block,
-  underlying: boolean
+  underlying: boolean,
 ): void {
-  if(poolAddress==Address.fromString("0x19EC9e3F7B21dd27598E7ad5aAe7dC0Db00A806d"))
-  underlying = false
+  if (
+    poolAddress ==
+    Address.fromString("0x19EC9e3F7B21dd27598E7ad5aAe7dC0Db00A806d")
+  )
+    underlying = false;
   if (underlying) return;
 
   const pool = getOrCreateLiquidityPool(poolAddress, block);
 
   const poolDailySnaphot = getOrCreateLiquidityPoolDailySnapshots(
     poolAddress.toHexString(),
-    block
+    block,
   );
   const poolHourlySnaphot = getOrCreateLiquidityPoolHourlySnapshots(
     poolAddress.toHexString(),
-    block
+    block,
   );
 
   const tokenIndex = pool.inputTokens.indexOf(tokenAddress);
@@ -206,17 +203,17 @@ export function updateTokenVolume(
 export function updateSnapshotsVolume(
   poolAddress: Address,
   volumeUSD: BigDecimal,
-  block: ethereum.Block
+  block: ethereum.Block,
 ): void {
   const protcol = getOrCreateDexAmmProtocol();
   const financialsDailySnapshot = getOrCreateFinancialDailySnapshots(block);
   const poolDailySnaphot = getOrCreateLiquidityPoolDailySnapshots(
     poolAddress.toHexString(),
-    block
+    block,
   );
   const poolHourlySnaphot = getOrCreateLiquidityPoolHourlySnapshots(
     poolAddress.toHexString(),
-    block
+    block,
   );
 
   financialsDailySnapshot.dailyVolumeUSD =
@@ -236,7 +233,7 @@ export function updateSnapshotsVolume(
 export function updateProtocolRevenue(
   liquidityPoolAddress: Address,
   volumeUSD: BigDecimal,
-  block: ethereum.Block
+  block: ethereum.Block,
 ): void {
   const pool = getOrCreateLiquidityPool(liquidityPoolAddress, block);
   const poolFees = utils.getPoolFees(liquidityPoolAddress);
@@ -248,6 +245,6 @@ export function updateProtocolRevenue(
     pool,
     supplySideRevenueUSD,
     protocolSideRevenueUSD,
-    block
+    block,
   );
 }

@@ -32,7 +32,7 @@ export class UniswapV3BaseConfigurations implements Configurations {
   }
   getFactoryContract(): Factory {
     return Factory.bind(
-      Address.fromString("0x33128a8fc17869897dce68ed026d694621f6fdfd")
+      Address.fromString("0x33128a8fc17869897dce68ed026d694621f6fdfd"),
     );
   }
   getProtocolFeeOnOff(): string {
@@ -78,12 +78,12 @@ export class UniswapV3BaseConfigurations implements Configurations {
   }
   getUntrackedTokens(): Bytes[] {
     return stringToBytesList([
-      '0x391ef60db8e7677c32d2c547ea1a009159558419', // Penguin
-      '0x6eeb5859e32225cb61434dca63bca84bb0e735a7', // Magic Internet Memes
-      '0x0d3031225f4471eafdb1707db807cbb00eb561cc', // Floating Point
-      '0x18f377990e7ccecd8956a30603c9c17f5de9580d', // Belphin
-      '0x0e1b2c65508b1cd9939cf90337fcefa647936a98', // 1155f0
-      '0x0a7df211de68b10e9a833a42d8d30b9f0358ab6d', // Base Trade
+      "0x391ef60db8e7677c32d2c547ea1a009159558419", // Penguin
+      "0x6eeb5859e32225cb61434dca63bca84bb0e735a7", // Magic Internet Memes
+      "0x0d3031225f4471eafdb1707db807cbb00eb561cc", // Floating Point
+      "0x18f377990e7ccecd8956a30603c9c17f5de9580d", // Belphin
+      "0x0e1b2c65508b1cd9939cf90337fcefa647936a98", // 1155f0
+      "0x0a7df211de68b10e9a833a42d8d30b9f0358ab6d", // Base Trade
     ]);
   }
   getMinimumLiquidityThreshold(): BigDecimal {

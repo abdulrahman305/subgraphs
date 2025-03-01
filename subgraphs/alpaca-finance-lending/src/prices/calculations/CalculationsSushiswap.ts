@@ -5,7 +5,7 @@ import { Address, BigDecimal, BigInt } from "@graphprotocol/graph-ts";
 import { CalculationsSushiSwap as CalculationsSushiContract } from "../../../generated/ibALPACA/CalculationsSushiSwap";
 
 export function getSushiSwapContract(
-  contractAddress: Address
+  contractAddress: Address,
 ): CalculationsSushiContract | null {
   if (utils.isNullAddress(contractAddress)) return null;
 
@@ -26,12 +26,12 @@ export function getTokenPriceUSDC(tokenAddr: Address): CustomPriceType {
   const tokenPrice: BigDecimal = utils
     .readValue<BigInt>(
       sushiContract.try_getPriceUsdc(tokenAddr),
-      constants.BIGINT_ZERO
+      constants.BIGINT_ZERO,
     )
     .toBigDecimal();
 
   return CustomPriceType.initialize(
     tokenPrice,
-    constants.DEFAULT_USDC_DECIMALS
+    constants.DEFAULT_USDC_DECIMALS,
   );
 }

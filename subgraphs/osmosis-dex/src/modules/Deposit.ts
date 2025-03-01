@@ -21,7 +21,7 @@ function createDepositTransaction(
   block: cosmos.HeaderOnlyBlock,
   inputTokenAmounts: Array<BigInt>,
   sharesMinted: BigInt,
-  amountUSD: BigDecimal
+  amountUSD: BigDecimal,
 ): void {
   if (!transaction) {
     return;
@@ -45,7 +45,7 @@ function createDepositTransaction(
 
   depositTransaction.blockNumber = BigInt.fromI32(block.header.height as i32);
   depositTransaction.timestamp = BigInt.fromI32(
-    block.header.time.seconds as i32
+    block.header.time.seconds as i32,
   );
 
   depositTransaction.save();
@@ -53,11 +53,11 @@ function createDepositTransaction(
 
 export function msgJoinPoolHandler(
   msgValue: Uint8Array,
-  data: cosmos.TransactionData
+  data: cosmos.TransactionData,
 ): void {
   const message = Protobuf.decode<MsgJoinPool>(msgValue, MsgJoinPool.decode);
   const liquidityPoolId = constants.Protocol.NAME.concat("-").concat(
-    message.poolId.toString()
+    message.poolId.toString(),
   );
   const liquidityPool = LiquidityPoolStore.load(liquidityPoolId);
   if (!liquidityPool) {
@@ -66,7 +66,7 @@ export function msgJoinPoolHandler(
 
   const inputTokenBalances = liquidityPool.inputTokenBalances;
   const inputTokenAmounts = new Array<BigInt>(inputTokenBalances.length).fill(
-    constants.BIGINT_ZERO
+    constants.BIGINT_ZERO,
   );
   for (let idx = 0; idx < message.tokenInMaxs.length; idx++) {
     const tokenInMax = message.tokenInMaxs[idx];
@@ -74,9 +74,8 @@ export function msgJoinPoolHandler(
     if (inputTokenIndex >= 0) {
       const amount = tokenInMax.amount;
       inputTokenAmounts[inputTokenIndex] = amount;
-      inputTokenBalances[inputTokenIndex] = inputTokenBalances[
-        inputTokenIndex
-      ].plus(amount);
+      inputTokenBalances[inputTokenIndex] =
+        inputTokenBalances[inputTokenIndex].plus(amount);
     }
   }
   log.warning("msgJoinPoolHandler() at height {} index {}", [
@@ -90,17 +89,17 @@ export function msgJoinPoolHandler(
     inputTokenBalances,
     inputTokenAmounts,
     message.shareOutAmount,
-    data
+    data,
   );
 }
 
 export function msgJoinSwapExternAmountInHandler(
   msgValue: Uint8Array,
-  data: cosmos.TransactionData
+  data: cosmos.TransactionData,
 ): void {
   const message = Protobuf.decode<MsgJoinSwapExternAmountIn>(
     msgValue,
-    MsgJoinSwapExternAmountIn.decode
+    MsgJoinSwapExternAmountIn.decode,
   );
   if (!message.tokenIn) {
     return;
@@ -113,17 +112,17 @@ export function msgJoinSwapExternAmountInHandler(
     tokenIn.denom,
     tokenIn.amount,
     message.shareOutMinAmount,
-    data
+    data,
   );
 }
 
 export function msgJoinSwapShareAmountOutHandler(
   msgValue: Uint8Array,
-  data: cosmos.TransactionData
+  data: cosmos.TransactionData,
 ): void {
   const message = Protobuf.decode<MsgJoinSwapShareAmountOut>(
     msgValue,
-    MsgJoinSwapShareAmountOut.decode
+    MsgJoinSwapShareAmountOut.decode,
   );
 
   joinSwapHandler(
@@ -132,7 +131,7 @@ export function msgJoinSwapShareAmountOutHandler(
     message.tokenInDenom,
     message.tokenInMaxAmount,
     message.shareOutAmount,
-    data
+    data,
   );
 }
 
@@ -142,10 +141,10 @@ function joinSwapHandler(
   tokenInDenom: string,
   tokenInAmount: BigInt,
   shareOutAmount: BigInt,
-  data: cosmos.TransactionData
+  data: cosmos.TransactionData,
 ): void {
   const liquidityPoolId = constants.Protocol.NAME.concat("-").concat(
-    poolId.toString()
+    poolId.toString(),
   );
   const liquidityPool = LiquidityPoolStore.load(liquidityPoolId);
   if (!liquidityPool) {
@@ -160,7 +159,7 @@ function joinSwapHandler(
   const inputTokenBalances = liquidityPool.inputTokenBalances;
   const inputTokenWeights = liquidityPool.inputTokenWeights;
   const inputTokenAmounts = new Array<BigInt>(inputTokenBalances.length).fill(
-    constants.BIGINT_ZERO
+    constants.BIGINT_ZERO,
   );
   const tokenInAmountChange = tokenInAmount
     .times(utils.bigDecimalToBigInt(inputTokenWeights[tokenInIndex]))
@@ -181,7 +180,7 @@ function joinSwapHandler(
     inputTokenBalances,
     inputTokenAmounts,
     shareOutAmount,
-    data
+    data,
   );
 }
 
@@ -191,12 +190,11 @@ function joinPoolHandler(
   inputTokenBalances: BigInt[],
   inputTokenAmounts: BigInt[],
   shareOutAmount: BigInt,
-  data: cosmos.TransactionData
+  data: cosmos.TransactionData,
 ): void {
   liquidityPool.inputTokenBalances = inputTokenBalances;
-  liquidityPool.outputTokenSupply = liquidityPool.outputTokenSupply!.plus(
-    shareOutAmount
-  );
+  liquidityPool.outputTokenSupply =
+    liquidityPool.outputTokenSupply!.plus(shareOutAmount);
   liquidityPool.save();
 
   const prevTVL = liquidityPool.totalValueLockedUSD;
@@ -210,7 +208,7 @@ function joinPoolHandler(
     data.block,
     inputTokenAmounts,
     shareOutAmount,
-    tvlChange
+    tvlChange,
   );
 
   utils.updateProtocolTotalValueLockedUSD(tvlChange);

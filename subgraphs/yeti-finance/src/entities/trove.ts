@@ -16,7 +16,7 @@ export function getOrCreateTrove(owner: Address): _Trove {
 
 export function getOrCreateTroveToken(
   trove: _Trove,
-  token: Address
+  token: Address,
 ): _TroveToken {
   const id = trove.id + "-" + token.toHexString();
 
@@ -24,9 +24,9 @@ export function getOrCreateTroveToken(
   if (troveToken == null) {
     troveToken = new _TroveToken(id);
     troveToken.trove = trove.id;
-    troveToken.collateral = BIGINT_ZERO
-    troveToken.collateralSurplus = BIGINT_ZERO
-    troveToken.collateralSurplusChange = BIGINT_ZERO
+    troveToken.collateral = BIGINT_ZERO;
+    troveToken.collateralSurplus = BIGINT_ZERO;
+    troveToken.collateralSurplusChange = BIGINT_ZERO;
     troveToken.token = getOrCreateToken(token).id;
     troveToken.save();
   }

@@ -39,16 +39,16 @@ export const CIRCULAR_BUFFER = "CIRCULAR_BUFFER";
 // 86400 = 1 Day
 export const RATE_IN_SECONDS = 86400;
 export const RATE_IN_SECONDS_BD = BigDecimal.fromString(
-  RATE_IN_SECONDS.toString()
+  RATE_IN_SECONDS.toString(),
 );
 
 // Estimated seconds per block of the protocol
 export const STARTING_BLOCKS_PER_DAY = RATE_IN_SECONDS_BD.div(
-  getStartingBlockRate()
+  getStartingBlockRate(),
 );
 
 export const WINDOW_SIZE_SECONDS_BD = BigDecimal.fromString(
-  WINDOW_SIZE_SECONDS.toString()
+  WINDOW_SIZE_SECONDS.toString(),
 );
 
 // Call this function in event handlers frequently enough so that it calls on blocks frequently enough
@@ -63,7 +63,7 @@ export function getRewardsPerDay(
   currentTimestamp: BigInt,
   currentBlockNumber: BigInt,
   rewardRate: BigDecimal,
-  rewardType: string
+  rewardType: string,
 ): BigDecimal {
   let circularBuffer = getOrCreateCircularBuffer();
 
@@ -75,7 +75,7 @@ export function getRewardsPerDay(
 
   // Interval between index and the index of the start of the window block
   let windowWidth = abs(
-    circularBuffer.windowStartIndex - circularBuffer.nextIndex
+    circularBuffer.windowStartIndex - circularBuffer.nextIndex,
   );
   if (windowWidth == 0) {
     if (circularBuffer.nextIndex >= circularBuffer.bufferSize) {
@@ -159,24 +159,23 @@ export function getRewardsPerDay(
 
   // Wideness of the window in seconds.
   let windowSecondsCount = BigDecimal.fromString(
-    (currentTimestampI32 - blocks[circularBuffer.windowStartIndex]).toString()
+    (currentTimestampI32 - blocks[circularBuffer.windowStartIndex]).toString(),
   );
 
   // Wideness of the window in blocks.
   let windowBlocksCount = BigDecimal.fromString(
     (
       currentBlockNumberI32 - blocks[circularBuffer.windowStartIndex + 1]
-    ).toString()
+    ).toString(),
   );
 
   // Estimate block speed for the window in seconds.
-  let unnormalizedBlockSpeed = WINDOW_SIZE_SECONDS_BD.div(
-    windowSecondsCount
-  ).times(windowBlocksCount);
+  let unnormalizedBlockSpeed =
+    WINDOW_SIZE_SECONDS_BD.div(windowSecondsCount).times(windowBlocksCount);
 
   // block speed converted to specified rate.
   let normalizedBlockSpeed = RATE_IN_SECONDS_BD.div(
-    WINDOW_SIZE_SECONDS_BD
+    WINDOW_SIZE_SECONDS_BD,
   ).times(unnormalizedBlockSpeed);
 
   // Update BlockTracker with new values.

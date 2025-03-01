@@ -3,7 +3,7 @@
 ## Configuration
 
 In `subgraph.yaml`, add the following code snippet inside the `abis` section of the `datasources` which is going to fetch prices of token using the `Price Oracle`.
-  **NOTE**: Include the following code snippet in each of the datasources, that is dependent on the `Price Oracle` and update imports in each file inside oracle folder.
+**NOTE**: Include the following code snippet in each of the datasources, that is dependent on the `Price Oracle` and update imports in each file inside oracle folder.
 
 ```
 ###########################################
@@ -48,7 +48,7 @@ Following are some ways through which you can get the prices of tokens:
 import { BigDecimal } from "@graphprotocol/graph-ts";
 import { getUsdPricePerToken, getUsdPrice } from "../Oracle";
 
-// Method 1 
+// Method 1
 // Using function getUsdPricePerToken(tokenAddr: Address): CustomPriceType
 
 let tokenPrice: BigDecimal;
@@ -129,31 +129,28 @@ Prices
 | [Uniswap](https://etherscan.io/address/0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D)   |    `Router`    | `10207858` |    ✅     |   🛠    |
 | [SushiSwap](https://etherscan.io/address/0xd9e1cE17f2641f24aE83637ab66a2cca9C378B9F) |    `Router`    | `10794261` |    ✅     |   🛠    |
 
-
 ### Fantom
 
 | Method                                                                               |      Type      | StartBlock | MultiCall | Status |
 | ------------------------------------------------------------------------------------ | :------------: | :--------: | :-------: | :----: |
-| [Curve](https://ftmscan.com/address/0x0b53e9df372e72d8fdcdbedfbb56059957a37128)     | `Calculations` | `27067399` |    ❎     |   🛠    |
-| [SushiSwap](https://ftmscan.com/address/0xec7Ac8AC897f5082B2c3d4e8D2173F992A097F24) | `Calculations` | `3808222` |    ❎     |   🛠    |
-| [Curve](https://ftmscan.com/address/0x0f854EA9F38ceA4B1c2FC79047E9D0134419D5d6)     |    `Router`    | `5655918` |    ✅     |   🛠    |
-| [SpookySwap](https://ftmscan.com/address/0xbe4fc72f8293f9d3512d58b969c98c3f676cb957)   |    `Router`    | `3796241` |    ✅     |   🛠    |
-| [SushiSwap](https://ftmscan.com/address/0x1b02da8cb0d097eb8d57a175b88c7d8b47997506) |    `Router`    | `2457904` |    ✅     |   🛠    |
-
+| [Curve](https://ftmscan.com/address/0x0b53e9df372e72d8fdcdbedfbb56059957a37128)      | `Calculations` | `27067399` |    ❎     |   🛠    |
+| [SushiSwap](https://ftmscan.com/address/0xec7Ac8AC897f5082B2c3d4e8D2173F992A097F24)  | `Calculations` | `3808222`  |    ❎     |   🛠    |
+| [Curve](https://ftmscan.com/address/0x0f854EA9F38ceA4B1c2FC79047E9D0134419D5d6)      |    `Router`    | `5655918`  |    ✅     |   🛠    |
+| [SpookySwap](https://ftmscan.com/address/0xbe4fc72f8293f9d3512d58b969c98c3f676cb957) |    `Router`    | `3796241`  |    ✅     |   🛠    |
+| [SushiSwap](https://ftmscan.com/address/0x1b02da8cb0d097eb8d57a175b88c7d8b47997506)  |    `Router`    | `2457904`  |    ✅     |   🛠    |
 
 ### Arbitrum-One
 
-| Method                                                                               |      Type      | StartBlock | MultiCall | Status |
-| ------------------------------------------------------------------------------------ | :------------: | :--------: | :-------: | :----: |
-| [Curve](https://arbiscan.io/address/0x26f698491daf32771217abc1356dae48c7230c75)     | `Calculations` | `5287603` |    ❎     |   🛠    |
-| [SushiSwap](https://arbiscan.io/address/0x5EA7E501c9A23F4A76Dc7D33a11D995B13a1dD25) | `Calculations` | `2396120` |    ❎     |   🛠    |
-| [Curve](https://arbiscan.io/address/0x445FE580eF8d70FF569aB36e80c647af338db351)     |    `Router`    | `1362056` |    ✅     |   🛠    |
-| [SushiSwap](https://arbiscan.io/address/0x1b02da8cb0d097eb8d57a175b88c7d8b47997506) |    `Router`    | `73` |    ✅     |   🛠    |
-
+| Method                                                                              |      Type      | StartBlock | MultiCall | Status |
+| ----------------------------------------------------------------------------------- | :------------: | :--------: | :-------: | :----: |
+| [Curve](https://arbiscan.io/address/0x26f698491daf32771217abc1356dae48c7230c75)     | `Calculations` | `5287603`  |    ❎     |   🛠    |
+| [SushiSwap](https://arbiscan.io/address/0x5EA7E501c9A23F4A76Dc7D33a11D995B13a1dD25) | `Calculations` | `2396120`  |    ❎     |   🛠    |
+| [Curve](https://arbiscan.io/address/0x445FE580eF8d70FF569aB36e80c647af338db351)     |    `Router`    | `1362056`  |    ✅     |   🛠    |
+| [SushiSwap](https://arbiscan.io/address/0x1b02da8cb0d097eb8d57a175b88c7d8b47997506) |    `Router`    |    `73`    |    ✅     |   🛠    |
 
 ### Polygon
 
-| Method                                                                               |      Type      | StartBlock | MultiCall | Status |
-| ------------------------------------------------------------------------------------ | :------------: | :--------: | :-------: | :----: |
-| [QuickSwap](https://etherscan.io/address/0xa5E0829CaCEd8fFDD4De3c43696c57F7D7A678ff) |    `Router`    | `4931900`  |    ✅     |   🛠   |
-| [SushiSwap](https://etherscan.io/address/0x1b02dA8Cb0d097eB8D57A175b88c7D8b47997506) |    `Router`    | `11333235` |    ✅     |   🛠   |
+| Method                                                                               |   Type   | StartBlock | MultiCall | Status |
+| ------------------------------------------------------------------------------------ | :------: | :--------: | :-------: | :----: |
+| [QuickSwap](https://etherscan.io/address/0xa5E0829CaCEd8fFDD4De3c43696c57F7D7A678ff) | `Router` | `4931900`  |    ✅     |   🛠    |
+| [SushiSwap](https://etherscan.io/address/0x1b02dA8Cb0d097eB8D57A175b88c7D8b47997506) | `Router` | `11333235` |    ✅     |   🛠    |

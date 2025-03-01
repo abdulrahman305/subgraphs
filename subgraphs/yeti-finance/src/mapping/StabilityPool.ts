@@ -15,8 +15,8 @@ import { bigIntToBigDecimal } from "../utils/numbers";
  *
  * @param event handleStabilityPoolBalancesUpdated event
  */
-export function handleStabilityPoolBalancesUpdated (
-  event: StabilityPoolBalancesUpdated
+export function handleStabilityPoolBalancesUpdated(
+  event: StabilityPoolBalancesUpdated,
 ): void {
   const protocol = getOrCreateYetiProtocol();
   const oldAssetUSDLocked = protocol.totalStablePoolAssetUSD;
@@ -25,11 +25,11 @@ export function handleStabilityPoolBalancesUpdated (
     const asset = event.params.assets[i];
     const amount = event.params.amounts[i];
     totalAssetLocked = totalAssetLocked.plus(
-      getUSDPriceWithoutDecimals(asset, amount.toBigDecimal())
+      getUSDPriceWithoutDecimals(asset, amount.toBigDecimal()),
     );
   }
   const totalValueLocked = protocol.totalValueLockedUSD.plus(
-    totalAssetLocked.minus(oldAssetUSDLocked)
+    totalAssetLocked.minus(oldAssetUSDLocked),
   );
 
   updateProtocolLockedUSD(event, totalValueLocked);
@@ -41,14 +41,14 @@ export function handleStabilityPoolBalancesUpdated (
  * @param event StabilityPoolYUSDBalanceUpdated event
  */
 export function handleStabilityPoolYUSDBalanceUpdated(
-  event: StabilityPoolYUSDBalanceUpdated
+  event: StabilityPoolYUSDBalanceUpdated,
 ): void {
   const totalYUSDLocked = event.params._newBalance;
 
   const protocol = getOrCreateYetiProtocol();
   const oldYUSDLockded = protocol.totalYUSDLocked;
   const totalValueLockedUSD = protocol.totalValueLockedUSD.plus(
-    bigIntToBigDecimal(totalYUSDLocked.minus(oldYUSDLockded))
+    bigIntToBigDecimal(totalYUSDLocked.minus(oldYUSDLockded)),
   );
 
   updateProtocolLockedUSD(event, totalValueLockedUSD);

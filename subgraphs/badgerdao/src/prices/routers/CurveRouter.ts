@@ -9,7 +9,7 @@ import { CurveRegistry as CurveRegistryContract } from "../../../generated/templ
 
 export function isCurveLpToken(
   lpAddress: Address,
-  block: ethereum.Block | null
+  block: ethereum.Block | null,
 ): bool {
   const poolAddress = getPoolFromLpToken(lpAddress, block);
   if (poolAddress.notEqual(constants.NULL.TYPE_ADDRESS)) return true;
@@ -19,7 +19,7 @@ export function isCurveLpToken(
 
 export function getPoolFromLpToken(
   lpAddress: Address,
-  block: ethereum.Block | null = null
+  block: ethereum.Block | null = null,
 ): Address {
   const config = utils.getConfig();
   const curveRegistryAdresses = config.curveRegistry();
@@ -29,12 +29,12 @@ export function getPoolFromLpToken(
     if (block && curveRegistry.startBlock.gt(block.number)) continue;
 
     const curveRegistryContract = CurveRegistryContract.bind(
-      curveRegistry.address
+      curveRegistry.address,
     );
 
     const poolAddress = utils.readValue<Address>(
       curveRegistryContract.try_get_pool_from_lp_token(lpAddress),
-      constants.NULL.TYPE_ADDRESS
+      constants.NULL.TYPE_ADDRESS,
     );
 
     if (poolAddress.notEqual(constants.NULL.TYPE_ADDRESS)) return poolAddress;
@@ -45,7 +45,7 @@ export function getPoolFromLpToken(
 
 export function isLpCryptoPool(
   lpAddress: Address,
-  block: ethereum.Block | null = null
+  block: ethereum.Block | null = null,
 ): bool {
   const poolAddress = getPoolFromLpToken(lpAddress, block);
 
@@ -63,7 +63,7 @@ export function isPoolCryptoPool(poolAddress: Address): bool {
   if (!priceOracleCall.reverted) return true;
 
   const priceOracle1Call = poolContract.try_price_oracle1(
-    constants.BIGINT_ZERO
+    constants.BIGINT_ZERO,
   );
   if (!priceOracle1Call.reverted) return true;
 
@@ -72,7 +72,7 @@ export function isPoolCryptoPool(poolAddress: Address): bool {
 
 export function getCurvePriceUsdc(
   lpAddress: Address,
-  block: ethereum.Block | null = null
+  block: ethereum.Block | null = null,
 ): CustomPriceType {
   if (isLpCryptoPool(lpAddress, block))
     return cryptoPoolLpPriceUsdc(lpAddress, block);
@@ -84,24 +84,24 @@ export function getCurvePriceUsdc(
   const usdcTokenDecimals = config.whitelistedTokens().mustGet("USDC").decimals;
 
   const decimalsAdjustment = constants.DEFAULT_DECIMALS.minus(
-    BigInt.fromI32(usdcTokenDecimals)
+    BigInt.fromI32(usdcTokenDecimals),
   );
   const priceUsdc = virtualPrice
     .times(basePrice.usdPrice)
     .times(
-      constants.BIGINT_TEN.pow(decimalsAdjustment.toI32() as u8).toBigDecimal()
+      constants.BIGINT_TEN.pow(decimalsAdjustment.toI32() as u8).toBigDecimal(),
     );
 
   return CustomPriceType.initialize(
     priceUsdc,
     decimalsAdjustment.plus(constants.DEFAULT_DECIMALS).toI32() as u8,
-    constants.OracleType.CURVE_ROUTER
+    constants.OracleType.CURVE_ROUTER,
   );
 }
 
 export function getBasePrice(
   lpAddress: Address,
-  block: ethereum.Block | null = null
+  block: ethereum.Block | null = null,
 ): CustomPriceType {
   const poolAddress = getPoolFromLpToken(lpAddress, block);
 
@@ -116,7 +116,7 @@ export function getBasePrice(
 
 export function getUnderlyingCoinFromPool(
   poolAddress: Address,
-  block: ethereum.Block | null = null
+  block: ethereum.Block | null = null,
 ): Address {
   const config = utils.getConfig();
   const curveRegistryAdresses = config.curveRegistry();
@@ -126,12 +126,12 @@ export function getUnderlyingCoinFromPool(
     if (block && curveRegistry.startBlock.gt(block.number)) continue;
 
     const curveRegistryContract = CurveRegistryContract.bind(
-      curveRegistry.address
+      curveRegistry.address,
     );
 
     const coins = utils.readValue<Address[]>(
       curveRegistryContract.try_get_underlying_coins(poolAddress),
-      []
+      [],
     );
 
     if (coins.length != 0) return getPreferredCoinFromCoins(coins);
@@ -163,7 +163,7 @@ export function getPreferredCoinFromCoins(coins: Address[]): Address {
 
 export function getVirtualPrice(
   curveLpTokenAddress: Address,
-  block: ethereum.Block | null = null
+  block: ethereum.Block | null = null,
 ): BigInt {
   const config = utils.getConfig();
   const curveRegistryAdresses = config.curveRegistry();
@@ -173,12 +173,12 @@ export function getVirtualPrice(
     if (block && curveRegistry.startBlock.gt(block.number)) continue;
 
     const curveRegistryContract = CurveRegistryContract.bind(
-      curveRegistry.address
+      curveRegistry.address,
     );
 
     const virtualPriceCall =
       curveRegistryContract.try_get_virtual_price_from_lp_token(
-        curveLpTokenAddress
+        curveLpTokenAddress,
       );
 
     if (!virtualPriceCall.reverted) return virtualPriceCall.value;
@@ -189,14 +189,14 @@ export function getVirtualPrice(
 
 export function getPriceUsdcRecommended(
   tokenAddress: Address,
-  block: ethereum.Block | null = null
+  block: ethereum.Block | null = null,
 ): CustomPriceType {
   return getUsdPricePerToken(tokenAddress, block);
 }
 
 export function cryptoPoolLpPriceUsdc(
   lpAddress: Address,
-  block: ethereum.Block | null = null
+  block: ethereum.Block | null = null,
 ): CustomPriceType {
   const totalSupply = utils.getTokenSupply(lpAddress);
 
@@ -204,21 +204,21 @@ export function cryptoPoolLpPriceUsdc(
   const priceUsdc = totalValueUsdc
     .times(
       constants.BIGINT_TEN.pow(
-        constants.DEFAULT_DECIMALS.toI32() as u8
-      ).toBigDecimal()
+        constants.DEFAULT_DECIMALS.toI32() as u8,
+      ).toBigDecimal(),
     )
     .div(totalSupply.toBigDecimal());
 
   return CustomPriceType.initialize(
     priceUsdc,
     0,
-    constants.OracleType.CURVE_ROUTER
+    constants.OracleType.CURVE_ROUTER,
   );
 }
 
 export function cryptoPoolLpTotalValueUsdc(
   lpAddress: Address,
-  block: ethereum.Block | null = null
+  block: ethereum.Block | null = null,
 ): BigDecimal {
   const poolAddress = getPoolFromLpToken(lpAddress, block);
 
@@ -236,7 +236,7 @@ export function cryptoPoolLpTotalValueUsdc(
       poolAddress,
       underlyingTokensAddresses[tokenIdx],
       BigInt.fromI32(tokenIdx),
-      block
+      block,
     );
     totalValue = totalValue.plus(tokenValueUsdc);
   }
@@ -248,14 +248,14 @@ export function cryptoPoolTokenAmountUsdc(
   poolAddress: Address,
   tokenAddress: Address,
   tokenIdx: BigInt,
-  block: ethereum.Block | null = null
+  block: ethereum.Block | null = null,
 ): BigDecimal {
   const poolContract = CurvePoolContract.bind(poolAddress);
 
   const tokenBalance = utils
     .readValue<BigInt>(
       poolContract.try_balances(tokenIdx),
-      constants.BIGINT_ZERO
+      constants.BIGINT_ZERO,
     )
     .toBigDecimal();
 
@@ -269,7 +269,7 @@ export function cryptoPoolTokenAmountUsdc(
 }
 
 export function cryptoPoolUnderlyingTokensAddressesByPoolAddress(
-  poolAddress: Address
+  poolAddress: Address,
 ): Address[] {
   const poolContract = CurvePoolContract.bind(poolAddress);
 
@@ -278,7 +278,7 @@ export function cryptoPoolUnderlyingTokensAddressesByPoolAddress(
   while (idx >= 0) {
     const coin = utils.readValue<Address>(
       poolContract.try_coins(BigInt.fromI32(idx)),
-      constants.NULL.TYPE_ADDRESS
+      constants.NULL.TYPE_ADDRESS,
     );
 
     if (coin.equals(constants.NULL.TYPE_ADDRESS)) {
@@ -294,7 +294,7 @@ export function cryptoPoolUnderlyingTokensAddressesByPoolAddress(
 
 export function getPriceUsdc(
   tokenAddress: Address,
-  block: ethereum.Block | null
+  block: ethereum.Block | null,
 ): CustomPriceType {
   if (isCurveLpToken(tokenAddress, block))
     return getCurvePriceUsdc(tokenAddress, block);
@@ -303,7 +303,7 @@ export function getPriceUsdc(
   const virtualPrice = utils
     .readValue<BigInt>(
       poolContract.try_get_virtual_price(),
-      constants.BIGINT_ZERO
+      constants.BIGINT_ZERO,
     )
     .toBigDecimal();
 
@@ -311,7 +311,7 @@ export function getPriceUsdc(
   for (let i = 0; i < 8; i++) {
     const coin = utils.readValue<Address>(
       poolContract.try_coins(BigInt.fromI32(i)),
-      constants.NULL.TYPE_ADDRESS
+      constants.NULL.TYPE_ADDRESS,
     );
 
     coins.push(coin);
@@ -323,6 +323,6 @@ export function getPriceUsdc(
   return CustomPriceType.initialize(
     price.usdPrice.times(virtualPrice),
     constants.DEFAULT_DECIMALS.toI32() as u8,
-    constants.OracleType.CURVE_ROUTER
+    constants.OracleType.CURVE_ROUTER,
   );
 }

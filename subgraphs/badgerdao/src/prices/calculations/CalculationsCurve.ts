@@ -6,7 +6,7 @@ import { CalculationsCurve as CalculationsCurveContract } from "../../../generat
 
 export function getTokenPriceUSDC(
   tokenAddr: Address,
-  block: ethereum.Block | null = null
+  block: ethereum.Block | null = null,
 ): CustomPriceType {
   const config = utils.getConfig();
   const contractAddress = utils.getContract(config.curveCalculations(), block);
@@ -23,13 +23,13 @@ export function getTokenPriceUSDC(
   const tokenPrice: BigDecimal = utils
     .readValue<BigInt>(
       calculationCurveContract.try_getCurvePriceUsdc(tokenAddr),
-      constants.BIGINT_ZERO
+      constants.BIGINT_ZERO,
     )
     .toBigDecimal();
 
   return CustomPriceType.initialize(
     tokenPrice,
     constants.DEFAULT_USDC_DECIMALS,
-    constants.OracleType.CURVE_CALCULATIONS
+    constants.OracleType.CURVE_CALCULATIONS,
   );
 }

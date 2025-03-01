@@ -21,7 +21,7 @@ function createWithdrawTransaction(
   block: cosmos.HeaderOnlyBlock,
   inputTokenAmounts: Array<BigInt>,
   sharesBurnt: BigInt,
-  amountUSD: BigDecimal
+  amountUSD: BigDecimal,
 ): void {
   if (!transaction) {
     return;
@@ -46,7 +46,7 @@ function createWithdrawTransaction(
 
   withdrawTransaction.blockNumber = BigInt.fromI32(block.header.height as i32);
   withdrawTransaction.timestamp = BigInt.fromI32(
-    block.header.time.seconds as i32
+    block.header.time.seconds as i32,
   );
 
   withdrawTransaction.save();
@@ -54,11 +54,11 @@ function createWithdrawTransaction(
 
 export function msgExitPoolHandler(
   msgValue: Uint8Array,
-  data: cosmos.TransactionData
+  data: cosmos.TransactionData,
 ): void {
   const message = Protobuf.decode<MsgExitPool>(msgValue, MsgExitPool.decode);
   const liquidityPoolId = constants.Protocol.NAME.concat("-").concat(
-    message.poolId.toString()
+    message.poolId.toString(),
   );
   const liquidityPool = LiquidityPoolStore.load(liquidityPoolId);
   if (!liquidityPool) {
@@ -67,25 +67,24 @@ export function msgExitPoolHandler(
 
   const inputTokenBalances = liquidityPool.inputTokenBalances;
   const inputTokenAmounts = new Array<BigInt>(inputTokenBalances.length).fill(
-    constants.BIGINT_ZERO
+    constants.BIGINT_ZERO,
   );
   let nonPositiveBalance = false;
   for (let idx = 0; idx < message.tokenOutMins.length; idx++) {
     const tokenOutMin = message.tokenOutMins[idx];
     const inputTokenIndex = liquidityPool.inputTokens.indexOf(
-      tokenOutMin.denom
+      tokenOutMin.denom,
     );
     if (inputTokenIndex >= 0) {
       const amount = tokenOutMin.amount;
       inputTokenAmounts[inputTokenIndex] = amount;
-      inputTokenBalances[inputTokenIndex] = inputTokenBalances[
-        inputTokenIndex
-      ].minus(amount);
+      inputTokenBalances[inputTokenIndex] =
+        inputTokenBalances[inputTokenIndex].minus(amount);
       if (inputTokenBalances[inputTokenIndex] <= constants.BIGINT_ZERO) {
         nonPositiveBalance = true;
         log.error(
           "[msgExitPoolHandler] token balance is not postive, this SHOULD NOT happen",
-          []
+          [],
         );
       }
     }
@@ -98,18 +97,18 @@ export function msgExitPoolHandler(
       inputTokenBalances,
       inputTokenAmounts,
       message.shareInAmount,
-      data
+      data,
     );
   }
 }
 
 export function msgExitSwapExternAmountOutHandler(
   msgValue: Uint8Array,
-  data: cosmos.TransactionData
+  data: cosmos.TransactionData,
 ): void {
   const message = Protobuf.decode<MsgExitSwapExternAmountOut>(
     msgValue,
-    MsgExitSwapExternAmountOut.decode
+    MsgExitSwapExternAmountOut.decode,
   );
   if (!message.tokenOut) {
     return;
@@ -122,17 +121,17 @@ export function msgExitSwapExternAmountOutHandler(
     tokenOut.denom,
     tokenOut.amount,
     message.shareInMaxAmount,
-    data
+    data,
   );
 }
 
 export function msgExitSwapShareAmountInHandler(
   msgValue: Uint8Array,
-  data: cosmos.TransactionData
+  data: cosmos.TransactionData,
 ): void {
   const message = Protobuf.decode<MsgExitSwapShareAmountIn>(
     msgValue,
-    MsgExitSwapShareAmountIn.decode
+    MsgExitSwapShareAmountIn.decode,
   );
 
   exitSwapHandler(
@@ -141,7 +140,7 @@ export function msgExitSwapShareAmountInHandler(
     message.tokenOutDenom,
     message.tokenOutMinAmount,
     message.shareInAmount,
-    data
+    data,
   );
 }
 
@@ -151,10 +150,10 @@ function exitSwapHandler(
   tokenOutDenom: string,
   tokenOutAmount: BigInt,
   shareInAmount: BigInt,
-  data: cosmos.TransactionData
+  data: cosmos.TransactionData,
 ): void {
   const liquidityPoolId = constants.Protocol.NAME.concat("-").concat(
-    poolId.toString()
+    poolId.toString(),
   );
   const liquidityPool = LiquidityPoolStore.load(liquidityPoolId);
   if (!liquidityPool) {
@@ -169,7 +168,7 @@ function exitSwapHandler(
   const inputTokenBalances = liquidityPool.inputTokenBalances;
   const inputTokenWeights = liquidityPool.inputTokenWeights;
   const inputTokenAmounts = new Array<BigInt>(inputTokenBalances.length).fill(
-    constants.BIGINT_ZERO
+    constants.BIGINT_ZERO,
   );
   const tokenOutAmountChange = tokenOutAmount
     .times(utils.bigDecimalToBigInt(inputTokenWeights[tokenOutIndex]))
@@ -186,7 +185,7 @@ function exitSwapHandler(
       nonPositiveBalance = true;
       log.error(
         "[exitSwapHandler] token balance is not postive, this SHOULD NOT happen",
-        []
+        [],
       );
     }
   }
@@ -198,7 +197,7 @@ function exitSwapHandler(
       inputTokenBalances,
       inputTokenAmounts,
       shareInAmount,
-      data
+      data,
     );
   }
 }
@@ -209,12 +208,11 @@ function exitPoolHandler(
   inputTokenBalances: BigInt[],
   inputTokenAmounts: BigInt[],
   shareInAmount: BigInt,
-  data: cosmos.TransactionData
+  data: cosmos.TransactionData,
 ): void {
   liquidityPool.inputTokenBalances = inputTokenBalances;
-  liquidityPool.outputTokenSupply = liquidityPool.outputTokenSupply!.minus(
-    shareInAmount
-  );
+  liquidityPool.outputTokenSupply =
+    liquidityPool.outputTokenSupply!.minus(shareInAmount);
   liquidityPool.save();
 
   const prevTVL = liquidityPool.totalValueLockedUSD;
@@ -227,11 +225,11 @@ function exitPoolHandler(
     data.block,
     inputTokenAmounts,
     shareInAmount,
-    prevTVL.minus(liquidityPool.totalValueLockedUSD)
+    prevTVL.minus(liquidityPool.totalValueLockedUSD),
   );
 
   utils.updateProtocolTotalValueLockedUSD(
-    liquidityPool.totalValueLockedUSD.minus(prevTVL)
+    liquidityPool.totalValueLockedUSD.minus(prevTVL),
   );
 
   updateMetrics(data.block, sender, constants.UsageType.WITHDRAW);

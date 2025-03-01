@@ -5,16 +5,16 @@ import { Address, BigDecimal, BigInt, log } from "@graphprotocol/graph-ts";
 import { CalculationsSushiSwap as CalculationsSushiContract } from "../../../generated/templates/Vault/CalculationsSushiSwap";
 
 export function getSushiSwapContract(
-  network: string
+  network: string,
 ): CalculationsSushiContract {
   return CalculationsSushiContract.bind(
-    constants.SUSHISWAP_CALCULATIONS_ADDRESS_MAP.get(network)!
+    constants.SUSHISWAP_CALCULATIONS_ADDRESS_MAP.get(network)!,
   );
 }
 
 export function getTokenPriceFromSushiSwap(
   tokenAddr: Address,
-  network: string
+  network: string,
 ): CustomPriceType {
   const curveContract = getSushiSwapContract(network);
   if (!curveContract) {
@@ -24,7 +24,7 @@ export function getTokenPriceFromSushiSwap(
   let tokenPrice: BigDecimal = utils
     .readValue<BigInt>(
       curveContract.try_getPriceUsdc(tokenAddr),
-      constants.BIGINT_ZERO
+      constants.BIGINT_ZERO,
     )
     .toBigDecimal();
 

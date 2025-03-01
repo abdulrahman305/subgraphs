@@ -27,7 +27,7 @@ export function createWithdrawTransaction(
   amountUSD: BigDecimal,
   provider: Address,
   transaction: ethereum.Transaction,
-  block: ethereum.Block
+  block: ethereum.Block,
 ): WithdrawTransaction {
   const withdrawTransactionId = "withdraw-"
     .concat(transaction.hash.toHexString())
@@ -87,7 +87,7 @@ function getInputToken(
   event: ethereum.Event,
   poolAddress: Address,
   provider: Address,
-  amount: BigInt
+  amount: BigInt,
 ): Address {
   const receipt = event.receipt;
   if (!receipt) return constants.NULL.TYPE_ADDRESS;
@@ -126,13 +126,13 @@ export function getWithdrawnTokenAmounts(
   provider: Address,
   inputTokens: string[],
   inputTokenAmount: BigInt,
-  event: ethereum.Event
+  event: ethereum.Event,
 ): BigInt[] {
   const inputToken = getInputToken(
     event,
     liquidityPoolAddress,
     provider,
-    inputTokenAmount
+    inputTokenAmount,
   );
 
   const withdrawnTokenAmounts = new Array<BigInt>();
@@ -158,7 +158,7 @@ export function Withdraw(
   provider: Address,
   transaction: ethereum.Transaction,
   block: ethereum.Block,
-  event: ethereum.Event
+  event: ethereum.Event,
 ): void {
   const pool = getOrCreateLiquidityPool(poolAddress, block);
 
@@ -167,13 +167,13 @@ export function Withdraw(
     outputTokenBurntAmount.equals(constants.BIGINT_NEGATIVE_ONE)
   ) {
     outputTokenBurntAmount = pool.outputTokenSupply!.minus(
-      tokenSupplyAfterWithdrawal!
+      tokenSupplyAfterWithdrawal!,
     );
   }
 
   if (!tokenSupplyAfterWithdrawal) {
     tokenSupplyAfterWithdrawal = pool.outputTokenSupply!.minus(
-      outputTokenBurntAmount
+      outputTokenBurntAmount,
     );
   }
 
@@ -185,7 +185,7 @@ export function Withdraw(
       provider,
       pool.inputTokens,
       withdrawnTokenAmounts[0],
-      event
+      event,
     );
   }
 
@@ -196,7 +196,7 @@ export function Withdraw(
   for (let idx = 0; idx < withdrawnTokenAmounts.length; idx++) {
     const inputToken = utils.getOrCreateTokenFromString(
       pool.inputTokens[idx],
-      block
+      block,
     );
 
     inputTokenAmounts.push(withdrawnTokenAmounts[idx]);
@@ -205,26 +205,26 @@ export function Withdraw(
     withdrawAmountUSD = withdrawAmountUSD.plus(
       withdrawnTokenAmounts[idx]
         .divDecimal(
-          constants.BIGINT_TEN.pow(inputToken.decimals as u8).toBigDecimal()
+          constants.BIGINT_TEN.pow(inputToken.decimals as u8).toBigDecimal(),
         )
-        .times(inputToken.lastPriceUSD!)
+        .times(inputToken.lastPriceUSD!),
     );
   }
 
   pool.inputTokenBalances = utils.getPoolBalances(
     poolAddress,
-    pool.inputTokens
+    pool.inputTokens,
   );
   pool.totalValueLockedUSD = utils.getPoolTVL(
     pool.inputTokens,
     pool.inputTokenBalances,
-    block
+    block,
   );
   pool.inputTokenWeights = utils.getPoolTokenWeights(
     pool.inputTokens,
     pool.inputTokenBalances,
     pool.totalValueLockedUSD,
-    block
+    block,
   );
   pool.outputTokenSupply = tokenSupplyAfterWithdrawal;
   pool.outputTokenPriceUSD = utils.getOutputTokenPriceUSD2(poolAddress, block);
@@ -237,7 +237,7 @@ export function Withdraw(
     withdrawAmountUSD,
     provider,
     transaction,
-    block
+    block,
   );
   utils.updateProtocolTotalValueLockedUSD();
   UpdateMetricsAfterWithdraw(block);
@@ -250,8 +250,6 @@ export function Withdraw(
       withdrawnTokenAmounts.join(", "),
       withdrawAmountUSD.truncate(1).toString(),
       transaction.hash.toHexString(),
-    ]
+    ],
   );
 }
-
-

@@ -1,14 +1,21 @@
 import { BigDecimal, BigInt } from "@graphprotocol/graph-ts";
-import { BIGDECIMAL_ONE, BIGDECIMAL_TWO, BIGDECIMAL_ZERO, BIGINT_TWO, BIGINT_ZERO, INT_ZERO } from "../constants";
+import {
+  BIGDECIMAL_ONE,
+  BIGDECIMAL_TWO,
+  BIGDECIMAL_ZERO,
+  BIGINT_TWO,
+  BIGINT_ZERO,
+  INT_ZERO,
+} from "../constants";
 
 export function bigIntToBigDecimal(
   quantity: BigInt,
-  decimals: i32 = 18
+  decimals: i32 = 18,
 ): BigDecimal {
   return quantity.divDecimal(
     BigInt.fromI32(10)
       .pow(decimals as u8)
-      .toBigDecimal()
+      .toBigDecimal(),
   );
 }
 
@@ -23,10 +30,7 @@ export function exponentToBigDecimal(exp: i32): BigDecimal {
 }
 
 // convert emitted values to tokens count
-export function applyDecimals(
-  tokenAmount: BigInt,
-  decimals: i32
-): BigDecimal {
+export function applyDecimals(tokenAmount: BigInt, decimals: i32): BigDecimal {
   if (decimals == INT_ZERO) {
     return tokenAmount.toBigDecimal();
   }
@@ -37,7 +41,7 @@ export function applyDecimals(
 // a fast approximation of (1 + rate)^exponent
 export function bigDecimalExponential(
   rate: BigDecimal,
-  exponent: BigDecimal
+  exponent: BigDecimal,
 ): BigDecimal {
   // binomial expansion to obtain (1 + x)^n : (1 + rate)^exponent
   // 1 + n *x + (n/2*(n-1))*x**2+(n/6*(n-1)*(n-2))*x**3+(n/12*(n-1)*(n-2)*(n-3))*x**4
@@ -54,16 +58,8 @@ export function bigDecimalExponential(
   let fourthTerm = exponent
     .div(BIGDECIMAL_TWELVE)
     .times(exponent.minus(BIGDECIMAL_THREE))
-    .times(
-      rate
-        .times(rate)
-        .times(rate)
-        .times(rate)
-    );
-  return firstTerm
-    .plus(secondTerm)
-    .plus(thirdTerm)
-    .plus(fourthTerm);
+    .times(rate.times(rate).times(rate).times(rate));
+  return firstTerm.plus(secondTerm).plus(thirdTerm).plus(fourthTerm);
 }
 
 export function calculateAverage(prices: BigDecimal[]): BigDecimal {
@@ -73,7 +69,7 @@ export function calculateAverage(prices: BigDecimal[]): BigDecimal {
   }
 
   return sum.div(
-    BigDecimal.fromString(BigInt.fromI32(prices.length).toString())
+    BigDecimal.fromString(BigInt.fromI32(prices.length).toString()),
   );
 }
 
@@ -95,9 +91,7 @@ export function calculateMedian(prices: BigDecimal[]): BigDecimal {
 // https://docs.aave.com/developers/v/2.0/glossary
 
 export function rayToWad(a: BigInt): BigInt {
-  const halfRatio = BigInt.fromI32(10)
-    .pow(9)
-    .div(BigInt.fromI32(2));
+  const halfRatio = BigInt.fromI32(10).pow(9).div(BigInt.fromI32(2));
   return halfRatio.plus(a).div(BigInt.fromI32(10).pow(9));
 }
 
@@ -113,10 +107,13 @@ export function round(numberToRound: BigDecimal): BigDecimal {
   return BigDecimal.fromString(roundedNumber.toString());
 }
 
-export function safeDiv(numerator: BigDecimal, denominator: BigDecimal): BigDecimal {
-  let result = BIGDECIMAL_ZERO
+export function safeDiv(
+  numerator: BigDecimal,
+  denominator: BigDecimal,
+): BigDecimal {
+  let result = BIGDECIMAL_ZERO;
   if (denominator != BIGDECIMAL_ZERO) {
-    result = numerator.div(denominator)
+    result = numerator.div(denominator);
   }
-  return result
+  return result;
 }

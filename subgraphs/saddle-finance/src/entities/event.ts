@@ -21,11 +21,11 @@ export function createDeposit(
   event: ethereum.Event,
   inputTokenAmounts: BigInt[], // these come sorted as in the contract, which might not match pool.inputTokens positions.
   totalOutputTokenAmount: BigInt,
-  provider: Address
+  provider: Address,
 ): void {
   const pool = getOrCreatePool(event.address);
   const deposit = new Deposit(
-    `${event.transaction.hash.toHexString()}-${event.logIndex.toString()}`
+    `${event.transaction.hash.toHexString()}-${event.logIndex.toString()}`,
   );
   deposit.pool = pool.id;
   deposit.hash = event.transaction.hash.toHexString();
@@ -39,12 +39,12 @@ export function createDeposit(
   deposit.outputToken = pool.outputToken;
   deposit.inputTokenAmounts = getInputTokenAmounts(inputTokenAmounts, pool);
   deposit.outputTokenAmount = totalOutputTokenAmount.minus(
-    pool.outputTokenSupply!
+    pool.outputTokenSupply!,
   );
   deposit.amountUSD = getTokenAmountsSumUSD(
     event,
     deposit.inputTokenAmounts,
-    pool.inputTokens
+    pool.inputTokens,
   );
   deposit.save();
   handlePoolDeposit(event, pool, deposit);
@@ -55,11 +55,11 @@ export function createWithdraw(
   event: ethereum.Event,
   inputTokenAmounts: BigInt[], // these come sorted as in the contract, which might not match pool.inputTokens positions.
   totalOutputTokenAmount: BigInt,
-  provider: Address
+  provider: Address,
 ): void {
   const pool = getOrCreatePool(event.address);
   const withdraw = new Withdraw(
-    `${event.transaction.hash.toHexString()}-${event.logIndex.toString()}`
+    `${event.transaction.hash.toHexString()}-${event.logIndex.toString()}`,
   );
   withdraw.pool = pool.id;
   withdraw.hash = event.transaction.hash.toHexString();
@@ -73,12 +73,12 @@ export function createWithdraw(
   withdraw.outputToken = pool.outputToken;
   withdraw.inputTokenAmounts = getInputTokenAmounts(inputTokenAmounts, pool);
   withdraw.outputTokenAmount = pool.outputTokenSupply!.minus(
-    totalOutputTokenAmount
+    totalOutputTokenAmount,
   );
   withdraw.amountUSD = getTokenAmountsSumUSD(
     event,
     withdraw.inputTokenAmounts,
-    pool.inputTokens
+    pool.inputTokens,
   );
   withdraw.save();
   handlePoolWithdraw(event, pool, withdraw);
@@ -92,10 +92,10 @@ export function createSwap(
   amountIn: BigInt,
   tokenOut: Token,
   amountOut: BigInt,
-  buyer: Address
+  buyer: Address,
 ): void {
   const swap = new SwapEvent(
-    `${event.transaction.hash.toHexString()}-${event.logIndex.toString()}`
+    `${event.transaction.hash.toHexString()}-${event.logIndex.toString()}`,
   );
   swap.pool = pool.id;
   swap.hash = event.transaction.hash.toHexString();
@@ -108,12 +108,12 @@ export function createSwap(
   swap.tokenIn = tokenIn.id;
   swap.amountIn = amountIn;
   swap.amountInUSD = bigIntToBigDecimal(amountIn, tokenIn.decimals).times(
-    getPriceUSD(tokenIn, event)
+    getPriceUSD(tokenIn, event),
   );
   swap.tokenOut = tokenOut.id;
   swap.amountOut = amountOut;
   swap.amountOutUSD = bigIntToBigDecimal(amountOut, tokenOut.decimals).times(
-    getPriceUSD(tokenOut, event)
+    getPriceUSD(tokenOut, event),
   );
   swap.save();
   handlePoolSwap(event, pool, swap);
@@ -134,10 +134,14 @@ export function createSwap(
 // So we have to make sure that we move the tokenAmounts in the same way token IDs move.
 function getInputTokenAmounts(
   tokenAmounts: BigInt[],
-  pool: LiquidityPool
+  pool: LiquidityPool,
 ): BigInt[] {
   if (!pool._basePool) {
-    return sortValuesByTokenOrder(pool._inputTokensOrdered, pool.inputTokens, tokenAmounts);
+    return sortValuesByTokenOrder(
+      pool._inputTokensOrdered,
+      pool.inputTokens,
+      tokenAmounts,
+    );
   }
   const lpTokenBalance = tokenAmounts.pop();
   const basePool = getOrCreatePool(Address.fromString(pool._basePool!));
@@ -150,7 +154,11 @@ function getInputTokenAmounts(
   }
 
   // sort BP token amounts as in the contract
-  bpTokenAmounts = sortValuesByTokenOrder(basePool.inputTokens, basePool._inputTokensOrdered, bpTokenAmounts);
+  bpTokenAmounts = sortValuesByTokenOrder(
+    basePool.inputTokens,
+    basePool._inputTokensOrdered,
+    bpTokenAmounts,
+  );
 
   // sort all token amounts together.
   return sortValuesByTokenOrder(

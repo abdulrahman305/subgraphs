@@ -22,7 +22,7 @@ export function handleSetPerformanceFee(call: SetPerformanceFeeCall): void {
 
     const performanceFeeId = utils.prefixID(
       constants.VaultFeeType.PERFORMANCE_FEE,
-      vaultAddress.toHexString()
+      vaultAddress.toHexString(),
     );
     const performanceFee = VaultFee.load(performanceFeeId);
 
@@ -48,7 +48,7 @@ export function handleSetWithdrawalFee(call: SetWithdrawalFeeCall): void {
 
     const withdrawalFeeId = utils.prefixID(
       constants.VaultFeeType.WITHDRAWAL_FEE,
-      vaultAddress.toHexString()
+      vaultAddress.toHexString(),
     );
     const withdrawalFee = VaultFee.load(withdrawalFeeId);
 
@@ -81,7 +81,7 @@ export function handleHarvested(event: HarvestedEvent): void {
       vault,
       wantEarned,
       event.block,
-      event.transaction
+      event.transaction,
     );
   }
 }

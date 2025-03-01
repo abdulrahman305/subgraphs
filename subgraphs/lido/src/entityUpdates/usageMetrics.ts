@@ -22,9 +22,8 @@ export function updateUsageMetrics(block: ethereum.Block, from: Address): void {
 
   const protocol = getOrCreateProtocol();
   const usageMetricsDailySnapshot = getOrCreateUsageMetricsDailySnapshot(block);
-  const usageMetricsHourlySnapshot = getOrCreateUsageMetricsHourlySnapshot(
-    block
-  );
+  const usageMetricsHourlySnapshot =
+    getOrCreateUsageMetricsHourlySnapshot(block);
 
   usageMetricsDailySnapshot.dailyTransactionCount += 1;
   usageMetricsHourlySnapshot.hourlyTransactionCount += 1;
@@ -59,7 +58,7 @@ export function updateUsageMetrics(block: ethereum.Block, from: Address): void {
 }
 
 export function getOrCreateUsageMetricsDailySnapshot(
-  block: ethereum.Block
+  block: ethereum.Block,
 ): UsageMetricsDailySnapshot {
   let dayId: string = (block.timestamp.toI64() / SECONDS_PER_DAY).toString();
   let usageMetrics = UsageMetricsDailySnapshot.load(dayId);
@@ -85,7 +84,7 @@ export function getOrCreateUsageMetricsDailySnapshot(
 }
 
 export function getOrCreateUsageMetricsHourlySnapshot(
-  block: ethereum.Block
+  block: ethereum.Block,
 ): UsageMetricsHourlySnapshot {
   let hourId: string = (block.timestamp.toI64() / SECONDS_PER_HOUR).toString();
   let usageMetrics = UsageMetricsHourlySnapshot.load(hourId);

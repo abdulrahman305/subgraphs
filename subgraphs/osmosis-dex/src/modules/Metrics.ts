@@ -18,7 +18,7 @@ import { updateRevenueSnapshots } from "./Revenue";
 
 export function updateUsageMetrics(
   block: cosmos.HeaderOnlyBlock,
-  from: Address
+  from: Address,
 ): void {
   const protocol = getOrCreateDexAmmProtocol();
   const usageMetricsDaily = getOrCreateUsageMetricsDailySnapshot(block);
@@ -59,7 +59,7 @@ export function updateUsageMetrics(
 
 export function updatePoolSnapshots(
   liquidityPoolId: string,
-  block: cosmos.HeaderOnlyBlock
+  block: cosmos.HeaderOnlyBlock,
 ): void {
   const pool = LiquidityPoolStore.load(liquidityPoolId);
   if (!pool) {
@@ -67,11 +67,11 @@ export function updatePoolSnapshots(
   }
   const poolDailySnapshots = getOrCreateLiquidityPoolDailySnapshots(
     liquidityPoolId,
-    block
+    block,
   );
   const poolHourlySnapshots = getOrCreateLiquidityPoolHourlySnapshots(
     liquidityPoolId,
-    block
+    block,
   );
   if (!poolDailySnapshots || !poolHourlySnapshots) {
     return;
@@ -155,7 +155,7 @@ export function updateTokenVolumeAndBalance(
   tokenAddress: string,
   tokenAmount: BigInt,
   tokenAmountUSD: BigDecimal,
-  block: cosmos.HeaderOnlyBlock
+  block: cosmos.HeaderOnlyBlock,
 ): void {
   const pool = LiquidityPoolStore.load(liquidityPoolId);
   if (!pool) {
@@ -163,11 +163,11 @@ export function updateTokenVolumeAndBalance(
   }
   const poolDailySnaphot = getOrCreateLiquidityPoolDailySnapshots(
     liquidityPoolId,
-    block
+    block,
   );
   const poolHourlySnaphot = getOrCreateLiquidityPoolHourlySnapshots(
     liquidityPoolId,
-    block
+    block,
   );
   if (!poolDailySnaphot || !poolHourlySnaphot) {
     return;
@@ -179,24 +179,20 @@ export function updateTokenVolumeAndBalance(
   }
 
   const dailyVolumeByTokenAmount = poolDailySnaphot.dailyVolumeByTokenAmount;
-  dailyVolumeByTokenAmount[tokenIndex] = dailyVolumeByTokenAmount[
-    tokenIndex
-  ].plus(tokenAmount);
+  dailyVolumeByTokenAmount[tokenIndex] =
+    dailyVolumeByTokenAmount[tokenIndex].plus(tokenAmount);
   const hourlyVolumeByTokenAmount = poolHourlySnaphot.hourlyVolumeByTokenAmount;
-  hourlyVolumeByTokenAmount[tokenIndex] = hourlyVolumeByTokenAmount[
-    tokenIndex
-  ].plus(tokenAmount);
+  hourlyVolumeByTokenAmount[tokenIndex] =
+    hourlyVolumeByTokenAmount[tokenIndex].plus(tokenAmount);
   poolDailySnaphot.dailyVolumeByTokenAmount = dailyVolumeByTokenAmount;
   poolHourlySnaphot.hourlyVolumeByTokenAmount = hourlyVolumeByTokenAmount;
 
   const dailyVolumeByTokenUSD = poolDailySnaphot.dailyVolumeByTokenUSD;
-  dailyVolumeByTokenUSD[tokenIndex] = dailyVolumeByTokenUSD[tokenIndex].plus(
-    tokenAmountUSD
-  );
+  dailyVolumeByTokenUSD[tokenIndex] =
+    dailyVolumeByTokenUSD[tokenIndex].plus(tokenAmountUSD);
   const hourlyVolumeByTokenUSD = poolHourlySnaphot.hourlyVolumeByTokenUSD;
-  hourlyVolumeByTokenUSD[tokenIndex] = hourlyVolumeByTokenUSD[tokenIndex].plus(
-    tokenAmountUSD
-  );
+  hourlyVolumeByTokenUSD[tokenIndex] =
+    hourlyVolumeByTokenUSD[tokenIndex].plus(tokenAmountUSD);
   poolDailySnaphot.dailyVolumeByTokenUSD = dailyVolumeByTokenUSD;
   poolHourlySnaphot.hourlyVolumeByTokenUSD = hourlyVolumeByTokenUSD;
 
@@ -207,7 +203,7 @@ export function updateTokenVolumeAndBalance(
 export function updateSnapshotsVolume(
   liquidityPoolId: string,
   volumeUSD: BigDecimal,
-  block: cosmos.HeaderOnlyBlock
+  block: cosmos.HeaderOnlyBlock,
 ): void {
   const protocol = getOrCreateDexAmmProtocol();
   const financialsDailySnapshot = getOrCreateFinancialDailySnapshots(block);
@@ -217,11 +213,11 @@ export function updateSnapshotsVolume(
   }
   const poolDailySnaphot = getOrCreateLiquidityPoolDailySnapshots(
     liquidityPoolId,
-    block
+    block,
   );
   const poolHourlySnaphot = getOrCreateLiquidityPoolHourlySnapshots(
     liquidityPoolId,
-    block
+    block,
   );
   if (!poolDailySnaphot || !poolHourlySnaphot) {
     return;
@@ -232,17 +228,15 @@ export function updateSnapshotsVolume(
 
   protocol.cumulativeVolumeUSD = protocol.cumulativeVolumeUSD.plus(volumeUSD);
 
-  financialsDailySnapshot.dailyVolumeUSD = financialsDailySnapshot.dailyVolumeUSD.plus(
-    volumeUSD
-  );
+  financialsDailySnapshot.dailyVolumeUSD =
+    financialsDailySnapshot.dailyVolumeUSD.plus(volumeUSD);
   financialsDailySnapshot.cumulativeVolumeUSD = protocol.cumulativeVolumeUSD;
   financialsDailySnapshot.totalValueLockedUSD = protocol.totalValueLockedUSD;
   financialsDailySnapshot.blockNumber = blockNumber;
   financialsDailySnapshot.timestamp = timestamp;
 
-  poolDailySnaphot.dailyVolumeUSD = poolDailySnaphot.dailyVolumeUSD.plus(
-    volumeUSD
-  );
+  poolDailySnaphot.dailyVolumeUSD =
+    poolDailySnaphot.dailyVolumeUSD.plus(volumeUSD);
   poolDailySnaphot.cumulativeVolumeUSD = liquidityPool.cumulativeVolumeUSD;
   poolDailySnaphot.totalValueLockedUSD = liquidityPool.totalValueLockedUSD;
   poolDailySnaphot.inputTokenBalances = liquidityPool.inputTokenBalances;
@@ -252,9 +246,8 @@ export function updateSnapshotsVolume(
   poolDailySnaphot.blockNumber = blockNumber;
   poolDailySnaphot.timestamp = timestamp;
 
-  poolHourlySnaphot.hourlyVolumeUSD = poolHourlySnaphot.hourlyVolumeUSD.plus(
-    volumeUSD
-  );
+  poolHourlySnaphot.hourlyVolumeUSD =
+    poolHourlySnaphot.hourlyVolumeUSD.plus(volumeUSD);
   poolHourlySnaphot.cumulativeVolumeUSD = liquidityPool.cumulativeVolumeUSD;
   poolHourlySnaphot.totalValueLockedUSD = liquidityPool.totalValueLockedUSD;
   poolHourlySnaphot.inputTokenBalances = liquidityPool.inputTokenBalances;
@@ -273,7 +266,7 @@ export function updateSnapshotsVolume(
 export function updateSupplySideRevenue(
   liquidityPoolId: string,
   volumeUSD: BigDecimal,
-  block: cosmos.HeaderOnlyBlock
+  block: cosmos.HeaderOnlyBlock,
 ): void {
   const pool = LiquidityPoolStore.load(liquidityPoolId);
   if (!pool) {
@@ -296,14 +289,14 @@ export function updateSupplySideRevenue(
     pool,
     supplySideRevenueUSD,
     constants.BIGDECIMAL_ZERO,
-    block
+    block,
   );
 }
 
 export function updateMetrics(
   block: cosmos.HeaderOnlyBlock,
   from: string,
-  usageType: string
+  usageType: string,
 ): void {
   const protocol = getOrCreateDexAmmProtocol();
 
@@ -313,15 +306,15 @@ export function updateMetrics(
 
   metricsDailySnapshot.blockNumber = BigInt.fromI32(block.header.height as i32);
   metricsDailySnapshot.timestamp = BigInt.fromI32(
-    block.header.time.seconds as i32
+    block.header.time.seconds as i32,
   );
   metricsDailySnapshot.dailyTransactionCount += 1;
 
   metricsHourlySnapshot.blockNumber = BigInt.fromI32(
-    block.header.height as i32
+    block.header.height as i32,
   );
   metricsHourlySnapshot.timestamp = BigInt.fromI32(
-    block.header.time.seconds as i32
+    block.header.time.seconds as i32,
   );
   metricsHourlySnapshot.hourlyTransactionCount += 1;
 

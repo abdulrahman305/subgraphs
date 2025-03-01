@@ -45,5 +45,3 @@ Count of Unique Addresses which have interacted with the protocol via any transa
 `Deposits`
 
 `Withdraws`
-
-

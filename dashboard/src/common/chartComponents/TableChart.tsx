@@ -212,11 +212,11 @@ export const TableChart = ({
             },
           }}
           onSortModelChange={(x) => {
-            if (x && x.length > 0 && x[0].hasOwnProperty('field') && x[0].hasOwnProperty('sort')) {
+            if (x && x.length > 0 && x[0].hasOwnProperty("field") && x[0].hasOwnProperty("sort")) {
               setSortColumn(x[0].field);
               setSortOrderAsc(x[0].sort === "asc");
             } else {
-              console.error('Sort model change event received invalid data:', x);
+              console.error("Sort model change event received invalid data:", x);
             }
           }}
           rows={tableData}

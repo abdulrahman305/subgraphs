@@ -130,7 +130,7 @@ export function handleVatRely(event: VatNoteEvent): void {
         ilkCall.reverted.toString(),
         gemCall.reverted.toString(),
         event.transaction.hash.toHexString(),
-      ]
+      ],
     );
 
     return;
@@ -180,7 +180,7 @@ export function handleVatRely(event: VatNoteEvent): void {
       tokenName,
       tokenSymbol,
       decimals.toString(),
-    ]
+    ],
   );
 
   getOrCreateMarket(
@@ -188,7 +188,7 @@ export function handleVatRely(event: VatNoteEvent): void {
     ilk.toString(),
     tokenId,
     event.block.number,
-    event.block.timestamp
+    event.block.timestamp,
   );
   getOrCreateIlk(ilk, marketID);
   getOrCreateToken(tokenId, tokenName, tokenSymbol, decimals as i32);
@@ -227,14 +227,14 @@ export function handleVatGrab(event: VatNoteEvent): void {
   const liquidationSigs = [
     crypto.keccak256(
       ByteArray.fromUTF8(
-        "Bite(bytes32,address,uint256,uint256,uint256,address,uint256)"
-      )
+        "Bite(bytes32,address,uint256,uint256,uint256,address,uint256)",
+      ),
     ),
 
     crypto.keccak256(
       ByteArray.fromUTF8(
-        "Bark(bytes32,address,uint256,uint256,uint256,address,uint256)"
-      )
+        "Bark(bytes32,address,uint256,uint256,uint256,address,uint256)",
+      ),
     ),
   ];
 
@@ -260,7 +260,7 @@ export function handleVatFrob(event: VatNoteEvent): void {
   if (ilk.toString() == "TELEPORT-FW-A") {
     log.info(
       "[handleVatSlip] Skip ilk={} (DAI Teleport: https://github.com/makerdao/dss-teleport)",
-      [ilk.toString()]
+      [ilk.toString()],
     );
     return;
   }
@@ -269,15 +269,15 @@ export function handleVatFrob(event: VatNoteEvent): void {
   // frob(bytes32 i, address u, address v, address w, int256 dink, int256 dart) call
   // 4th arg w: start = 4 (signature) + 3 * 32, end = start + 32
   let w = bytes32ToAddressHexString(
-    extractCallData(event.params.data, 100, 132)
+    extractCallData(event.params.data, 100, 132),
   );
   // 5th arg dink: start = 4 (signature) + 4 * 32, end = start + 32
   const dink = bytesToSignedBigInt(
-    extractCallData(event.params.data, 132, 164)
+    extractCallData(event.params.data, 132, 164),
   ); // change to collateral
   // 6th arg dart: start = 4 (signature) + 4 * 32, end = start + 32
   const dart = bytesToSignedBigInt(
-    extractCallData(event.params.data, 164, 196)
+    extractCallData(event.params.data, 164, 196),
   ); // change to debt
   const tx = event.transaction.hash
     .toHexString()
@@ -294,7 +294,7 @@ export function handleVatFrob(event: VatNoteEvent): void {
       w,
       dink.toString(),
       dart.toString(),
-    ]
+    ],
   );
 
   const urn = u;
@@ -309,7 +309,7 @@ export function handleVatFrob(event: VatNoteEvent): void {
 
     log.info(
       "[handleVatFrob]account migration tx {} for urn={},migrationCaller={} skipped",
-      [tx, urn, migrationCaller!]
+      [tx, urn, migrationCaller!],
     );
 
     return;
@@ -333,7 +333,7 @@ export function handleVatFrob(event: VatNoteEvent): void {
   const deltaCollateral = bigIntChangeDecimals(dink, WAD, token.decimals);
   const deltaCollateralUSD = bigIntToBDUseDecimals(
     deltaCollateral,
-    token.decimals
+    token.decimals,
   ).times(token.lastPriceUSD!);
 
   log.info(
@@ -344,7 +344,7 @@ export function handleVatFrob(event: VatNoteEvent): void {
       token.decimals.toString(),
       deltaCollateral.toString(),
       deltaCollateralUSD.toString(),
-    ]
+    ],
   );
 
   market.inputTokenPriceUSD = token.lastPriceUSD!;
@@ -361,7 +361,7 @@ export function handleVatFrob(event: VatNoteEvent): void {
       market.inputTokenBalance.toString(),
       market.inputTokenPriceUSD.toString(),
       market.totalBorrowBalanceUSD.toString(),
-    ]
+    ],
   );
 
   createTransactions(
@@ -372,7 +372,7 @@ export function handleVatFrob(event: VatNoteEvent): void {
     deltaCollateral,
     deltaCollateralUSD,
     dart,
-    deltaDebtUSD
+    deltaDebtUSD,
   );
   updateUsageMetrics(event, [u, v, w], deltaCollateralUSD, deltaDebtUSD);
   updatePosition(event, urn, ilk, deltaCollateral, dart);
@@ -381,7 +381,7 @@ export function handleVatFrob(event: VatNoteEvent): void {
     market,
     deltaCollateral,
     deltaCollateralUSD,
-    deltaDebtUSD
+    deltaDebtUSD,
   );
   updateProtocol(deltaCollateralUSD, deltaDebtUSD);
   //this needs to after updateProtocol as it uses protocol to do the update
@@ -398,11 +398,11 @@ export function handleVatFork(event: VatNoteEvent): void {
   // fork( bytes32 ilk, address src, address dst, int256 dink, int256 dart)
   // 4th arg dink: start = 4 (signature) + 3 * 32, end = start + 32
   const dink = bytesToSignedBigInt(
-    extractCallData(event.params.data, 100, 132)
+    extractCallData(event.params.data, 100, 132),
   ); // change to collateral
   // 5th arg dart: start = 4 (signature) + 4 * 32, end = start + 32
   const dart = bytesToSignedBigInt(
-    extractCallData(event.params.data, 132, 164)
+    extractCallData(event.params.data, 132, 164),
   ); // change to debt
 
   const market: Market = getMarketFromIlk(ilk)!;
@@ -410,7 +410,7 @@ export function handleVatFork(event: VatNoteEvent): void {
   const collateralTransferAmount = bigIntChangeDecimals(
     dink,
     WAD,
-    token.decimals
+    token.decimals,
   );
   const debtTransferAmount = dart;
 
@@ -431,7 +431,7 @@ export function handleVatFork(event: VatNoteEvent): void {
       PositionSide.LENDER,
       null,
       null,
-      collateralTransferAmount
+      collateralTransferAmount,
     );
   } else if (dink.lt(BIGINT_ZERO)) {
     transferPosition(
@@ -442,7 +442,7 @@ export function handleVatFork(event: VatNoteEvent): void {
       PositionSide.LENDER,
       null,
       null,
-      collateralTransferAmount.times(BIGINT_NEG_ONE)
+      collateralTransferAmount.times(BIGINT_NEG_ONE),
     );
   }
 
@@ -455,7 +455,7 @@ export function handleVatFork(event: VatNoteEvent): void {
       PositionSide.BORROWER,
       null,
       null,
-      debtTransferAmount
+      debtTransferAmount,
     );
   } else if (dart.lt(BIGINT_ZERO)) {
     transferPosition(
@@ -466,7 +466,7 @@ export function handleVatFork(event: VatNoteEvent): void {
       PositionSide.BORROWER,
       null,
       null,
-      debtTransferAmount.times(BIGINT_NEG_ONE)
+      debtTransferAmount.times(BIGINT_NEG_ONE),
     );
   }
 }
@@ -477,7 +477,7 @@ export function handleVatFold(event: VatNoteEvent): void {
   if (ilk.toString() == "TELEPORT-FW-A") {
     log.info(
       "[handleVatSlip] Skip ilk={} (DAI Teleport: https://github.com/makerdao/dss-teleport)",
-      [ilk.toString()]
+      [ilk.toString()],
     );
     return;
   }
@@ -490,7 +490,7 @@ export function handleVatFold(event: VatNoteEvent): void {
   if (vow.toLowerCase() != VOW_ADDRESS.toLowerCase()) {
     log.warning(
       "[handleVatFold]Stability fee unexpectedly credited to a non-Vow address {}",
-      [vow]
+      [vow],
     );
   }
   const marketAddress = getMarketAddressFromIlk(ilk);
@@ -506,12 +506,12 @@ export function handleVatFold(event: VatNoteEvent): void {
       marketID,
       newTotalRevenueUSD,
       BIGDECIMAL_ZERO,
-      ProtocolSideRevenueType.STABILITYFEE
+      ProtocolSideRevenueType.STABILITYFEE,
     );
   } else {
     log.warning(
       "[handleVatFold]Failed to find marketID for ilk {}/{}; revenue of ${} is ignored.",
-      [ilk.toString(), ilk.toHexString(), newTotalRevenueUSD.toString()]
+      [ilk.toString(), ilk.toHexString(), newTotalRevenueUSD.toString()],
     );
   }
 }
@@ -523,7 +523,7 @@ export function handleCatBite(event: BiteEvent): void {
   if (ilk.toString() == "TELEPORT-FW-A") {
     log.info(
       "[handleVatSlip] Skip ilk={} (DAI Teleport: https://github.com/makerdao/dss-teleport)",
-      [ilk.toString()]
+      [ilk.toString()],
     );
     return;
   }
@@ -537,12 +537,12 @@ export function handleCatBite(event: BiteEvent): void {
   const token = getOrCreateToken(market.inputToken);
   const collateral = bigIntChangeDecimals(lot, WAD, token.decimals);
   const collateralUSD = bigIntToBDUseDecimals(collateral, token.decimals).times(
-    token.lastPriceUSD!
+    token.lastPriceUSD!,
   );
   const deltaCollateral = collateral.times(BIGINT_NEG_ONE);
   const deltaCollateralUSD = collateralUSD.times(BIGDECIMAL_NEG_ONE);
   const deltaDebtUSD = bigIntToBDUseDecimals(art, WAD).times(
-    BIGDECIMAL_NEG_ONE
+    BIGDECIMAL_NEG_ONE,
   );
 
   // Here we remove all collateral and close positions, even though partial collateral may be returned
@@ -553,20 +553,20 @@ export function handleCatBite(event: BiteEvent): void {
     urn,
     ilk,
     collateral,
-    art
+    art,
   );
   updateMarket(
     event,
     market,
     deltaCollateral,
     deltaCollateralUSD,
-    deltaDebtUSD
+    deltaDebtUSD,
   );
   updateProtocol();
   updateFinancialsSnapshot(event);
 
   const liquidationRevenueUSD = bigIntToBDUseDecimals(tab, RAD).times(
-    market.liquidationPenalty.div(BIGDECIMAL_ONE_HUNDRED)
+    market.liquidationPenalty.div(BIGDECIMAL_ONE_HUNDRED),
   );
 
   updateRevenue(
@@ -574,7 +574,7 @@ export function handleCatBite(event: BiteEvent): void {
     market.id,
     liquidationRevenueUSD,
     BIGDECIMAL_ZERO,
-    ProtocolSideRevenueType.LIQUIDATION
+    ProtocolSideRevenueType.LIQUIDATION,
   );
 
   const storeID = flip.toHexString().concat("-").concat(id.toString());
@@ -589,7 +589,7 @@ export function handleCatBite(event: BiteEvent): void {
       art.toString(),
       tab.toString(),
       liquidationRevenueUSD.toString(),
-    ]
+    ],
   );
 
   const liquidatee = getOwnerAddress(urn);
@@ -619,14 +619,14 @@ export function handleCatFile(event: CatNoteEvent): void {
   if (ilk.toString() == "TELEPORT-FW-A") {
     log.info(
       "[handleVatSlip] Skip ilk={} (DAI Teleport: https://github.com/makerdao/dss-teleport)",
-      [ilk.toString()]
+      [ilk.toString()],
     );
     return;
   }
   const what = event.params.arg2.toString();
   // 3rd arg: start = 4 + 2 * 32, end = start + 32
   const chop = bytesToUnsignedBigInt(
-    extractCallData(event.params.data, 68, 100)
+    extractCallData(event.params.data, 68, 100),
   );
 
   if (what != "chop") {
@@ -667,7 +667,7 @@ export function handleDogBark(event: BarkEvent): void {
   if (ilk.toString() == "TELEPORT-FW-A") {
     log.info(
       "[handleVatSlip] Skip ilk={} (DAI Teleport: https://github.com/makerdao/dss-teleport)",
-      [ilk.toString()]
+      [ilk.toString()],
     );
     return;
   }
@@ -680,19 +680,21 @@ export function handleDogBark(event: BarkEvent): void {
 
   const market = getMarketFromIlk(ilk);
   if (!market) {
-    log.warning("[handleDogBark] Failed to get market for ilk {}", [ilk.toString()]);
+    log.warning("[handleDogBark] Failed to get market for ilk {}", [
+      ilk.toString(),
+    ]);
     return;
   }
 
   const token = getOrCreateToken(market.inputToken);
   const collateral = bigIntChangeDecimals(lot, WAD, token.decimals);
   const collateralUSD = bigIntToBDUseDecimals(collateral, token.decimals).times(
-    token.lastPriceUSD!
+    token.lastPriceUSD!,
   );
   const deltaCollateral = collateral.times(BIGINT_NEG_ONE);
   const deltaCollateralUSD = collateralUSD.times(BIGDECIMAL_NEG_ONE);
   const deltaDebtUSD = bigIntToBDUseDecimals(art, WAD).times(
-    BIGDECIMAL_NEG_ONE
+    BIGDECIMAL_NEG_ONE,
   );
 
   // Here we remove all collateral and close positions, even though partial collateral may be returned
@@ -703,20 +705,20 @@ export function handleDogBark(event: BarkEvent): void {
     urn.toHexString(),
     ilk,
     collateral,
-    art
+    art,
   );
   updateMarket(
     event,
     market,
     deltaCollateral,
     deltaCollateralUSD,
-    deltaDebtUSD
+    deltaDebtUSD,
   );
   updateProtocol();
   updateFinancialsSnapshot(event);
 
   const liquidationRevenueUSD = bigIntToBDUseDecimals(due, RAD).times(
-    market.liquidationPenalty.div(BIGDECIMAL_ONE_HUNDRED)
+    market.liquidationPenalty.div(BIGDECIMAL_ONE_HUNDRED),
   );
 
   updateRevenue(
@@ -724,7 +726,7 @@ export function handleDogBark(event: BarkEvent): void {
     market.id,
     liquidationRevenueUSD,
     BIGDECIMAL_ZERO,
-    ProtocolSideRevenueType.LIQUIDATION
+    ProtocolSideRevenueType.LIQUIDATION,
   );
 
   const storeID = clip.toHexString().concat("-").concat(id.toString());
@@ -738,7 +740,7 @@ export function handleDogBark(event: BarkEvent): void {
       art.toString(),
       due.toString(),
       liquidationRevenueUSD.toString(),
-    ]
+    ],
   );
 
   //let debt = bigIntChangeDecimals(due, RAD, WAD);
@@ -763,7 +765,7 @@ export function handleDogFile(event: DogFileChopEvent): void {
   if (ilk.toString() == "TELEPORT-FW-A") {
     log.info(
       "[handleVatSlip] Skip ilk={} (DAI Teleport: https://github.com/makerdao/dss-teleport)",
-      [ilk.toString()]
+      [ilk.toString()],
     );
     return;
   }
@@ -795,7 +797,7 @@ export function handleDogFile(event: DogFileChopEvent): void {
       chop.toString(),
       liquidationPenalty.toString(),
       market.liquidationPenalty.toString(),
-    ]
+    ],
   );
 }
 
@@ -832,7 +834,7 @@ export function handleFlipBids(event: FlipNoteEvent): void {
       flipBidsStore.tab.toString(),
       flipBidsStore.bid.toString(),
       flipBidsStore.bidder,
-    ]
+    ],
   );
 
   log.info(
@@ -846,7 +848,7 @@ export function handleFlipBids(event: FlipNoteEvent): void {
       tab.toString(),
       bid.toString(),
       bidder,
-    ]
+    ],
   );
 
   if (flipBidsStore.tab.notEqual(tab)) {
@@ -868,7 +870,7 @@ export function handleFlipBids(event: FlipNoteEvent): void {
   const market = getMarketFromIlk(ilk)!;
   const token = getOrCreateToken(market.inputToken);
   const value = bigIntToBDUseDecimals(flipBidsStore.lot, token.decimals).times(
-    market.inputTokenPriceUSD
+    market.inputTokenPriceUSD,
   );
   log.info(
     "[handleFlipBids]storeID={}, flip.id={}, ilk={} round #{} winning bid: lot={}, price={}, value (lot*price)={}, tab={}, bid={}, bidder={}",
@@ -883,7 +885,7 @@ export function handleFlipBids(event: FlipNoteEvent): void {
       flipBidsStore.tab.toString(),
       flipBidsStore.bid.toString(),
       bidder,
-    ]
+    ],
   );
   flipBidsStore.save();
 }
@@ -906,7 +908,7 @@ export function handleFlipEndAuction(event: FlipNoteEvent): void {
       flipBidsStore.tab.toString(),
       flipBidsStore.bid.toString(),
       flipBidsStore.bidder,
-    ]
+    ],
   );
 
   const marketID = flipBidsStore.market;
@@ -915,11 +917,11 @@ export function handleFlipEndAuction(event: FlipNoteEvent): void {
 
   const amount = bigIntChangeDecimals(flipBidsStore.lot, WAD, token.decimals);
   const amountUSD = bigIntToBDUseDecimals(amount, token.decimals).times(
-    token.lastPriceUSD!
+    token.lastPriceUSD!,
   );
   // bid is in DAI, assumed to priced at $1
   const profitUSD = amountUSD.minus(
-    bigIntToBDUseDecimals(flipBidsStore.bid, RAD)
+    bigIntToBDUseDecimals(flipBidsStore.bid, RAD),
   );
 
   let liquidatee = flipBidsStore.liquidatee;
@@ -936,7 +938,7 @@ export function handleFlipEndAuction(event: FlipNoteEvent): void {
     liquidator,
     amount,
     amountUSD,
-    profitUSD
+    profitUSD,
   );
   //TODO: this should be an array/list including both borrowerPosition and lenderPosition
   liquidate.position = flipBidsStore.positions![0];
@@ -953,7 +955,7 @@ export function handleFlipEndAuction(event: FlipNoteEvent): void {
       token.lastPriceUSD!.toString(),
       liquidate.amountUSD.toString(),
       liquidate.profitUSD.toString(),
-    ]
+    ],
   );
 
   if (
@@ -970,7 +972,7 @@ export function handleFlipEndAuction(event: FlipNoteEvent): void {
         liquidate.amount.toString(),
         liquidate.amountUSD.toString(),
         liquidate.profitUSD.toString(),
-      ]
+      ],
     );
   }
 
@@ -984,7 +986,7 @@ export function handleFlipEndAuction(event: FlipNoteEvent): void {
     BIGDECIMAL_ZERO,
     liquidate.amountUSD,
     liquidator,
-    liquidatee
+    liquidatee,
   );
   updateMarket(
     event,
@@ -992,14 +994,14 @@ export function handleFlipEndAuction(event: FlipNoteEvent): void {
     BIGINT_ZERO,
     BIGDECIMAL_ZERO,
     BIGDECIMAL_ZERO,
-    liquidate.amountUSD
+    liquidate.amountUSD,
   );
   updateProtocol(BIGDECIMAL_ZERO, BIGDECIMAL_ZERO, liquidate.amountUSD);
   updateFinancialsSnapshot(
     event,
     BIGDECIMAL_ZERO,
     BIGDECIMAL_ZERO,
-    liquidate.amountUSD
+    liquidate.amountUSD,
   );
 }
 
@@ -1028,7 +1030,7 @@ export function handleClipTakeBid(event: TakeEvent): void {
   const token = getOrCreateToken(market.inputToken);
 
   const value = bigIntToBDUseDecimals(lot, token.decimals).times(
-    token.lastPriceUSD!
+    token.lastPriceUSD!,
   );
   log.info(
     "[handleClipTakeBid]block#={}, storeID={}, clip.id={}, slice #{} event params: max={}, lot={}, price={}, value(lot*price)={}, art={}, tab={}, owe={}, liquidatee={}, liquidator={}",
@@ -1046,13 +1048,13 @@ export function handleClipTakeBid(event: TakeEvent): void {
       owe.toString(),
       liquidatee,
       liquidator,
-    ]
+    ],
   );
 
   const deltaLot = clipTakeStore.lot.minus(lot);
   const amount = bigIntChangeDecimals(deltaLot, WAD, token.decimals);
   const amountUSD = bigIntToBDUseDecimals(amount, token.decimals).times(
-    token.lastPriceUSD!
+    token.lastPriceUSD!,
   );
   const profitUSD = amountUSD.minus(bigIntToBDUseDecimals(owe, RAD));
 
@@ -1065,7 +1067,7 @@ export function handleClipTakeBid(event: TakeEvent): void {
     liquidator,
     amount,
     amountUSD,
-    profitUSD
+    profitUSD,
   );
   //TODO: this should be an array/list including both borrowerPosition and lenderPosition
   liquidate.position = clipTakeStore.positions![0];
@@ -1086,7 +1088,7 @@ export function handleClipTakeBid(event: TakeEvent): void {
         liquidate.amount.toString(),
         liquidate.amountUSD.toString(),
         liquidate.profitUSD.toString(),
-      ]
+      ],
     );
   }
 
@@ -1104,7 +1106,7 @@ export function handleClipTakeBid(event: TakeEvent): void {
       liquidate.amount.toString(),
       liquidate.amountUSD.toString(),
       liquidate.profitUSD.toString(),
-    ]
+    ],
   );
 
   log.info(
@@ -1115,7 +1117,7 @@ export function handleClipTakeBid(event: TakeEvent): void {
       clipTakeStore.lot.toString(),
       clipTakeStore.tab.toString(),
       token.lastPriceUSD!.toString(),
-    ]
+    ],
   );
 
   updateUsageMetrics(
@@ -1125,7 +1127,7 @@ export function handleClipTakeBid(event: TakeEvent): void {
     BIGDECIMAL_ZERO,
     liquidate.amountUSD,
     liquidator,
-    liquidatee
+    liquidatee,
   );
   updateMarket(
     event,
@@ -1133,14 +1135,14 @@ export function handleClipTakeBid(event: TakeEvent): void {
     BIGINT_ZERO,
     BIGDECIMAL_ZERO,
     BIGDECIMAL_ZERO,
-    liquidate.amountUSD
+    liquidate.amountUSD,
   );
   updateProtocol(BIGDECIMAL_ZERO, BIGDECIMAL_ZERO, liquidate.amountUSD);
   updateFinancialsSnapshot(
     event,
     BIGDECIMAL_ZERO,
     BIGDECIMAL_ZERO,
-    liquidate.amountUSD
+    liquidate.amountUSD,
   );
 }
 
@@ -1170,7 +1172,7 @@ export function handleClipYankBid(event: ClipYankEvent): void {
   // convert collateral to its native amount from WAD
   const amount = bigIntChangeDecimals(lot, WAD, token.decimals);
   const amountUSD = bigIntToBDUseDecimals(amount, token.decimals).times(
-    token.lastPriceUSD!
+    token.lastPriceUSD!,
   );
   const profitUSD = amountUSD.minus(bigIntToBDUseDecimals(tab, RAD));
   const liquidate = getOrCreateLiquidate(
@@ -1181,7 +1183,7 @@ export function handleClipYankBid(event: ClipYankEvent): void {
     liquidator,
     amount,
     amountUSD,
-    profitUSD
+    profitUSD,
   );
   //TODO: this should be an array/list including both borrowerPosition and lenderPosition
   liquidate.position = clipTakeStore.positions![0];
@@ -1195,7 +1197,7 @@ export function handleClipYankBid(event: ClipYankEvent): void {
       liquidator,
       liquidate.amountUSD.toString(),
       liquidate.profitUSD.toString(),
-    ]
+    ],
   );
 
   if (
@@ -1209,7 +1211,7 @@ export function handleClipYankBid(event: ClipYankEvent): void {
         liquidate.amount.toString(),
         liquidate.amountUSD.toString(),
         liquidate.profitUSD.toString(),
-      ]
+      ],
     );
   }
 
@@ -1220,7 +1222,7 @@ export function handleClipYankBid(event: ClipYankEvent): void {
     BIGDECIMAL_ZERO,
     liquidate.amountUSD,
     liquidator,
-    liquidatee
+    liquidatee,
   );
   updateMarket(
     event,
@@ -1228,14 +1230,14 @@ export function handleClipYankBid(event: ClipYankEvent): void {
     BIGINT_ZERO,
     BIGDECIMAL_ZERO,
     BIGDECIMAL_ZERO,
-    liquidate.amountUSD
+    liquidate.amountUSD,
   );
   updateProtocol(BIGDECIMAL_ZERO, BIGDECIMAL_ZERO, liquidate.amountUSD);
   updateFinancialsSnapshot(
     event,
     BIGDECIMAL_ZERO,
     BIGDECIMAL_ZERO,
-    liquidate.amountUSD
+    liquidate.amountUSD,
   );
 }
 
@@ -1247,7 +1249,7 @@ export function handleSpotFileMat(event: SpotNoteEvent): void {
     if (ilk.toString() == "TELEPORT-FW-A") {
       log.info(
         "[handleVatSlip] Skip ilk={} (DAI Teleport: https://github.com/makerdao/dss-teleport)",
-        [ilk.toString()]
+        [ilk.toString()],
       );
       return;
     }
@@ -1262,7 +1264,7 @@ export function handleSpotFileMat(event: SpotNoteEvent): void {
 
     // 3rd arg: start = 4 + 2 * 32, end = start + 32
     const mat = bytesToUnsignedBigInt(
-      extractCallData(event.params.data, 68, 100)
+      extractCallData(event.params.data, 68, 100),
     );
     log.info("[handleSpotFileMat]ilk={}, market={}, mat={}", [
       ilk.toString(),
@@ -1276,7 +1278,7 @@ export function handleSpotFileMat(event: SpotNoteEvent): void {
     if (mat != BIGINT_ZERO) {
       // mat for the SAI market is 0 and can not be used as deonimnator
       market.maximumLTV = BIGDECIMAL_ONE_HUNDRED.div(
-        bigIntToBDUseDecimals(mat, RAY)
+        bigIntToBDUseDecimals(mat, RAY),
       ).div(bigIntToBDUseDecimals(par, RAY));
       market.liquidationThreshold = market.maximumLTV;
     }
@@ -1299,7 +1301,7 @@ export function handleSpotFilePar(event: SpotNoteEvent): void {
       if (mat != BIGINT_ZERO) {
         // mat is 0 for the SAI market
         market.maximumLTV = BIGDECIMAL_ONE_HUNDRED.div(
-          bigIntToBDUseDecimals(mat, RAY)
+          bigIntToBDUseDecimals(mat, RAY),
         ).div(bigIntToBDUseDecimals(par, RAY));
         market.liquidationThreshold = market.maximumLTV;
         market.save();
@@ -1314,7 +1316,7 @@ export function handleSpotPoke(event: PokeEvent): void {
   if (ilk.toString() == "TELEPORT-FW-A") {
     log.info(
       "[handleVatSlip] Skip ilk={} (DAI Teleport: https://github.com/makerdao/dss-teleport)",
-      [ilk.toString()]
+      [ilk.toString()],
     );
     return;
   }
@@ -1329,7 +1331,7 @@ export function handleSpotPoke(event: PokeEvent): void {
 
   const tokenPriceUSD = bigIntToBDUseDecimals(
     bytesToUnsignedBigInt(event.params.val),
-    WAD
+    WAD,
   );
   market.inputTokenPriceUSD = tokenPriceUSD;
   market.save();
@@ -1348,7 +1350,7 @@ export function handleSpotPoke(event: PokeEvent): void {
       market.id,
       tokenPriceUSD.toString(),
       token.lastPriceUSD!.toString(),
-    ]
+    ],
   );
 }
 
@@ -1357,7 +1359,7 @@ export function handleJugFileDuty(event: JugNoteEvent): void {
   if (ilk.toString() == "TELEPORT-FW-A") {
     log.info(
       "[handleJugFileDuty] Skip ilk={} (DAI Teleport: https://github.com/makerdao/dss-teleport)",
-      [ilk.toString()]
+      [ilk.toString()],
     );
     return;
   }
@@ -1376,13 +1378,13 @@ export function handleJugFileDuty(event: JugNoteEvent): void {
     const base = jugContract.base();
     const duty = jugContract.ilks(ilk).value0;
     const rate = bigIntToBDUseDecimals(base.plus(duty), RAY).minus(
-      BIGDECIMAL_ONE
+      BIGDECIMAL_ONE,
     );
     let rateAnnualized = BIGDECIMAL_ZERO;
     if (rate.gt(BIGDECIMAL_ZERO)) {
       rateAnnualized = bigDecimalExponential(
         rate,
-        SECONDS_PER_YEAR_BIGDECIMAL
+        SECONDS_PER_YEAR_BIGDECIMAL,
       ).times(BIGDECIMAL_ONE_HUNDRED);
     }
     log.info(
@@ -1392,7 +1394,7 @@ export function handleJugFileDuty(event: JugNoteEvent): void {
         duty.toString(),
         rate.toString(),
         rateAnnualized.toString(),
-      ]
+      ],
     );
 
     const interestRateID =
@@ -1400,7 +1402,7 @@ export function handleJugFileDuty(event: JugNoteEvent): void {
     const interestRate = getOrCreateInterestRate(
       market.id,
       InterestRateSide.BORROW,
-      InterestRateType.STABLE
+      InterestRateType.STABLE,
     );
     interestRate.rate = rateAnnualized;
     interestRate.save();
@@ -1422,12 +1424,12 @@ export function handlePotFileVow(event: PotNoteEvent): void {
       "MCD POT",
       DAI_ADDRESS,
       event.block.number,
-      event.block.timestamp
+      event.block.timestamp,
     );
 
     log.info(
       "[handlePotFileVow] Create market {} for Pot Contract; supply side revenue is accrued to this market",
-      [market.id]
+      [market.id],
     );
   }
 
@@ -1437,7 +1439,7 @@ export function handlePotFileVow(event: PotNoteEvent): void {
   const _chiID = event.address.toHexString();
   log.info(
     "[handlePotFileVow] Save values for dsr calculation: chi={}, rho={}",
-    [chiValue.toString(), rhoValue.toString()]
+    [chiValue.toString(), rhoValue.toString()],
   );
   const _chi = getOrCreateChi(_chiID);
   _chi.chi = chiValue;
@@ -1458,7 +1460,7 @@ export function handlePotFileDsr(event: PotNoteEvent): void {
     if (rate.gt(BIGDECIMAL_ZERO)) {
       rateAnnualized = bigDecimalExponential(
         rate,
-        SECONDS_PER_YEAR_BIGDECIMAL
+        SECONDS_PER_YEAR_BIGDECIMAL,
       ).times(BIGDECIMAL_ONE_HUNDRED);
     }
 
@@ -1468,7 +1470,7 @@ export function handlePotFileDsr(event: PotNoteEvent): void {
     const interestRate = getOrCreateInterestRate(
       market.id,
       InterestRateSide.LENDER,
-      InterestRateType.STABLE
+      InterestRateType.STABLE,
     );
     interestRate.rate = rateAnnualized;
     interestRate.save();
@@ -1497,7 +1499,7 @@ export function handlePotDrip(event: PotNoteEvent): void {
 
   const chiValueDiff = chiValueOnChain.minus(chiValuePrev);
   const newSupplySideRevenue = bigIntToBDUseDecimals(Pie, WAD).times(
-    bigIntToBDUseDecimals(chiValueDiff, RAY)
+    bigIntToBDUseDecimals(chiValueDiff, RAY),
   );
 
   // dsr all goes to supply side, so totalrevenue = supplyside revenue in this call
@@ -1512,7 +1514,7 @@ export function handlePotDrip(event: PotNoteEvent): void {
       _chi.rho.toString(),
       now.minus(_chi.rho).toString(),
       newSupplySideRevenue.toString(),
-    ]
+    ],
   );
 
   _chi.chi = chiValueOnChain;
@@ -1584,7 +1586,7 @@ export function handleCdpGive(event: CdpNoteEvent): void {
     srcUrn,
     PositionSide.LENDER,
     srcAccountAddress,
-    dstAccountOwner
+    dstAccountOwner,
   );
   transferPosition(
     event,
@@ -1593,7 +1595,7 @@ export function handleCdpGive(event: CdpNoteEvent): void {
     srcUrn,
     PositionSide.BORROWER,
     srcAccountAddress,
-    dstAccountOwner
+    dstAccountOwner,
   );
 }
 
@@ -1622,7 +1624,7 @@ export function handleCdpShift(event: CdpNoteEvent): void {
       dstUrnAddress,
       dstIlk.toString(),
       event.transaction.hash.toHexString(),
-    ]
+    ],
   );
 
   transferPosition(
@@ -1630,14 +1632,14 @@ export function handleCdpShift(event: CdpNoteEvent): void {
     srcIlk,
     srcUrnAddress,
     dstUrnAddress,
-    PositionSide.LENDER
+    PositionSide.LENDER,
   );
   transferPosition(
     event,
     srcIlk,
     srcUrnAddress,
     dstUrnAddress,
-    PositionSide.BORROWER
+    PositionSide.BORROWER,
   );
 }
 
@@ -1673,7 +1675,7 @@ export function handleCdpFlux(event: CdpNoteEvent): void {
   const dst = bytes32ToAddress(event.params.arg2).toHexString();
   // 3rd arg: start = 4 + 2 * 32, end = start + 32
   const wad = bytesToUnsignedBigInt(
-    extractCallData(event.params.data, 68, 100)
+    extractCallData(event.params.data, 68, 100),
   );
   if (wad == BIGINT_ZERO) {
     log.info("[handleCdpFlux]wad = 0, skip transferring position", []);
@@ -1688,7 +1690,7 @@ export function handleCdpFlux(event: CdpNoteEvent): void {
 
   log.info(
     "[handleCdpFlux]transfer {} collateral from src {} to dst {} for ilk {}",
-    [wad.toString(), src, dst, ilk.toString()]
+    [wad.toString(), src, dst, ilk.toString()],
   );
   transferPosition(
     event,
@@ -1698,7 +1700,7 @@ export function handleCdpFlux(event: CdpNoteEvent): void {
     PositionSide.LENDER,
     null,
     null,
-    transferAmount
+    transferAmount,
   );
 }
 
@@ -1708,7 +1710,7 @@ export function handleCdpMove(event: CdpNoteEvent): void {
   const dst = bytes32ToAddress(event.params.arg2).toHexString();
   // 3rd arg: start = 4 + 2 * 32, end = start + 32
   const rad = bytesToUnsignedBigInt(
-    extractCallData(event.params.data, 68, 100)
+    extractCallData(event.params.data, 68, 100),
   );
   if (rad == BIGINT_ZERO) {
     log.info("[handleCdpMove]wad = 0, skip transferring position", []);
@@ -1735,7 +1737,7 @@ export function handleCdpMove(event: CdpNoteEvent): void {
     PositionSide.BORROWER,
     null,
     null,
-    transferAmount
+    transferAmount,
   );
 }
 
@@ -1774,7 +1776,7 @@ function _handleSwapFee(event: ethereum.Event, feeUSD: BigDecimal): void {
     marketID,
     feeUSD,
     BIGDECIMAL_ZERO,
-    ProtocolSideRevenueType.PSM
+    ProtocolSideRevenueType.PSM,
   );
 }
 
@@ -1786,7 +1788,7 @@ export function getMigrationCaller(
   u: string,
   v: string,
   w: string,
-  event: ethereum.Event
+  event: ethereum.Event,
 ): string | null {
   if (!(u == v && u == w && w == v)) return null;
   const owner = event.transaction.from.toHexString();

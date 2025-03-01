@@ -10,7 +10,7 @@ export class MsgPoolParams {
   constructor(
     swapFee: BigDecimal = constants.BIGDECIMAL_ZERO,
     exitFee: BigDecimal = constants.BIGDECIMAL_ZERO,
-    smoothWeightChangeParams: string | null = null
+    smoothWeightChangeParams: string | null = null,
   ) {
     this.swapFee = swapFee;
     this.exitFee = exitFee;
@@ -52,7 +52,7 @@ export class MsgPoolAssets {
 
   constructor(
     token: MsgToken | null = null,
-    weight: BigInt = constants.BIGINT_ZERO
+    weight: BigInt = constants.BIGINT_ZERO,
   ) {
     this.token = token;
     this.weight = weight;
@@ -127,7 +127,7 @@ export class MsgCreateBalancerPool {
     sender: string = "",
     poolParams: MsgPoolParams | null = null,
     poolAssets: Array<MsgPoolAssets> = [],
-    future_pool_governor: string = ""
+    future_pool_governor: string = "",
   ) {
     this.sender = sender;
     this.poolParams = poolParams;
@@ -152,7 +152,7 @@ export class MsgCreateBalancerPool {
 
         case 3:
           message.poolAssets.push(
-            MsgPoolAssets.decode(reader, reader.uint32())
+            MsgPoolAssets.decode(reader, reader.uint32()),
           );
           break;
 
@@ -180,7 +180,7 @@ export class MsgJoinPool {
     sender: string = "",
     poolId: BigInt = constants.BIGINT_ZERO,
     shareOutAmount: BigInt = constants.BIGINT_ZERO,
-    tokenInMaxs: Array<MsgToken> = []
+    tokenInMaxs: Array<MsgToken> = [],
   ) {
     this.sender = sender;
     this.poolId = poolId;
@@ -231,7 +231,7 @@ export class MsgJoinSwapExternAmountIn {
     sender: string = "",
     poolId: BigInt = constants.BIGINT_ZERO,
     tokenIn: MsgToken | null = null,
-    shareOutMinAmount: BigInt = constants.BIGINT_ZERO
+    shareOutMinAmount: BigInt = constants.BIGINT_ZERO,
   ) {
     this.sender = sender;
     this.poolId = poolId;
@@ -284,7 +284,7 @@ export class MsgJoinSwapShareAmountOut {
     poolId: BigInt = constants.BIGINT_ZERO,
     tokenInDenom: string = "",
     shareOutAmount: BigInt = constants.BIGINT_ZERO,
-    tokenInMaxAmount: BigInt = constants.BIGINT_ZERO
+    tokenInMaxAmount: BigInt = constants.BIGINT_ZERO,
   ) {
     this.sender = sender;
     this.poolId = poolId;
@@ -340,7 +340,7 @@ export class MsgExitPool {
     sender: string = "",
     poolId: BigInt = constants.BIGINT_ZERO,
     shareInAmount: BigInt = constants.BIGINT_ZERO,
-    tokenOutMins: Array<MsgToken> = []
+    tokenOutMins: Array<MsgToken> = [],
   ) {
     this.sender = sender;
     this.poolId = poolId;
@@ -391,7 +391,7 @@ export class MsgExitSwapExternAmountOut {
     sender: string = "",
     poolId: BigInt = constants.BIGINT_ZERO,
     tokenOut: MsgToken | null = null,
-    shareInMaxAmount: BigInt = constants.BIGINT_ZERO
+    shareInMaxAmount: BigInt = constants.BIGINT_ZERO,
   ) {
     this.sender = sender;
     this.poolId = poolId;
@@ -444,7 +444,7 @@ export class MsgExitSwapShareAmountIn {
     poolId: BigInt = constants.BIGINT_ZERO,
     tokenOutDenom: string = "",
     shareInAmount: BigInt = constants.BIGINT_ZERO,
-    tokenOutMinAmount: BigInt = constants.BIGINT_ZERO
+    tokenOutMinAmount: BigInt = constants.BIGINT_ZERO,
   ) {
     this.sender = sender;
     this.poolId = poolId;

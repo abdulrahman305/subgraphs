@@ -57,16 +57,16 @@ export namespace RewardIntervalType {
 // 86400 = 1 Day
 export const RATE_IN_SECONDS = 86400;
 export const RATE_IN_SECONDS_BD = BigDecimal.fromString(
-  RATE_IN_SECONDS.toString()
+  RATE_IN_SECONDS.toString(),
 );
 
 // Estimated seconds per block of the protocol
 export const STARTING_BLOCKS_PER_DAY = RATE_IN_SECONDS_BD.div(
-  getStartingBlockRate()
+  getStartingBlockRate(),
 );
 
 export const WINDOW_SIZE_SECONDS_BD = BigDecimal.fromString(
-  WINDOW_SIZE_SECONDS.toString()
+  WINDOW_SIZE_SECONDS.toString(),
 );
 
 // Call this function in event handlers frequently enough so that it calls on blocks frequently enough
@@ -81,7 +81,7 @@ export function getRewardsPerDay(
   currentTimestamp: BigInt,
   currentBlockNumber: BigInt,
   rewardRate: BigDecimal,
-  rewardType: string
+  rewardType: string,
 ): BigDecimal {
   const circularBuffer = getOrCreateCircularBuffer();
 
@@ -93,7 +93,7 @@ export function getRewardsPerDay(
 
   // Interval between index and the index of the start of the window block
   const windowWidth = abs(
-    circularBuffer.windowStartIndex - circularBuffer.nextIndex
+    circularBuffer.windowStartIndex - circularBuffer.nextIndex,
   );
   if (windowWidth == INT_ZERO) {
     if (circularBuffer.nextIndex >= circularBuffer.bufferSize) {
@@ -181,24 +181,23 @@ export function getRewardsPerDay(
 
   // Wideness of the window in seconds.
   const windowSecondsCount = BigDecimal.fromString(
-    (currentTimestampI32 - blocks[circularBuffer.windowStartIndex]).toString()
+    (currentTimestampI32 - blocks[circularBuffer.windowStartIndex]).toString(),
   );
 
   // Wideness of the window in blocks.
   const windowBlocksCount = BigDecimal.fromString(
     (
       currentBlockNumberI32 - blocks[circularBuffer.windowStartIndex + INT_ONE]
-    ).toString()
+    ).toString(),
   );
 
   // Estimate block speed for the window in seconds.
-  const unnormalizedBlockSpeed = WINDOW_SIZE_SECONDS_BD.div(
-    windowSecondsCount
-  ).times(windowBlocksCount);
+  const unnormalizedBlockSpeed =
+    WINDOW_SIZE_SECONDS_BD.div(windowSecondsCount).times(windowBlocksCount);
 
   // block speed converted to specified rate.
   const normalizedBlockSpeed = RATE_IN_SECONDS_BD.div(
-    WINDOW_SIZE_SECONDS_BD
+    WINDOW_SIZE_SECONDS_BD,
   ).times(unnormalizedBlockSpeed);
 
   // Update BlockTracker with new values.
@@ -283,7 +282,7 @@ function getStartingBlockRate(): BigDecimal {
 
 export function getAuraMintAmount(
   rewardTokenAddr: Address,
-  rewardRate: BigInt
+  rewardRate: BigInt,
 ): BigDecimal {
   // https://github.com/aurafinance/aura-contracts/blob/9fadc49b63f329333701bba28de801109dd5c44d/contracts/core/Aura.sol#L82
 
@@ -291,29 +290,29 @@ export function getAuraMintAmount(
 
   const totalSupply = readValue<BigInt>(
     rewardTokenContract.try_totalSupply(),
-    BIGINT_ZERO
+    BIGINT_ZERO,
   ).toBigDecimal();
   const totalCliffs = readValue<BigInt>(
     rewardTokenContract.try_totalCliffs(),
-    BIGINT_ZERO
+    BIGINT_ZERO,
   ).toBigDecimal();
   const reductionPerCliff = readValue<BigInt>(
     rewardTokenContract.try_reductionPerCliff(),
-    BIGINT_ZERO
+    BIGINT_ZERO,
   ).toBigDecimal();
   const maxSupply = readValue<BigInt>(
     rewardTokenContract.try_EMISSIONS_MAX_SUPPLY(),
-    BIGINT_ZERO
+    BIGINT_ZERO,
   ).toBigDecimal();
   const initMint = readValue<BigInt>(
     rewardTokenContract.try_INIT_MINT_AMOUNT(),
-    BIGINT_ZERO
+    BIGINT_ZERO,
   ).toBigDecimal();
 
   let auraMintAmount = BIGDECIMAL_ZERO;
 
   const remainingCliff = totalCliffs.minus(
-    totalSupply.minus(initMint).div(reductionPerCliff)
+    totalSupply.minus(initMint).div(reductionPerCliff),
   );
   if (remainingCliff > BIGDECIMAL_ZERO) {
     auraMintAmount = rewardRate
@@ -322,7 +321,7 @@ export function getAuraMintAmount(
         remainingCliff
           .times(BigInt.fromI32(5).toBigDecimal())
           .div(BigInt.fromI32(2).toBigDecimal())
-          .plus(BigInt.fromI32(700).toBigDecimal())
+          .plus(BigInt.fromI32(700).toBigDecimal()),
       )
       .div(totalCliffs);
 

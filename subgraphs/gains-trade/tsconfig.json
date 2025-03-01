@@ -3,6 +3,9 @@
   "compilerOptions": {
     "target": "es5"
   },
-  "include": ["src", "protocols/gains-trade/config/deployments/gains-trade-polygon/syntheticTokens.ts"],
+  "include": [
+    "src",
+    "protocols/gains-trade/config/deployments/gains-trade-polygon/syntheticTokens.ts"
+  ],
   "exclude": ["node_modules"]
 }

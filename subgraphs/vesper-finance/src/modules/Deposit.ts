@@ -27,7 +27,7 @@ export function createDepositTransaction(
   amount: BigInt,
   amountUSD: BigDecimal,
   transaction: ethereum.Transaction,
-  block: ethereum.Block
+  block: ethereum.Block,
 ): DepositTransaction {
   let transactionId = "deposit-" + transaction.hash.toHexString();
 
@@ -79,7 +79,7 @@ export function Deposit(
   depositAmount: BigInt,
   sharesMinted: BigInt,
   transaction: ethereum.Transaction,
-  block: ethereum.Block
+  block: ethereum.Block,
 ): void {
   const vault = getOrCreateVault(vaultAddress, block);
   let vaultContract = VaultContract.bind(vaultAddress);
@@ -97,23 +97,23 @@ export function Deposit(
 
   vault.outputTokenSupply = utils.readValue<BigInt>(
     vaultContract.try_totalSupply(),
-    constants.BIGINT_ZERO
+    constants.BIGINT_ZERO,
   );
 
   let totalValue = utils.readValue<BigInt>(
     vaultContract.try_totalValue(),
-    constants.BIGINT_ZERO
+    constants.BIGINT_ZERO,
   );
 
   if (totalValue.equals(constants.BIGINT_ZERO)) {
     let vaultTokenLocked = utils.readValue<BigInt>(
       vaultContract.try_tokenLocked(),
-      constants.BIGINT_ZERO
+      constants.BIGINT_ZERO,
     );
 
     let tokenInVault = utils.readValue<BigInt>(
       vaultContract.try_tokensHere(),
-      constants.BIGINT_ZERO
+      constants.BIGINT_ZERO,
     );
 
     totalValue = vaultTokenLocked.plus(tokenInVault);
@@ -137,7 +137,7 @@ export function Deposit(
     depositAmount,
     depositAmountUSD,
     transaction,
-    block
+    block,
   );
 
   utils.updateProtocolTotalValueLockedUSD();
@@ -151,6 +151,6 @@ export function Deposit(
       depositAmount.toString(),
       depositAmountUSD.toString(),
       transaction.hash.toHexString(),
-    ]
+    ],
   );
 }

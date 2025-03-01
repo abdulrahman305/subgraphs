@@ -96,7 +96,7 @@ export namespace UsageType {
 export const ZERO_ADDRESS = "0x0000000000000000000000000000000000000000";
 export const ADDRESS_ZERO = Address.fromString(ZERO_ADDRESS);
 export const ETH_ADDRESS = Address.fromString(
-  "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE"
+  "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE",
 );
 
 ////////////////////////
@@ -117,7 +117,7 @@ export const BIGINT_HUNDRED = BigInt.fromI32(100);
 export const BIGINT_THOUSAND = BigInt.fromI32(1000);
 export const BIGINT_TEN_TO_EIGHTEENTH = BigInt.fromString("10").pow(18);
 export const BIGINT_MAX = BigInt.fromString(
-  "115792089237316195423570985008687907853269984665640564039457584007913129639935"
+  "115792089237316195423570985008687907853269984665640564039457584007913129639935",
 );
 
 export const BIGDECIMAL_ZERO = new BigDecimal(BIGINT_ZERO);
@@ -131,7 +131,7 @@ export const SECONDS_PER_HOUR = 60 * 60; // 3600
 export const MS_PER_DAY = new BigDecimal(BigInt.fromI32(24 * 60 * 60 * 1000));
 export const DAYS_PER_YEAR = new BigDecimal(BigInt.fromI32(365));
 export const MS_PER_YEAR = DAYS_PER_YEAR.times(
-  new BigDecimal(BigInt.fromI32(24 * 60 * 60 * 1000))
+  new BigDecimal(BigInt.fromI32(24 * 60 * 60 * 1000)),
 );
 export const SNAPSHOT_SECONDS = SECONDS_PER_DAY;
 
@@ -148,31 +148,31 @@ export const ETH_NAME = "ETH";
 
 export const FEE_DENOMINATOR_DECIMALS = 10;
 export const FACTORY_ADDRESS = Address.fromString(
-  "0xf65BEd27e96a367c61e0E06C54e14B16b84a5870"
+  "0xf65BEd27e96a367c61e0E06C54e14B16b84a5870",
 );
 export const PANCAKE_FACTORY_ADDRESS = Address.fromString(
-  "0xcA143Ce32Fe78f1f7019d7d551a6402fC5350c73"
+  "0xcA143Ce32Fe78f1f7019d7d551a6402fC5350c73",
 );
 export const WBNB_ADDRESS = Address.fromString(
-  "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c"
+  "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c",
 );
 export const BUSD_ADDRESS = Address.fromString(
-  "0xe9e7CEA3DedcA5984780Bafc599bD69ADd087D56"
+  "0xe9e7CEA3DedcA5984780Bafc599bD69ADd087D56",
 );
 export const USDC_ADDRESS = Address.fromString(
-  "0x8AC76a51cc950d9822D68b83fE1Ad97B32Cd580d"
+  "0x8AC76a51cc950d9822D68b83fE1Ad97B32Cd580d",
 );
 export const BBTC_ADDRESS = Address.fromString(
-  "0x7130d2A12B9BCbFAe4f2634d864A1Ee1Ce3Ead9c"
+  "0x7130d2A12B9BCbFAe4f2634d864A1Ee1Ce3Ead9c",
 );
 export const EPS_ADDRESS = Address.fromString(
-  "0xA7f552078dcC247C2684336020c03648500C6d9F"
+  "0xA7f552078dcC247C2684336020c03648500C6d9F",
 );
 export const EPX_ADDRESS = Address.fromString(
-  "0xaf41054c1487b0e5e2b9250c0332ecbce6ce9d71"
+  "0xaf41054c1487b0e5e2b9250c0332ecbce6ce9d71",
 );
 export const REGISTRY_ADDRESS = Address.fromString(
-  "0x266Bb386252347b03C7B6eB37F950f476D7c3E63"
+  "0x266Bb386252347b03C7B6eB37F950f476D7c3E63",
 );
 export const STAKING_V1 = "0xcce949De564fE60e7f96C85e55177F8B9E4CF61b";
 export const STAKING_V2 = "0x5B74C99AA2356B4eAa7B85dC486843eDff8Dfdbe";
@@ -180,27 +180,27 @@ export const STAKING_V2 = "0x5B74C99AA2356B4eAa7B85dC486843eDff8Dfdbe";
 export const POOL_LP_TOKEN_MAP = new Map<string, Address>();
 POOL_LP_TOKEN_MAP.set(
   "0x160CAed03795365F3A589f10C379FfA7d75d4E76".toLowerCase(),
-  Address.fromString("0xaF4dE8E872131AE328Ce21D909C74705d3Aaf452")
+  Address.fromString("0xaF4dE8E872131AE328Ce21D909C74705d3Aaf452"),
 );
 POOL_LP_TOKEN_MAP.set(
   "0x2477fB288c5b4118315714ad3c7Fd7CC69b00bf9".toLowerCase(),
-  Address.fromString("0x2a435Ecb3fcC0E316492Dc1cdd62d0F189be5640")
+  Address.fromString("0x2a435Ecb3fcC0E316492Dc1cdd62d0F189be5640"),
 );
 POOL_LP_TOKEN_MAP.set(
   "0x19EC9e3F7B21dd27598E7ad5aAe7dC0Db00A806d".toLowerCase(),
-  Address.fromString("0x5b5bD8913D766D005859CE002533D4838B0Ebbb5")
+  Address.fromString("0x5b5bD8913D766D005859CE002533D4838B0Ebbb5"),
 );
 POOL_LP_TOKEN_MAP.set(
   "0xfA715E7C8fA704Cf425Dd7769f4a77b81420fbF2".toLowerCase(),
-  Address.fromString("0xdC7f3E34C43f8700B0EB58890aDd03AA84F7B0e1")
+  Address.fromString("0xdC7f3E34C43f8700B0EB58890aDd03AA84F7B0e1"),
 );
 
 export const BASE_POOL_MAP = new Map<Address, Address>();
 BASE_POOL_MAP.set(
   Address.fromString(
-    "0x5A7d2F9595eA00938F3B5BA1f97a85274f20b96c".toLowerCase()
+    "0x5A7d2F9595eA00938F3B5BA1f97a85274f20b96c".toLowerCase(),
   ),
-  Address.fromString("0x160CAed03795365F3A589f10C379FfA7d75d4E76")
+  Address.fromString("0x160CAed03795365F3A589f10C379FfA7d75d4E76"),
 );
 
 export const ELLIPSIS_PLATFORM_ID = "ellipsis";
@@ -217,10 +217,10 @@ export namespace PoolType {
 
 export const EARLY_BASEPOOLS: Address[] = [
   Address.fromString(
-    "0x160CAed03795365F3A589f10C379FfA7d75d4E76".toLowerCase()
+    "0x160CAed03795365F3A589f10C379FfA7d75d4E76".toLowerCase(),
   ),
   Address.fromString(
-    "0x2477fB288c5b4118315714ad3c7Fd7CC69b00bf9".toLowerCase()
+    "0x2477fB288c5b4118315714ad3c7Fd7CC69b00bf9".toLowerCase(),
   ),
 ];
 
@@ -248,7 +248,9 @@ export const FEE_DENOMINATOR = BigDecimal.fromString("10000000000");
 export const DEFAULT_POOL_FEE = BigInt.fromString("4000000");
 export const DEFAULT_ADMIN_FEE = BigInt.fromString("5000000000");
 
-export const REGISTRY_ADDRESS_V2 = Address.fromString("0x266Bb386252347b03C7B6eB37F950f476D7c3E63");
+export const REGISTRY_ADDRESS_V2 = Address.fromString(
+  "0x266Bb386252347b03C7B6eB37F950f476D7c3E63",
+);
 export const EPS_POOL_ADDRESS = Address.fromString(
-  "0x19ec9e3f7b21dd27598e7ad5aae7dc0db00a806d"
+  "0x19ec9e3f7b21dd27598e7ad5aae7dc0db00a806d",
 );

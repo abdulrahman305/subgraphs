@@ -35,7 +35,7 @@ export function getOrCreateMarket(tokenAddr: Address): Market {
   let market = Market.load(ACTIVE_POOL + "-" + tokenAddr.toHexString());
   if (!market) {
     market = new Market(ACTIVE_POOL + "-" + tokenAddr.toHexString());
-    const token = getOrCreateToken(tokenAddr)
+    const token = getOrCreateToken(tokenAddr);
     market.protocol = getOrCreateYetiProtocol().id;
     market.name = token.name;
     market.isActive = true;
@@ -53,11 +53,11 @@ export function getOrCreateMarket(tokenAddr: Address): Market {
     market.createdBlockNumber = ACTIVE_POOL_CREATED_BLOCK;
     market.totalValueLockedUSD = BIGDECIMAL_ZERO;
     market.totalDepositBalanceUSD = BIGDECIMAL_ZERO;
-    market.cumulativeBorrowUSD = BIGDECIMAL_ZERO
-    market.cumulativeDepositUSD = BIGDECIMAL_ZERO
-    market.cumulativeLiquidateUSD = BIGDECIMAL_ZERO
-    market.totalBorrowBalanceUSD = BIGDECIMAL_ZERO
-    market.outputTokenPriceUSD = BIGDECIMAL_ZERO
+    market.cumulativeBorrowUSD = BIGDECIMAL_ZERO;
+    market.cumulativeDepositUSD = BIGDECIMAL_ZERO;
+    market.cumulativeLiquidateUSD = BIGDECIMAL_ZERO;
+    market.totalBorrowBalanceUSD = BIGDECIMAL_ZERO;
+    market.outputTokenPriceUSD = BIGDECIMAL_ZERO;
     market.save();
   }
   return market;
@@ -65,7 +65,7 @@ export function getOrCreateMarket(tokenAddr: Address): Market {
 
 export function getOrCreateMarketSnapshot(
   event: ethereum.Event,
-  market: Market
+  market: Market,
 ): MarketDailySnapshot {
   const day: i64 = event.block.timestamp.toI64() / SECONDS_PER_DAY;
   const id = `${market.id}-${day}`;
@@ -92,14 +92,13 @@ export function getOrCreateMarketSnapshot(
   marketSnapshot.blockNumber = event.block.number;
   marketSnapshot.timestamp = event.block.timestamp;
 
-
   marketSnapshot.save();
   return marketSnapshot;
 }
 
 export function getOrCreateMarketHourlySnapshot(
   event: ethereum.Event,
-  market: Market
+  market: Market,
 ): MarketHourlySnapshot {
   const timestamp = event.block.timestamp.toI64();
   const hour: i64 = timestamp / SECONDS_PER_HOUR;
@@ -132,7 +131,7 @@ export function getOrCreateMarketHourlySnapshot(
 
 export function setMarketYUSDDebt(
   event: ethereum.Event,
-  debtYUSD: BigInt
+  debtYUSD: BigInt,
 ): void {
   const debtUSD = bigIntToBigDecimal(debtYUSD);
   updateProtocolBorrowBalance(event, debtUSD, debtYUSD);
@@ -141,7 +140,7 @@ export function setMarketYUSDDebt(
 export function setMarketAssetBalance(
   event: ethereum.Event,
   balance: BigInt,
-  tokenAddr: Address
+  tokenAddr: Address,
 ): void {
   const tokenPrice = getUSDPrice(tokenAddr);
   const token = getOrCreateToken(tokenAddr);
@@ -164,7 +163,7 @@ export function setMarketAssetBalance(
 export function addMarketDepositVolume(
   event: ethereum.Event,
   depositedUSD: BigDecimal,
-  token: Address
+  token: Address,
 ): void {
   const market = getOrCreateMarket(token);
   market.cumulativeDepositUSD = market.cumulativeDepositUSD.plus(depositedUSD);
@@ -183,7 +182,7 @@ export function addMarketDepositVolume(
 export function addMarketLiquidateVolume(
   event: ethereum.Event,
   liquidatedUSD: BigDecimal,
-  token: Address
+  token: Address,
 ): void {
   const market = getOrCreateMarket(token);
   market.cumulativeLiquidateUSD =
@@ -203,7 +202,7 @@ export function addMarketLiquidateVolume(
 export function addMarketBorrowVolume(
   event: ethereum.Event,
   borrowedUSD: BigDecimal,
-  token: Address
+  token: Address,
 ): void {
   const market = getOrCreateMarket(token);
   market.cumulativeBorrowUSD = market.cumulativeBorrowUSD.plus(borrowedUSD);

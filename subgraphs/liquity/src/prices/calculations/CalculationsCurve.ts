@@ -5,7 +5,7 @@ import { Address, BigDecimal, BigInt } from "@graphprotocol/graph-ts";
 import { CalculationsCurve as CalculationsCurveContract } from "../../../generated/TroveManager/CalculationsCurve";
 
 export function getCalculationsCurveContract(
-  contractAddress: Address
+  contractAddress: Address,
 ): CalculationsCurveContract | null {
   if (utils.isNullAddress(contractAddress)) return null;
 
@@ -19,19 +19,19 @@ export function getTokenPriceUSDC(tokenAddr: Address): CustomPriceType {
     return new CustomPriceType();
 
   const calculationCurveContract = getCalculationsCurveContract(
-    config.curveCalculations()
+    config.curveCalculations(),
   );
   if (!calculationCurveContract) return new CustomPriceType();
 
   const tokenPrice: BigDecimal = utils
     .readValue<BigInt>(
       calculationCurveContract.try_getCurvePriceUsdc(tokenAddr),
-      constants.BIGINT_ZERO
+      constants.BIGINT_ZERO,
     )
     .toBigDecimal();
 
   return CustomPriceType.initialize(
     tokenPrice,
-    constants.DEFAULT_USDC_DECIMALS
+    constants.DEFAULT_USDC_DECIMALS,
   );
 }

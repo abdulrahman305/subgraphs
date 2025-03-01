@@ -6,7 +6,7 @@ import { ChainLinkContract } from "../../../generated/templates/Strategy/ChainLi
 
 export function getTokenPriceUSDC(
   tokenAddr: Address,
-  block: ethereum.Block | null = null
+  block: ethereum.Block | null = null,
 ): CustomPriceType {
   const config = utils.getConfig();
   const contractAddress = utils.getContract(config.chainLink(), block);
@@ -16,22 +16,22 @@ export function getTokenPriceUSDC(
   const chainLinkContract = ChainLinkContract.bind(contractAddress);
   const result = chainLinkContract.try_latestRoundData(
     tokenAddr,
-    constants.CHAIN_LINK_USD_ADDRESS
+    constants.CHAIN_LINK_USD_ADDRESS,
   );
 
   if (!result.reverted) {
     const decimals = utils.readValue<i32>(
       chainLinkContract.try_decimals(
         tokenAddr,
-        constants.CHAIN_LINK_USD_ADDRESS
+        constants.CHAIN_LINK_USD_ADDRESS,
       ),
-      constants.DEFAULT_USDC_DECIMALS
+      constants.DEFAULT_USDC_DECIMALS,
     );
 
     return CustomPriceType.initialize(
       result.value.value1.toBigDecimal(),
       decimals,
-      constants.OracleType.CHAINLINK_FEED
+      constants.OracleType.CHAINLINK_FEED,
     );
   }
 

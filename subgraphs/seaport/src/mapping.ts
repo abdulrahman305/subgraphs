@@ -45,7 +45,7 @@ class Sale {
     public readonly seller: Address,
     public readonly nfts: NFTs,
     public readonly money: Money,
-    public readonly fees: Fees
+    public readonly fees: Fees,
   ) {}
 }
 
@@ -54,7 +54,7 @@ class NFTs {
     public readonly collection: Address,
     public readonly standard: string,
     public readonly tokenIds: Array<BigInt>,
-    public readonly amounts: Array<BigInt>
+    public readonly amounts: Array<BigInt>,
   ) {}
 }
 
@@ -65,7 +65,7 @@ class Money {
 class Fees {
   constructor(
     public readonly protocolRevenue: BigInt,
-    public readonly creatorRevenue: BigInt
+    public readonly creatorRevenue: BigInt,
   ) {}
 }
 
@@ -102,7 +102,7 @@ export function handleOrderFulfilled(event: OrderFulfilled): void {
     offerer,
     recipient,
     offer,
-    consideration
+    consideration,
   );
   if (!saleResult) {
     return;
@@ -119,7 +119,7 @@ export function handleOrderFulfilled(event: OrderFulfilled): void {
     .times(BIGDECIMAL_HUNDRED);
   const totalNftAmount = saleResult.nfts.amounts.reduce(
     (acc, curr) => acc.plus(curr),
-    BIGINT_ZERO
+    BIGINT_ZERO,
   );
   const volumeETH = saleResult.money.amount.toBigDecimal().div(MANTISSA_FACTOR);
   const priceETH = volumeETH.div(totalNftAmount.toBigDecimal());
@@ -152,7 +152,7 @@ export function handleOrderFulfilled(event: OrderFulfilled): void {
     trade.priceETH = priceETH;
     trade.amount = saleResult.nfts.amounts[i];
     // if it is a basic order then STANDARD_SALE
-    // otherwise ANY_ITEM_FROM_SET. 
+    // otherwise ANY_ITEM_FROM_SET.
     // TODO: ANY_ITEM_FROM_SET correct strategy? Cannot find docs on how to decide
     trade.strategy = tradeStrategy(event);
     trade.buyer = buyer;
@@ -162,8 +162,8 @@ export function handleOrderFulfilled(event: OrderFulfilled): void {
     // Save details of how trade was fulfilled
     const orderFulfillment = new _OrderFulfillment(tradeID);
     orderFulfillment.trade = tradeID;
-    orderFulfillment.orderFulfillmentMethod = orderFulfillmentMethod(event)
-    orderFulfillment.save()
+    orderFulfillment.orderFulfillmentMethod = orderFulfillmentMethod(event);
+    orderFulfillment.save();
   }
 
   //
@@ -200,13 +200,13 @@ export function handleOrderFulfilled(event: OrderFulfilled): void {
     .toBigDecimal()
     .div(MANTISSA_FACTOR);
   collection.marketplaceRevenueETH = collection.marketplaceRevenueETH.plus(
-    deltaMarketplaceRevenueETH
+    deltaMarketplaceRevenueETH,
   );
   collection.creatorRevenueETH = collection.creatorRevenueETH.plus(
-    deltaCreatorRevenueETH
+    deltaCreatorRevenueETH,
   );
   collection.totalRevenueETH = collection.marketplaceRevenueETH.plus(
-    collection.creatorRevenueETH
+    collection.creatorRevenueETH,
   );
   collection.save();
 
@@ -214,19 +214,19 @@ export function handleOrderFulfilled(event: OrderFulfilled): void {
   // update marketplace
   //
   const marketplace = getOrCreateMarketplace(
-    NetworkConfigs.getMarketplaceAddress()
+    NetworkConfigs.getMarketplaceAddress(),
   );
   marketplace.tradeCount += 1;
   marketplace.cumulativeTradeVolumeETH =
     marketplace.cumulativeTradeVolumeETH.plus(volumeETH);
   marketplace.marketplaceRevenueETH = marketplace.marketplaceRevenueETH.plus(
-    deltaMarketplaceRevenueETH
+    deltaMarketplaceRevenueETH,
   );
   marketplace.creatorRevenueETH = marketplace.creatorRevenueETH.plus(
-    deltaCreatorRevenueETH
+    deltaCreatorRevenueETH,
   );
   marketplace.totalRevenueETH = marketplace.marketplaceRevenueETH.plus(
-    marketplace.creatorRevenueETH
+    marketplace.creatorRevenueETH,
   );
   const buyerAccountID = "MARKETPLACE_ACCOUNT-".concat(buyer);
   let buyerAccount = _Item.load(buyerAccountID);
@@ -265,18 +265,18 @@ export function handleOrderFulfilled(event: OrderFulfilled): void {
   //
   const collectionSnapshot = getOrCreateCollectionDailySnapshot(
     collectionAddr,
-    event.block.timestamp
+    event.block.timestamp,
   );
   collectionSnapshot.blockNumber = event.block.number;
   collectionSnapshot.timestamp = event.block.timestamp;
   collectionSnapshot.royaltyFee = collection.royaltyFee;
   collectionSnapshot.dailyMinSalePrice = min(
     collectionSnapshot.dailyMinSalePrice,
-    priceETH
+    priceETH,
   );
   collectionSnapshot.dailyMaxSalePrice = max(
     collectionSnapshot.dailyMaxSalePrice,
-    priceETH
+    priceETH,
   );
   collectionSnapshot.cumulativeTradeVolumeETH =
     collection.cumulativeTradeVolumeETH;
@@ -293,7 +293,7 @@ export function handleOrderFulfilled(event: OrderFulfilled): void {
   // take marketplace snapshot
   //
   const marketplaceSnapshot = getOrCreateMarketplaceDailySnapshot(
-    event.block.timestamp
+    event.block.timestamp,
   );
   marketplaceSnapshot.blockNumber = event.block.number;
   marketplaceSnapshot.timestamp = event.block.timestamp;
@@ -363,7 +363,7 @@ function getOrCreateCollection(collectionID: string): Collection {
     collection.save();
 
     const marketplace = getOrCreateMarketplace(
-      NetworkConfigs.getMarketplaceAddress()
+      NetworkConfigs.getMarketplaceAddress(),
     );
     marketplace.collectionCount += 1;
     marketplace.save();
@@ -395,7 +395,7 @@ function getOrCreateMarketplace(marketplaceID: string): Marketplace {
 
 function getOrCreateCollectionDailySnapshot(
   collection: string,
-  timestamp: BigInt
+  timestamp: BigInt,
 ): CollectionDailySnapshot {
   const snapshotID = collection
     .concat("-")
@@ -422,7 +422,7 @@ function getOrCreateCollectionDailySnapshot(
 }
 
 function getOrCreateMarketplaceDailySnapshot(
-  timestamp: BigInt
+  timestamp: BigInt,
 ): MarketplaceDailySnapshot {
   const snapshotID = (timestamp.toI32() / SECONDS_PER_DAY).toString();
   let snapshot = MarketplaceDailySnapshot.load(snapshotID);
@@ -450,7 +450,7 @@ function getNftStandard(collectionID: string): string {
   const erc165 = ERC165.bind(Address.fromString(collectionID));
 
   const isERC721Result = erc165.try_supportsInterface(
-    Bytes.fromHexString(ERC721_INTERFACE_IDENTIFIER)
+    Bytes.fromHexString(ERC721_INTERFACE_IDENTIFIER),
   );
   if (isERC721Result.reverted) {
     log.warning("[getNftStandard] isERC721 reverted on {}", [collectionID]);
@@ -461,7 +461,7 @@ function getNftStandard(collectionID: string): string {
   }
 
   const isERC1155Result = erc165.try_supportsInterface(
-    Bytes.fromHexString(ERC1155_INTERFACE_IDENTIFIER)
+    Bytes.fromHexString(ERC1155_INTERFACE_IDENTIFIER),
   );
   if (isERC1155Result.reverted) {
     log.warning("[getNftStandard] isERC1155 reverted on {}", [collectionID]);
@@ -487,7 +487,7 @@ function tryGetSale(
   offerer: Address,
   recipient: Address,
   offer: Array<OrderFulfilledOfferStruct>,
-  consideration: Array<OrderFulfilledConsiderationStruct>
+  consideration: Array<OrderFulfilledConsiderationStruct>,
 ): Sale | null {
   const txn = event.transaction.hash.toHexString();
   const txnLogIdx = event.transactionLogIndex.toString();
@@ -533,9 +533,9 @@ function tryGetSale(
         [
           txn,
           _DEBUG_join(
-            consideration.map<string>((c) => _DEBUG_considerationToString(c))
+            consideration.map<string>((c) => _DEBUG_considerationToString(c)),
           ),
-        ]
+        ],
       );
       return null;
     }
@@ -544,7 +544,7 @@ function tryGetSale(
       recipient,
       considerationNFTsResult,
       getMoneyFromOffer(offer[0]),
-      getFees(txn, recipient, consideration)
+      getFees(txn, recipient, consideration),
     );
   } else {
     // otherwise, money is in `consideration` and NFTs are in `offer`
@@ -555,7 +555,7 @@ function tryGetSale(
         txn,
         _DEBUG_considerationToString(consideration[0]),
         _DEBUG_join(
-          consideration.map<string>((c) => _DEBUG_considerationToString(c))
+          consideration.map<string>((c) => _DEBUG_considerationToString(c)),
         ),
       ]);
       return null;
@@ -573,7 +573,7 @@ function tryGetSale(
       offerer,
       offerNFTsResult,
       considerationMoneyResult,
-      getFees(txn, offerer, consideration)
+      getFees(txn, offerer, consideration),
     );
   }
 }
@@ -584,7 +584,7 @@ function getMoneyFromOffer(o: OrderFulfilledOfferStruct): Money {
 
 // Add up all money amounts in consideration in order to get the trade volume
 function tryGetMoneyFromConsideration(
-  consideration: Array<OrderFulfilledConsiderationStruct>
+  consideration: Array<OrderFulfilledConsiderationStruct>,
 ): Money | null {
   let hasMoney = false;
   let amount = BIGINT_ZERO;
@@ -601,7 +601,7 @@ function tryGetMoneyFromConsideration(
 }
 
 function tryGetNFTsFromOffer(
-  offer: Array<OrderFulfilledOfferStruct>
+  offer: Array<OrderFulfilledOfferStruct>,
 ): NFTs | null {
   if (offer.some((o) => !isNFT(o.itemType))) {
     return null;
@@ -615,7 +615,7 @@ function tryGetNFTsFromOffer(
     if (o.token != collection) {
       log.warning(
         "[tryGetNFTsFromOffer] we're not handling collection > 1 case",
-        []
+        [],
       );
       return null;
     }
@@ -625,13 +625,13 @@ function tryGetNFTsFromOffer(
   const standard = isERC721(tpe)
     ? NftStandard.ERC721
     : isERC1155(tpe)
-    ? NftStandard.ERC1155
-    : NftStandard.UNKNOWN;
+      ? NftStandard.ERC1155
+      : NftStandard.UNKNOWN;
   return new NFTs(collection, standard, tokenIds, amounts);
 }
 
 function tryGetNFTsFromConsideration(
-  consideration: Array<OrderFulfilledConsiderationStruct>
+  consideration: Array<OrderFulfilledConsiderationStruct>,
 ): NFTs | null {
   const nftItems = consideration.filter((c) => isNFT(c.itemType));
   if (nftItems.length == 0) {
@@ -646,7 +646,7 @@ function tryGetNFTsFromConsideration(
     if (item.token != collection) {
       log.warning(
         "[tryGetNFTsFromConsideration] we're not handling collection > 1 case",
-        []
+        [],
       );
       return null;
     }
@@ -656,8 +656,8 @@ function tryGetNFTsFromConsideration(
   const standard = isERC721(tpe)
     ? NftStandard.ERC721
     : isERC1155(tpe)
-    ? NftStandard.ERC1155
-    : NftStandard.UNKNOWN;
+      ? NftStandard.ERC1155
+      : NftStandard.UNKNOWN;
   return new NFTs(collection, standard, tokenIds, amounts);
 }
 
@@ -667,17 +667,17 @@ function tryGetNFTsFromConsideration(
 function getFees(
   txn: string,
   excludedRecipient: Address,
-  consideration: Array<OrderFulfilledConsiderationStruct>
+  consideration: Array<OrderFulfilledConsiderationStruct>,
 ): Fees {
   const protocolFeeItems = consideration.filter((c) =>
-    isOpenSeaFeeAccount(c.recipient)
+    isOpenSeaFeeAccount(c.recipient),
   );
   let protocolRevenue = BIGINT_ZERO;
   if (protocolFeeItems.length == 0) {
     log.warning("[{}] known issue: protocol fee not found, consideration {}", [
       txn,
       _DEBUG_join(
-        consideration.map<string>((c) => _DEBUG_considerationToString(c))
+        consideration.map<string>((c) => _DEBUG_considerationToString(c)),
       ),
     ]);
   } else {
@@ -708,7 +708,7 @@ function _DEBUG_offerToString(item: OrderFulfilledOfferStruct): string {
 }
 
 function _DEBUG_considerationToString(
-  item: OrderFulfilledConsiderationStruct
+  item: OrderFulfilledConsiderationStruct,
 ): string {
   return `Consideration(type=${
     item.itemType

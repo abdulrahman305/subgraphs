@@ -16,7 +16,7 @@ export function handleEarningReported(event: EarningReportedEvent): void {
 
   const vaultAddress = utils.readValue<Address>(
     accountantContract.try_pool(),
-    constants.NULL.TYPE_ADDRESS
+    constants.NULL.TYPE_ADDRESS,
   );
   const vault = getOrCreateVault(vaultAddress, event.block);
 
@@ -34,7 +34,7 @@ export function handleEarningReported(event: EarningReportedEvent): void {
     vault,
     supplySideRevenueUSD,
     constants.BIGDECIMAL_ZERO,
-    event.block
+    event.block,
   );
 }
 
@@ -44,7 +44,7 @@ export function handleLossReported(event: LossReportedEvent): void {
 
   const vaultAddress = utils.readValue<Address>(
     accountantContract.try_pool(),
-    constants.NULL.TYPE_ADDRESS
+    constants.NULL.TYPE_ADDRESS,
   );
   const vault = getOrCreateVault(vaultAddress, event.block);
 
@@ -63,6 +63,6 @@ export function handleLossReported(event: LossReportedEvent): void {
     vault,
     supplySideLossUSD,
     constants.BIGDECIMAL_ZERO,
-    event.block
+    event.block,
   );
 }

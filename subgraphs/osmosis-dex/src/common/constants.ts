@@ -108,7 +108,7 @@ export const BIGDECIMAL_ONE = new BigDecimal(BIGINT_ONE);
 export const BIGDECIMAL_TEN = new BigDecimal(BIGINT_TEN);
 export const BIGDECIMAL_HUNDRED = new BigDecimal(BIGINT_HUNDRED);
 export const BIGDECIMAL_SECONDS_PER_DAY = new BigDecimal(
-  BigInt.fromI32(SECONDS_PER_DAY)
+  BigInt.fromI32(SECONDS_PER_DAY),
 );
 
 export const USDC_DECIMALS = 6;
@@ -116,7 +116,7 @@ export const DEFAULT_DECIMALS = BigInt.fromI32(18);
 export const DENOMINATOR = BigDecimal.fromString("10000");
 export const USDC_DENOMINATOR = BigDecimal.fromString("1000000");
 export const ZERO_ADDRESS = Address.fromString(
-  "0x0000000000000000000000000000000000000000"
+  "0x0000000000000000000000000000000000000000",
 );
 export const ZERO_ADDRESS_STRING = "0x0000000000000000000000000000000000000000";
 

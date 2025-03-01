@@ -17,8 +17,8 @@ export function handleTransfer(event: Transfer): void {
 
   let dolaContract = DOLA.bind(event.address);
   let supply = dolaContract.totalSupply();
-  if ( protocol.mintedTokens == null || protocol.mintedTokens!.length == 0 ) {
-    protocol.mintedTokens = [event.address.toHexString()]
+  if (protocol.mintedTokens == null || protocol.mintedTokens!.length == 0) {
+    protocol.mintedTokens = [event.address.toHexString()];
   }
 
   protocol.mintedTokenSupplies = [supply];

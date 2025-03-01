@@ -12,7 +12,7 @@ import { PriceSource } from "../common/constants";
 
 export function getUsdPricePerToken(
   tokenAddr: Address,
-  skipSources: Array<string> = []
+  skipSources: Array<string> = [],
 ): CustomPriceType {
   // Check if tokenAddr is a NULL Address
   if (tokenAddr.toHex() == constants.ZERO_ADDRESS_STRING) {
@@ -54,7 +54,7 @@ export function getUsdPricePerToken(
   if (!skipSources.includes(PriceSource.CURVE_CALC)) {
     let calculationsCurvePrice = getTokenPriceFromCalculationCurve(
       tokenAddr,
-      network
+      network,
     );
     if (!calculationsCurvePrice.reverted) {
       log.warning("[CalculationsCurve] tokenAddress: {}, Price: {}", [
@@ -71,7 +71,7 @@ export function getUsdPricePerToken(
   if (!skipSources.includes(PriceSource.SUSHISWAP_CALC)) {
     let calculationsSushiSwapPrice = getTokenPriceFromSushiSwap(
       tokenAddr,
-      network
+      network,
     );
     if (!calculationsSushiSwapPrice.reverted) {
       log.warning("[CalculationsSushiSwap] tokenAddress: {}, Price: {}", [
@@ -129,7 +129,7 @@ export function getUsdPricePerToken(
 
 export function getUsdPrice(
   tokenAddr: Address,
-  amount: BigDecimal
+  amount: BigDecimal,
 ): BigDecimal {
   let tokenPrice = getUsdPricePerToken(tokenAddr);
 

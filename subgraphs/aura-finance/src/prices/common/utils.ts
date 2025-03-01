@@ -4,7 +4,7 @@ import { Address, BigInt, ethereum } from "@graphprotocol/graph-ts";
 
 export function readValue<T>(
   callResult: ethereum.CallResult<T>,
-  defaultValue: T
+  defaultValue: T,
 ): T {
   return callResult.reverted ? defaultValue : callResult.value;
 }
@@ -14,7 +14,7 @@ export function getTokenDecimals(tokenAddr: Address): BigInt {
 
   const decimals = readValue<BigInt>(
     token.try_decimals(),
-    constants.DEFAULT_DECIMALS
+    constants.DEFAULT_DECIMALS,
   );
 
   return decimals;

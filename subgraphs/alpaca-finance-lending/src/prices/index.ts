@@ -28,7 +28,7 @@ export function getUsdPricePerToken(tokenAddr: Address): CustomPriceType {
   if (config.hardcodedStables().includes(tokenAddr)) {
     return CustomPriceType.initialize(
       constants.BIGDECIMAL_USD_PRICE,
-      constants.DEFAULT_USDC_DECIMALS
+      constants.DEFAULT_USDC_DECIMALS,
     );
   }
 
@@ -113,7 +113,7 @@ export function getUsdPricePerToken(tokenAddr: Address): CustomPriceType {
 
 export function getUsdPrice(
   tokenAddr: Address,
-  amount: BigDecimal
+  amount: BigDecimal,
 ): BigDecimal {
   const tokenPrice = getUsdPricePerToken(tokenAddr);
 

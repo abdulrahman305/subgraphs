@@ -1,8 +1,6 @@
 [
   {
-    "inputs": [
-      { "internalType": "address", "name": "account", "type": "address" }
-    ],
+    "inputs": [{ "internalType": "address", "name": "account", "type": "address" }],
     "payable": false,
     "stateMutability": "nonpayable",
     "type": "constructor"
@@ -164,9 +162,7 @@
   },
   {
     "constant": false,
-    "inputs": [
-      { "internalType": "address", "name": "_user", "type": "address" }
-    ],
+    "inputs": [{ "internalType": "address", "name": "_user", "type": "address" }],
     "name": "addToWhitelist",
     "outputs": [],
     "payable": false,
@@ -199,9 +195,7 @@
   },
   {
     "constant": true,
-    "inputs": [
-      { "internalType": "address", "name": "account", "type": "address" }
-    ],
+    "inputs": [{ "internalType": "address", "name": "account", "type": "address" }],
     "name": "balanceOf",
     "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
     "payable": false,
@@ -243,9 +237,7 @@
   },
   {
     "constant": false,
-    "inputs": [
-      { "internalType": "address", "name": "delegatee", "type": "address" }
-    ],
+    "inputs": [{ "internalType": "address", "name": "delegatee", "type": "address" }],
     "name": "delegate",
     "outputs": [],
     "payable": false,
@@ -279,9 +271,7 @@
   },
   {
     "constant": true,
-    "inputs": [
-      { "internalType": "address", "name": "account", "type": "address" }
-    ],
+    "inputs": [{ "internalType": "address", "name": "account", "type": "address" }],
     "name": "getCurrentVotes",
     "outputs": [{ "internalType": "uint96", "name": "", "type": "uint96" }],
     "payable": false,
@@ -376,9 +366,7 @@
   },
   {
     "constant": false,
-    "inputs": [
-      { "internalType": "address", "name": "_user", "type": "address" }
-    ],
+    "inputs": [{ "internalType": "address", "name": "_user", "type": "address" }],
     "name": "removeFromWhitelist",
     "outputs": [],
     "payable": false,
@@ -408,9 +396,7 @@
   },
   {
     "constant": false,
-    "inputs": [
-      { "internalType": "address", "name": "owner_", "type": "address" }
-    ],
+    "inputs": [{ "internalType": "address", "name": "owner_", "type": "address" }],
     "name": "setOwner",
     "outputs": [],
     "payable": false,

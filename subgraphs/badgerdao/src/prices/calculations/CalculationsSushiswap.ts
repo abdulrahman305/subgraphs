@@ -6,7 +6,7 @@ import { CalculationsSushiSwap as CalculationsSushiContract } from "../../../gen
 
 export function getTokenPriceUSDC(
   tokenAddr: Address,
-  block: ethereum.Block | null = null
+  block: ethereum.Block | null = null,
 ): CustomPriceType {
   const config = utils.getConfig();
   const contractAddress = utils.getContract(config.sushiCalculations(), block);
@@ -22,13 +22,13 @@ export function getTokenPriceUSDC(
   const tokenPrice: BigDecimal = utils
     .readValue<BigInt>(
       curveContract.try_getPriceUsdc(tokenAddr),
-      constants.BIGINT_ZERO
+      constants.BIGINT_ZERO,
     )
     .toBigDecimal();
 
   return CustomPriceType.initialize(
     tokenPrice,
     constants.DEFAULT_USDC_DECIMALS,
-    constants.OracleType.SUSHI_CALCULATIONS
+    constants.OracleType.SUSHI_CALCULATIONS,
   );
 }

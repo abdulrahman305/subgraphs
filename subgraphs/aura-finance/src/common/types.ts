@@ -1,9 +1,4 @@
-import {
-  Address,
-  BigDecimal,
-  BigInt,
-  Wrapped,
-} from "@graphprotocol/graph-ts";
+import { Address, BigDecimal, BigInt, Wrapped } from "@graphprotocol/graph-ts";
 
 import { FEE_DENOMINATOR } from "../common/constants";
 
@@ -61,7 +56,7 @@ export class CustomFeesType {
     lockIncentive: BigInt,
     callIncentive: BigInt,
     stakerIncentive: BigInt,
-    platformFee: BigInt
+    platformFee: BigInt,
   ) {
     this._lockIncentive = lockIncentive;
     this._callIncentive = callIncentive;
@@ -101,7 +96,7 @@ export class PoolTokensType {
     poolAddress: Address,
     supply: BigInt,
     tokens: Address[] = [],
-    balances: BigInt[] = []
+    balances: BigInt[] = [],
   ) {
     this._poolAddress = poolAddress;
     this._tokens = tokens;

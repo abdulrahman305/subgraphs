@@ -5,16 +5,16 @@ import { Address, BigDecimal, BigInt } from "@graphprotocol/graph-ts";
 import { CalculationsCurve as CalculationsCurveContract } from "../../../generated/Booster-v1/CalculationsCurve";
 
 export function getCalculationsCurveContract(
-  network: string
+  network: string,
 ): CalculationsCurveContract {
   return CalculationsCurveContract.bind(
-    constants.CURVE_CALCULATIONS_ADDRESS_MAP.get(network)!
+    constants.CURVE_CALCULATIONS_ADDRESS_MAP.get(network)!,
   );
 }
 
 export function getTokenPriceFromCalculationCurve(
   tokenAddr: Address,
-  network: string
+  network: string,
 ): CustomPriceType {
   const calculationCurveContract = getCalculationsCurveContract(network);
 
@@ -25,12 +25,12 @@ export function getTokenPriceFromCalculationCurve(
   const tokenPrice: BigDecimal = utils
     .readValue<BigInt>(
       calculationCurveContract.try_getCurvePriceUsdc(tokenAddr),
-      constants.BIGINT_ZERO
+      constants.BIGINT_ZERO,
     )
     .toBigDecimal();
 
   return CustomPriceType.initialize(
     tokenPrice,
-    constants.DEFAULT_USDC_DECIMALS
+    constants.DEFAULT_USDC_DECIMALS,
   );
 }

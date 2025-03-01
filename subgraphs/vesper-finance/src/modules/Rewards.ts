@@ -12,13 +12,13 @@ import { PoolRewards as PoolRewardsContract } from "../../generated/templates/Po
 export function updateRewardToken(
   vaultAddress: Address,
   poolRewardsAddress: Address,
-  block: ethereum.Block
+  block: ethereum.Block,
 ): void {
   const poolRewardsContract = PoolRewardsContract.bind(poolRewardsAddress);
 
   let rewardTokens = utils.readValue<Address[]>(
     poolRewardsContract.try_getRewardTokens(),
-    []
+    [],
   );
 
   for (let i = 0; i < rewardTokens.length; i += 1) {
@@ -26,14 +26,14 @@ export function updateRewardToken(
 
     let rewardRate = utils.readValue<BigInt>(
       poolRewardsContract.try_rewardRates(rewardToken),
-      constants.BIGINT_ZERO
+      constants.BIGINT_ZERO,
     );
 
     let rewardRatePerDay = getRewardsPerDay(
       block.timestamp,
       block.number,
       rewardRate.toBigDecimal(),
-      constants.RewardIntervalType.TIMESTAMP
+      constants.RewardIntervalType.TIMESTAMP,
     );
 
     let rewardPerDay = BigInt.fromString(rewardRatePerDay.toString());
@@ -52,7 +52,7 @@ export function updateRewardTokenEmissions(
   rewardTokenAddress: Address,
   vaultAddress: Address,
   rewardTokenPerDay: BigInt,
-  block: ethereum.Block
+  block: ethereum.Block,
 ): void {
   const vault = getOrCreateVault(vaultAddress, block);
   const rewardToken = getOrCreateRewardToken(rewardTokenAddress);
@@ -81,7 +81,7 @@ export function updateRewardTokenEmissions(
 
   const rewardTokenPrice = getUsdPricePerToken(rewardTokenAddress);
   const rewardTokenDecimals = utils.getTokenDecimals(rewardTokenAddress);
-  
+
   rewardTokenEmissionsAmount[rewardTokenIndex] = rewardTokenPerDay;
   rewardTokenEmissionsUSD[rewardTokenIndex] = rewardTokenPerDay
     .toBigDecimal()

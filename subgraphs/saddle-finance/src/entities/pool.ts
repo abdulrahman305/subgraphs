@@ -72,14 +72,19 @@ export function getOrCreatePool(address: Address): LiquidityPool {
 // because it should already be in the yaml.
 function createPoolFromAddress(address: Address): LiquidityPool {
   const poolData = POOL_DATA.get(
-    prefixID(dataSource.network(), address.toHexString())
+    prefixID(dataSource.network(), address.toHexString()),
   );
 
-  const pool = createPool(address, poolData.createdBlockNumber, poolData.createdTimestamp, null);
+  const pool = createPool(
+    address,
+    poolData.createdBlockNumber,
+    poolData.createdTimestamp,
+    null,
+  );
   if (!pool) {
-    log.critical("unable to create pool from address", [])
+    log.critical("unable to create pool from address", []);
   }
-  return pool!
+  return pool!;
 }
 
 // createPoolFromEvent will create a pool from a PairCreated event, and subscribe to events from it.
@@ -94,15 +99,24 @@ export function createPoolFromFactoryEvent(event: NewSwapPool): void {
     return;
   }
 
-
-  if (createPool(poolAddr, event.block.number, event.block.timestamp, event.params.pooledTokens)) {
+  if (
+    createPool(
+      poolAddr,
+      event.block.number,
+      event.block.timestamp,
+      event.params.pooledTokens,
+    )
+  ) {
     SwapTemplate.create(poolAddr);
   }
 }
 
 // createPoolFromRegistryEvent will create a pool if doesn't exist already when added to the pool registry.
 // This should catch pools deployed manually and not via a deployer.
-export function createPoolFromRegistryEvent(address: Address, block: ethereum.Block): void {
+export function createPoolFromRegistryEvent(
+  address: Address,
+  block: ethereum.Block,
+): void {
   if (BROKEN_POOLS.has(address.toHexString())) {
     return;
   }
@@ -121,7 +135,7 @@ function createPool(
   swapAddress: Address,
   blockNum: BigInt,
   timestamp: BigInt,
-  pooledTokens: Address[] | null
+  pooledTokens: Address[] | null,
 ): LiquidityPool | null {
   const address = swapAddress;
   const addressString = address.toHexString();
@@ -137,7 +151,7 @@ function createPool(
         lpTokenAddress.toHexString(),
         address.toHexString(),
       ]);
-      return null
+      return null;
     }
   }
 
@@ -176,7 +190,7 @@ function createPool(
 
 export function getOrCreatePoolDailySnapshot(
   event: ethereum.Event,
-  pool: LiquidityPool
+  pool: LiquidityPool,
 ): LiquidityPoolDailySnapshot {
   const day: i64 = event.block.timestamp.toI64() / SECONDS_PER_DAY;
   const id = `${pool.id}-${day}`;
@@ -186,10 +200,10 @@ export function getOrCreatePoolDailySnapshot(
     poolDailySnapshot.protocol = pool.protocol;
     poolDailySnapshot.pool = pool.id;
     poolDailySnapshot.dailyVolumeByTokenAmount = new Array<BigInt>(
-      pool.inputTokens.length
+      pool.inputTokens.length,
     ).map<BigInt>(() => BIGINT_ZERO);
     poolDailySnapshot.dailyVolumeByTokenUSD = new Array<BigDecimal>(
-      pool.inputTokens.length
+      pool.inputTokens.length,
     ).map<BigDecimal>(() => BIGDECIMAL_ZERO);
 
     poolDailySnapshot.dailyVolumeUSD = BIGDECIMAL_ZERO;
@@ -222,7 +236,7 @@ export function getOrCreatePoolDailySnapshot(
 
 export function getOrCreatePoolHourlySnapshot(
   event: ethereum.Event,
-  pool: LiquidityPool
+  pool: LiquidityPool,
 ): LiquidityPoolHourlySnapshot {
   const timestamp = event.block.timestamp.toI64();
   const hours: i64 = timestamp / SECONDS_PER_HOUR;
@@ -233,10 +247,10 @@ export function getOrCreatePoolHourlySnapshot(
     poolHourlySnapshot.protocol = pool.protocol;
     poolHourlySnapshot.pool = pool.id;
     poolHourlySnapshot.hourlyVolumeByTokenAmount = new Array<BigInt>(
-      pool.inputTokens.length
+      pool.inputTokens.length,
     ).map<BigInt>(() => BIGINT_ZERO);
     poolHourlySnapshot.hourlyVolumeByTokenUSD = new Array<BigDecimal>(
-      pool.inputTokens.length
+      pool.inputTokens.length,
     ).map<BigDecimal>(() => BIGDECIMAL_ZERO);
 
     poolHourlySnapshot.hourlyVolumeUSD = BIGDECIMAL_ZERO;
@@ -271,11 +285,11 @@ export function getOrCreatePoolHourlySnapshot(
 export function handlePoolDeposit(
   event: ethereum.Event,
   pool: LiquidityPool,
-  deposit: Deposit
+  deposit: Deposit,
 ): void {
   setInputTokenBalancesAndWeights(pool);
   pool.outputTokenSupply = pool.outputTokenSupply!.plus(
-    deposit.outputTokenAmount!
+    deposit.outputTokenAmount!,
   );
   updateOutputTokenPriceAndTVL(event, pool);
   updateRewardTokenEmissionsUSD(event, pool);
@@ -288,11 +302,11 @@ export function handlePoolDeposit(
 export function handlePoolWithdraw(
   event: ethereum.Event,
   pool: LiquidityPool,
-  withdraw: Withdraw
+  withdraw: Withdraw,
 ): void {
   setInputTokenBalancesAndWeights(pool);
   pool.outputTokenSupply = pool.outputTokenSupply!.minus(
-    withdraw.outputTokenAmount!
+    withdraw.outputTokenAmount!,
   );
   updateOutputTokenPriceAndTVL(event, pool);
   updateRewardTokenEmissionsUSD(event, pool);
@@ -305,7 +319,7 @@ export function handlePoolWithdraw(
 export function handlePoolSwap(
   event: ethereum.Event,
   pool: LiquidityPool,
-  swap: SwapEvent
+  swap: SwapEvent,
 ): void {
   const volumeUSD = calculateAverage([swap.amountInUSD, swap.amountOutUSD]);
   pool.cumulativeVolumeUSD = pool.cumulativeVolumeUSD.plus(volumeUSD);
@@ -318,12 +332,12 @@ export function handlePoolSwap(
   dailySnapshot.dailyVolumeByTokenAmount = addTokenVolume(
     dailySnapshot.dailyVolumeByTokenAmount,
     swap,
-    pool
+    pool,
   );
   dailySnapshot.dailyVolumeByTokenUSD = addTokenVolumeUSD(
     dailySnapshot.dailyVolumeByTokenUSD,
     swap,
-    pool
+    pool,
   );
   dailySnapshot.save();
   const hourlySnapshot = getOrCreatePoolHourlySnapshot(event, pool);
@@ -332,18 +346,18 @@ export function handlePoolSwap(
   hourlySnapshot.hourlyVolumeByTokenAmount = addTokenVolume(
     hourlySnapshot.hourlyVolumeByTokenAmount,
     swap,
-    pool
+    pool,
   );
   hourlySnapshot.hourlyVolumeByTokenUSD = addTokenVolumeUSD(
     hourlySnapshot.hourlyVolumeByTokenUSD,
     swap,
-    pool
+    pool,
   );
   hourlySnapshot.save();
   incrementProtocolSwapCount(event);
   addProtocolUSDVolume(event, volumeUSD);
   const supplySideRevenueUSD = swap.amountInUSD.times(
-    getSupplySideFee(pool.id)
+    getSupplySideFee(pool.id),
   );
   const protocolRevenueUSD = swap.amountInUSD.times(getProtocolFee(pool.id));
   addProtocolUSDRevenue(event, pool, supplySideRevenueUSD, protocolRevenueUSD);
@@ -353,7 +367,7 @@ export function handlePoolRewardsUpdated(
   event: ethereum.Event,
   miniChef: MiniChefV2,
   pid: BigInt,
-  stakedAmountChange: BigInt = BIGINT_ZERO
+  stakedAmountChange: BigInt = BIGINT_ZERO,
 ): void {
   const lpTokenAddress = miniChef.lpToken(pid);
   if (lpTokenAddress.toHexString() == ZERO_ADDRESS) {
@@ -391,7 +405,7 @@ export function handlePoolRewardsUpdated(
     } else {
       const rewardPerSecond = rewarder.rewardPerSecond();
       const rewardPerDay = rewardPerSecond.times(
-        BigInt.fromI64(SECONDS_PER_DAY)
+        BigInt.fromI64(SECONDS_PER_DAY),
       );
       rewardTokens.push(getOrCreateRewardToken(rewardTokenAddress).id);
       rewardTokenEmissions.push(rewardPerDay);
@@ -412,20 +426,20 @@ export function handlePoolRewardsUpdated(
 
 function updateRewardTokenEmissionsUSD(
   event: ethereum.Event,
-  pool: LiquidityPool
+  pool: LiquidityPool,
 ): void {
   if (!pool.rewardTokens) {
     return;
   }
   const rewardTokenEmissionsUSD = new Array<BigDecimal>(
-    pool.rewardTokens!.length
+    pool.rewardTokens!.length,
   );
   for (let i = 0; i < pool.rewardTokens!.length; i++) {
     const rewardToken = getOrCreateTokenFromString(pool.rewardTokens![i]);
     const emissionAmount = pool.rewardTokenEmissionsAmount![i];
     rewardTokenEmissionsUSD[i] = bigIntToBigDecimal(
       emissionAmount,
-      rewardToken.decimals
+      rewardToken.decimals,
     ).times(getPriceUSD(rewardToken, event));
   }
   pool.rewardTokenEmissionsUSD = rewardTokenEmissionsUSD;
@@ -448,7 +462,7 @@ function isLPSwap(swap: SwapEvent, pool: LiquidityPool): boolean {
 function addTokenVolume(
   tokenVolume: BigInt[],
   swap: SwapEvent,
-  pool: LiquidityPool
+  pool: LiquidityPool,
 ): BigInt[] {
   if (isLPSwap(swap, pool)) {
     return addLPSwapVolume(pool, swap, tokenVolume);
@@ -464,7 +478,7 @@ function addTokenVolume(
 function addTokenVolumeUSD(
   tokenVolume: BigDecimal[],
   swap: SwapEvent,
-  pool: LiquidityPool
+  pool: LiquidityPool,
 ): BigDecimal[] {
   if (isLPSwap(swap, pool)) {
     return addLPSwapVolumeUSD(pool, swap, tokenVolume);
@@ -474,7 +488,7 @@ function addTokenVolumeUSD(
   const tokenOutIndex = pool.inputTokens.indexOf(swap.tokenOut);
   tokenVolume[tokenInIndex] = tokenVolume[tokenInIndex].plus(swap.amountInUSD);
   tokenVolume[tokenOutIndex] = tokenVolume[tokenOutIndex].plus(
-    swap.amountOutUSD
+    swap.amountOutUSD,
   );
   return tokenVolume;
 }
@@ -486,7 +500,7 @@ function addTokenVolumeUSD(
 function addLPSwapVolume(
   pool: LiquidityPool,
   swap: SwapEvent,
-  poolVolumes: BigInt[]
+  poolVolumes: BigInt[],
 ): BigInt[] {
   const basePool = LiquidityPool.load(pool._basePool!)!;
   const lpToken = basePool.outputToken;
@@ -501,7 +515,7 @@ function addLPSwapVolume(
   }
 
   const multiplier = lpAmount.divDecimal(
-    basePool.outputTokenSupply!.toBigDecimal()
+    basePool.outputTokenSupply!.toBigDecimal(),
   );
   const underlyingTokens = basePool.inputTokens;
   for (let i = 0; i < underlyingTokens.length; i++) {
@@ -520,12 +534,12 @@ function addLPSwapVolume(
 
 // addLPSwapVolumeUSD will add to a given volumes array the volumeUSD of each token
 // involved in a swap. It will assume that one of the two tokens swapped is an LP token.
-// Since we keep the underlying tokens that compose the LP instead of the LP token 
+// Since we keep the underlying tokens that compose the LP instead of the LP token
 // itself, we'll add the proportional part of each underlying from the LP volume.
 function addLPSwapVolumeUSD(
   pool: LiquidityPool,
   swap: SwapEvent,
-  poolVolumes: BigDecimal[]
+  poolVolumes: BigDecimal[],
 ): BigDecimal[] {
   const basePool = LiquidityPool.load(pool._basePool!)!;
   const lpToken = basePool.outputToken;
@@ -577,27 +591,27 @@ function getOrCreateInputTokens(pooledTokens: Address[]): string[] {
 
 function updateOutputTokenPriceAndTVL(
   event: ethereum.Event,
-  pool: LiquidityPool
+  pool: LiquidityPool,
 ): void {
   const totalValueLocked = getTokenAmountsSumUSD(
     event,
     pool.inputTokenBalances,
-    pool.inputTokens
+    pool.inputTokens,
   );
   const outputTokenAmount = bigIntToBigDecimal(
     pool.outputTokenSupply!,
-    getTokenDecimals(pool.outputToken!)
+    getTokenDecimals(pool.outputToken!),
   );
-  pool.outputTokenPriceUSD = totalValueLocked.equals(BIGDECIMAL_ZERO) ?
-    BIGDECIMAL_ZERO : 
-    totalValueLocked.div(outputTokenAmount); // avoid div by 0 when pool is empty
+  pool.outputTokenPriceUSD = totalValueLocked.equals(BIGDECIMAL_ZERO)
+    ? BIGDECIMAL_ZERO
+    : totalValueLocked.div(outputTokenAmount); // avoid div by 0 when pool is empty
   updateProtocolTVL(event, totalValueLocked.minus(pool.totalValueLockedUSD));
   pool.totalValueLockedUSD = totalValueLocked;
 }
 
 function setInputTokenBalancesAndWeights(
   pool: LiquidityPool,
-  contract: Swap | null = null
+  contract: Swap | null = null,
 ): void {
   if (contract == null) {
     contract = Swap.bind(Address.fromString(pool.id));
@@ -618,7 +632,7 @@ function setInputTokenBalancesAndWeights(
         bpBalances.push(BIGINT_ZERO);
         continue;
       }
-      
+
       bpBalances.push(balance.times(lpTokenBalance).div(totalLPTokenSupply));
     }
 
@@ -626,7 +640,11 @@ function setInputTokenBalancesAndWeights(
     // base reference. Balances fetched from the contract will follow the order of `_inputTokensSorted`.
     // BasePool balances are already sorted, but they need to match `_inputTokensOrdered` in order to sort
     // them together with the rest.
-    bpBalances = sortValuesByTokenOrder(basePool.inputTokens, basePool._inputTokensOrdered, bpBalances);
+    bpBalances = sortValuesByTokenOrder(
+      basePool.inputTokens,
+      basePool._inputTokensOrdered,
+      bpBalances,
+    );
   }
 
   const balances = getBalances(
@@ -641,7 +659,7 @@ function setInputTokenBalancesAndWeights(
   );
   pool.inputTokenWeights = getBalanceWeights(
     pool.inputTokenBalances,
-    pool.inputTokens
+    pool.inputTokens,
   );
 }
 
@@ -658,7 +676,7 @@ function getBalanceWeights(balances: BigInt[], tokens: string[]): BigDecimal[] {
   for (let i = 0; i < balances.length; i++) {
     decimalBalances[i] = bigIntToBigDecimal(
       balances[i],
-      getTokenDecimals(tokens[i])
+      getTokenDecimals(tokens[i]),
     );
   }
   let sum = decimalBalances.reduce((a, b) => a.plus(b), BIGDECIMAL_ZERO);
@@ -691,15 +709,15 @@ function fetchInputTokensFromContract(contract: Swap): Address[] {
 export function sortValuesByTokenOrder<T>(
   referenceOrder: string[],
   targetOrder: string[],
-  valuesToSort: Array<T>
+  valuesToSort: Array<T>,
 ): Array<T> {
   const len = referenceOrder.length;
   const intersection = arrayIntersection(referenceOrder, targetOrder);
   if (intersection.length != len || valuesToSort.length != len) {
     // reference and target should contain the same elements, just ordered differently.
     log.error(
-      "Failed to sort array via reference. Both arrays should have the same values. Ref: {}, target: {}", 
-      [referenceOrder.toString(), targetOrder.toString()]
+      "Failed to sort array via reference. Both arrays should have the same values. Ref: {}, target: {}",
+      [referenceOrder.toString(), targetOrder.toString()],
     );
     log.critical("", []);
     return valuesToSort;
@@ -710,13 +728,13 @@ export function sortValuesByTokenOrder<T>(
     const val = valuesToSort[i];
     const ref = referenceOrder[i];
 
-    const targetIndex = targetOrder.indexOf(ref)
+    const targetIndex = targetOrder.indexOf(ref);
     ordered[targetIndex] = val;
   }
   return ordered;
 }
 
-// arrayIntersection will return an array with the common items 
+// arrayIntersection will return an array with the common items
 // between two arrays.
 function arrayIntersection<T>(arr1: Array<T>, arr2: Array<T>): Array<T> {
   let len = arr1.length;

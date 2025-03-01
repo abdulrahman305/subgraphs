@@ -10,17 +10,17 @@ export const NETWORK_STRING = "mainnet";
 
 export const YEARN_LENS_CONTRACT_ADDRESS = ContractInfo.set(
   Address.fromString("0x83d95e0d5f402511db06817aff3f9ea88224b030"),
-  BigInt.fromI32(12242339)
+  BigInt.fromI32(12242339),
 );
 
 export const INCH_ORACLE_CONTRACT_ADDRESS = ContractInfo.set(
   Address.fromString("0x07d91f5fb9bf7798734c3f606db065549f6893bb"),
-  BigInt.fromI32(12522266)
+  BigInt.fromI32(12522266),
 );
 
 export const CHAIN_LINK_CONTRACT_ADDRESS = ContractInfo.set(
   Address.fromString("0x47fb2585d2c56fe188d0e6ec628a38b74fceeedf"),
-  BigInt.fromI32(12864088)
+  BigInt.fromI32(12864088),
 );
 
 ///////////////////////////////////////////////////////////////////////////
@@ -29,17 +29,17 @@ export const CHAIN_LINK_CONTRACT_ADDRESS = ContractInfo.set(
 
 export const CURVE_CALCULATIONS_ADDRESS = ContractInfo.set(
   Address.fromString("0x25bf7b72815476dd515044f9650bf79bad0df655"),
-  BigInt.fromI32(12370088)
+  BigInt.fromI32(12370088),
 );
 
 export const CURVE_REGISTRY_ADDRESSES = [
   ContractInfo.set(
     Address.fromString("0x7d86446ddb609ed0f5f8684acf30380a356b2b4c"),
-    BigInt.fromI32(11154794)
+    BigInt.fromI32(11154794),
   ),
   ContractInfo.set(
     Address.fromString("0x8f942c20d02befc377d41445793068908e2250d0"),
-    BigInt.fromI32(13986752)
+    BigInt.fromI32(13986752),
   ),
 ];
 
@@ -49,17 +49,17 @@ export const CURVE_REGISTRY_ADDRESSES = [
 
 export const SUSHISWAP_CALCULATIONS_ADDRESS = ContractInfo.set(
   Address.fromString("0x5ea7e501c9a23f4a76dc7d33a11d995b13a1dd25"),
-  BigInt.fromI32(2396120)
+  BigInt.fromI32(2396120),
 );
 
 export const UNISWAP_FORKS_ROUTER_ADDRESSES = [
   ContractInfo.set(
     Address.fromString("0x7a250d5630b4cf539739df2c5dacb4c659f2488d"), // Uniswap
-    BigInt.fromI32(10207858)
+    BigInt.fromI32(10207858),
   ),
   ContractInfo.set(
     Address.fromString("0xd9e1ce17f2641f24ae83637ab66a2cca9c378b9f"), // SushiSwap
-    BigInt.fromI32(10794261)
+    BigInt.fromI32(10794261),
   ),
 ];
 
@@ -131,8 +131,8 @@ WHITELISTED_TOKENS.set(
   TokenInfo.set(
     "USDC",
     6,
-    Address.fromString("0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48")
-  )
+    Address.fromString("0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48"),
+  ),
 );
 
 WHITELISTED_TOKENS.set(
@@ -140,8 +140,8 @@ WHITELISTED_TOKENS.set(
   TokenInfo.set(
     "USDT",
     6,
-    Address.fromString("0xdac17f958d2ee523a2206206994597c13d831ec7")
-  )
+    Address.fromString("0xdac17f958d2ee523a2206206994597c13d831ec7"),
+  ),
 );
 
 WHITELISTED_TOKENS.set(
@@ -149,8 +149,8 @@ WHITELISTED_TOKENS.set(
   TokenInfo.set(
     "DAI",
     18,
-    Address.fromString("0x6b175474e89094c44da98b954eedeac495271d0f")
-  )
+    Address.fromString("0x6b175474e89094c44da98b954eedeac495271d0f"),
+  ),
 );
 
 WHITELISTED_TOKENS.set(
@@ -158,8 +158,8 @@ WHITELISTED_TOKENS.set(
   TokenInfo.set(
     "WETH",
     18,
-    Address.fromString("0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2")
-  )
+    Address.fromString("0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2"),
+  ),
 );
 
 WHITELISTED_TOKENS.set(
@@ -167,8 +167,8 @@ WHITELISTED_TOKENS.set(
   TokenInfo.set(
     "ETH",
     18,
-    Address.fromString("0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee")
-  )
+    Address.fromString("0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"),
+  ),
 );
 
 export class config implements Configurations {

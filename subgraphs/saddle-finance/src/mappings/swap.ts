@@ -22,7 +22,7 @@ export function handleAddLiquidity(event: AddLiquidity): void {
     event,
     event.params.tokenAmounts,
     event.params.lpTokenSupply,
-    event.params.provider
+    event.params.provider,
   );
 }
 
@@ -31,7 +31,7 @@ export function handleNewAdminFee(event: NewAdminFee): void {
   createOrUpdateAllFees(
     event.address,
     contract.swapStorage().value4 /* swapFee */,
-    event.params.newAdminFee
+    event.params.newAdminFee,
   );
 }
 
@@ -40,7 +40,7 @@ export function handleNewSwapFee(event: NewSwapFee): void {
   createOrUpdateAllFees(
     event.address,
     event.params.newSwapFee,
-    contract.swapStorage().value5 /* adminFee */
+    contract.swapStorage().value5 /* adminFee */,
   );
 }
 
@@ -49,18 +49,18 @@ export function handleRemoveLiquidity(event: RemoveLiquidity): void {
     event,
     event.params.tokenAmounts,
     event.params.lpTokenSupply,
-    event.params.provider
+    event.params.provider,
   );
 }
 
 export function handleRemoveLiquidityImbalance(
-  event: RemoveLiquidityImbalance
+  event: RemoveLiquidityImbalance,
 ): void {
   createWithdraw(
     event,
     event.params.tokenAmounts,
     event.params.lpTokenSupply,
-    event.params.provider
+    event.params.provider,
   );
 }
 
@@ -72,24 +72,24 @@ export function handleRemoveLiquidityOne(event: RemoveLiquidityOne): void {
     inputTokenCount = inputTokenCount - basePool.inputTokens.length + 1;
   }
   const inputTokenAmounts = new Array<BigInt>(inputTokenCount).map<BigInt>(
-    () => BIGINT_ZERO
+    () => BIGINT_ZERO,
   );
   inputTokenAmounts[event.params.boughtId.toI32()] = event.params.tokensBought;
   createWithdraw(
     event,
     inputTokenAmounts,
     event.params.lpTokenSupply.minus(event.params.lpTokenAmount),
-    event.params.provider
+    event.params.provider,
   );
 }
 
 export function handleTokenSwap(event: TokenSwap): void {
   const pool = getOrCreatePool(event.address);
   let tokenIn = getOrCreateTokenFromString(
-    pool._inputTokensOrdered[event.params.soldId.toI32()]
+    pool._inputTokensOrdered[event.params.soldId.toI32()],
   );
   let tokenOut = getOrCreateTokenFromString(
-    pool._inputTokensOrdered[event.params.boughtId.toI32()]
+    pool._inputTokensOrdered[event.params.boughtId.toI32()],
   );
 
   if (isLPSwap(event, pool)) {
@@ -109,7 +109,7 @@ export function handleTokenSwap(event: TokenSwap): void {
     event.params.tokensSold,
     tokenOut,
     event.params.tokensBought,
-    event.params.buyer
+    event.params.buyer,
   );
 }
 
@@ -140,7 +140,9 @@ export function handleTokenSwapUnderlying(event: TokenSwapUnderlying): void {
     return;
   }
   const tokenIn = getOrCreateTokenFromString(pool._inputTokensOrdered[soldId]);
-  const tokenOut = getOrCreateTokenFromString(pool._inputTokensOrdered[boughtId]);
+  const tokenOut = getOrCreateTokenFromString(
+    pool._inputTokensOrdered[boughtId],
+  );
   createSwap(
     pool,
     event,
@@ -148,6 +150,6 @@ export function handleTokenSwapUnderlying(event: TokenSwapUnderlying): void {
     event.params.tokensSold,
     tokenOut,
     event.params.tokensBought,
-    event.params.buyer
+    event.params.buyer,
   );
 }

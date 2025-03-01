@@ -35,7 +35,7 @@ export function createToken(
   event: ethereum.Event,
   contract: ERC721,
   tokenCollection: Collection,
-  tokenId: BigInt
+  tokenId: BigInt,
 ): Token {
   let contractTokenId = tokenCollection.id + "-" + tokenId.toString();
 
@@ -54,7 +54,10 @@ export function createToken(
   return newToken;
 }
 
-export function updateTokenMetadata(event: ethereum.Event, token: Token): Token {
+export function updateTokenMetadata(
+  event: ethereum.Event,
+  token: Token,
+): Token {
   if (token.tokenURI == null) {
     return token;
   }

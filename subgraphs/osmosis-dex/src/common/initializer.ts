@@ -36,7 +36,7 @@ export function getOrCreateAccount(id: string): Account {
 export function getOrCreateLiquidityPoolFee(
   feeId: string,
   feeType: string,
-  feePercentage: BigDecimal = constants.BIGDECIMAL_ZERO
+  feePercentage: BigDecimal = constants.BIGDECIMAL_ZERO,
 ): LiquidityPoolFee {
   let fees = LiquidityPoolFee.load(feeId);
 
@@ -101,7 +101,7 @@ export function getOrCreateToken(denom: string): Token {
 }
 
 export function getOrCreateFinancialDailySnapshots(
-  block: cosmos.HeaderOnlyBlock
+  block: cosmos.HeaderOnlyBlock,
 ): FinancialsDailySnapshot {
   const id = block.header.time.seconds / constants.SECONDS_PER_DAY;
   let financialMetrics = FinancialsDailySnapshot.load(id.toString());
@@ -126,7 +126,7 @@ export function getOrCreateFinancialDailySnapshots(
 
     financialMetrics.blockNumber = BigInt.fromI32(block.header.height as i32);
     financialMetrics.timestamp = BigInt.fromI32(
-      block.header.time.seconds as i32
+      block.header.time.seconds as i32,
     );
 
     financialMetrics.save();
@@ -136,7 +136,7 @@ export function getOrCreateFinancialDailySnapshots(
 }
 
 export function getOrCreateUsageMetricsDailySnapshot(
-  block: cosmos.HeaderOnlyBlock
+  block: cosmos.HeaderOnlyBlock,
 ): UsageMetricsDailySnapshot {
   const id = (block.header.time.seconds / constants.SECONDS_PER_DAY).toString();
   let usageMetrics = UsageMetricsDailySnapshot.load(id);
@@ -165,7 +165,7 @@ export function getOrCreateUsageMetricsDailySnapshot(
 }
 
 export function getOrCreateUsageMetricsHourlySnapshot(
-  block: cosmos.HeaderOnlyBlock
+  block: cosmos.HeaderOnlyBlock,
 ): UsageMetricsHourlySnapshot {
   const metricsID: string = (
     block.header.time.seconds / constants.SECONDS_PER_HOUR
@@ -196,7 +196,7 @@ export function getOrCreateUsageMetricsHourlySnapshot(
 
 export function getOrCreateLiquidityPoolDailySnapshots(
   liquidityPoolId: string,
-  block: cosmos.HeaderOnlyBlock
+  block: cosmos.HeaderOnlyBlock,
 ): LiquidityPoolDailySnapshot | null {
   const id: string = liquidityPoolId
     .concat("-")
@@ -216,10 +216,10 @@ export function getOrCreateLiquidityPoolDailySnapshots(
     poolSnapshots.totalValueLockedUSD = pool.totalValueLockedUSD;
     const inputTokenLength = pool.inputTokens.length;
     poolSnapshots.dailyVolumeByTokenAmount = new Array<BigInt>(
-      inputTokenLength
+      inputTokenLength,
     ).fill(constants.BIGINT_ZERO);
     poolSnapshots.dailyVolumeByTokenUSD = new Array<BigDecimal>(
-      inputTokenLength
+      inputTokenLength,
     ).fill(constants.BIGDECIMAL_ZERO);
 
     poolSnapshots.inputTokenBalances = pool.inputTokenBalances;
@@ -257,12 +257,12 @@ export function getOrCreateLiquidityPoolDailySnapshots(
 
 export function getOrCreateLiquidityPoolHourlySnapshots(
   liquidityPoolId: string,
-  block: cosmos.HeaderOnlyBlock
+  block: cosmos.HeaderOnlyBlock,
 ): LiquidityPoolHourlySnapshot | null {
   const id: string = liquidityPoolId
     .concat("-")
     .concat(
-      (block.header.time.seconds / constants.SECONDS_PER_HOUR).toString()
+      (block.header.time.seconds / constants.SECONDS_PER_HOUR).toString(),
     );
   let poolSnapshots = LiquidityPoolHourlySnapshot.load(id);
 
@@ -279,10 +279,10 @@ export function getOrCreateLiquidityPoolHourlySnapshots(
     poolSnapshots.totalValueLockedUSD = pool.totalValueLockedUSD;
     const inputTokenLength = pool.inputTokens.length;
     poolSnapshots.hourlyVolumeByTokenAmount = new Array<BigInt>(
-      inputTokenLength
+      inputTokenLength,
     ).fill(constants.BIGINT_ZERO);
     poolSnapshots.hourlyVolumeByTokenUSD = new Array<BigDecimal>(
-      inputTokenLength
+      inputTokenLength,
     ).fill(constants.BIGDECIMAL_ZERO);
 
     poolSnapshots.inputTokenBalances = pool.inputTokenBalances;
@@ -320,19 +320,19 @@ export function getOrCreateLiquidityPoolHourlySnapshots(
 
 export function msgCreatePoolHandler(
   msgValue: Uint8Array,
-  data: cosmos.TransactionData
+  data: cosmos.TransactionData,
 ): void {
   initRegistry();
 
   const poolId = getPoolId(data.tx.result.events);
   const liquidityPoolId = constants.Protocol.NAME.concat("-").concat(
-    poolId.toString()
+    poolId.toString(),
   );
   const liquidityPool = new LiquidityPoolStore(liquidityPoolId);
 
   const message = Protobuf.decode<MsgCreateBalancerPool>(
     msgValue,
-    MsgCreateBalancerPool.decode
+    MsgCreateBalancerPool.decode,
   );
   liquidityPool.name = `${message.poolAssets[0].token!.denom} / ${
     message.poolAssets[1].token!.denom
@@ -365,7 +365,7 @@ export function msgCreatePoolHandler(
   liquidityPool.inputTokenBalances = inputTokenBalances;
   liquidityPool.inputTokenWeights = inputTokenWeights;
   liquidityPool.outputToken = getOrCreateToken(
-    "PoolToken".concat("-").concat(poolId.toString())
+    "PoolToken".concat("-").concat(poolId.toString()),
   ).id;
   liquidityPool.outputTokenSupply = constants.BIGINT_ZERO;
   liquidityPool.outputTokenPriceUSD = constants.BIGDECIMAL_ZERO;
@@ -387,7 +387,7 @@ export function msgCreatePoolHandler(
 
   liquidityPool.createdBlockNumber = BigInt.fromI32(data.tx.height as i32);
   liquidityPool.createdTimestamp = BigInt.fromI32(
-    data.block.header.time.seconds as i32
+    data.block.header.time.seconds as i32,
   );
   liquidityPool.save();
 

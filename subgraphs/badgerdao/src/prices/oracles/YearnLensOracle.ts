@@ -6,7 +6,7 @@ import { YearnLensContract } from "../../../generated/templates/Strategy/YearnLe
 
 export function getTokenPriceUSDC(
   tokenAddr: Address,
-  block: ethereum.Block | null = null
+  block: ethereum.Block | null = null,
 ): CustomPriceType {
   const config = utils.getConfig();
   const contractAddress = utils.getContract(config.yearnLens(), block);
@@ -18,13 +18,13 @@ export function getTokenPriceUSDC(
   const tokenPrice: BigDecimal = utils
     .readValue<BigInt>(
       yearnLensContract.try_getPriceUsdcRecommended(tokenAddr),
-      constants.BIGINT_ZERO
+      constants.BIGINT_ZERO,
     )
     .toBigDecimal();
 
   return CustomPriceType.initialize(
     tokenPrice,
     constants.DEFAULT_USDC_DECIMALS,
-    constants.OracleType.YEARN_LENS_ORACLE
+    constants.OracleType.YEARN_LENS_ORACLE,
   );
 }

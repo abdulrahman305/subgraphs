@@ -12,14 +12,14 @@ import { getPriceUsdcRecommended } from "../Prices/routers/CurveRouter";
 export function getPriceOfOutputTokens(
   vaultAddress: Address,
   tokenAddress: Address,
-  _decimals: BigDecimal
+  _decimals: BigDecimal,
 ): BigDecimal {
   const network = dataSource.network();
   const vaultContract = Vault.bind(vaultAddress);
 
   let pricePerShare = utils.readValue<BigInt>(
     vaultContract.try_getPricePerFullShare(),
-    constants.BIGINT_ZERO
+    constants.BIGINT_ZERO,
   );
 
   let virtualPrice = getPriceUsdcRecommended(tokenAddress, network);

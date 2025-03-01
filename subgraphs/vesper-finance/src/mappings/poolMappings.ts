@@ -34,7 +34,7 @@ export function handleDeposit(event: DepositEvent): void {
     depositAmount,
     sharesMinted,
     event.transaction,
-    event.block
+    event.block,
   );
 
   updateFinancials(event.block);
@@ -52,7 +52,7 @@ export function handleWithdraw(event: WithdrawEvent): void {
     withdrawAmount,
     sharesBurnt,
     event.transaction,
-    event.block
+    event.block,
   );
 
   updateFinancials(event.block);
@@ -78,12 +78,12 @@ export function handleUniversalFeePaid(event: UniversalFeePaidEvent): void {
     vault,
     constants.BIGDECIMAL_ZERO,
     protocolSideRevenueUSD,
-    event.block
+    event.block,
   );
 }
 
 export function handleUpdatedUniversalFee(
-  event: UpdatedUniversalFeeEvent
+  event: UpdatedUniversalFeeEvent,
 ): void {}
 
 export function handleUpdatedWithdrawFee(event: UpdatedWithdrawFeeEvent): void {
@@ -94,7 +94,7 @@ export function handleUpdatedWithdrawFee(event: UpdatedWithdrawFeeEvent): void {
 
   const withdrawalFee = getOrCreateFee(
     withdrawalFeeId,
-    constants.VaultFeeType.WITHDRAWAL_FEE
+    constants.VaultFeeType.WITHDRAWAL_FEE,
   );
 
   withdrawalFee.feePercentage = event.params.newWithdrawFee
@@ -127,7 +127,7 @@ export function handleEarningReported(event: EarningReportedEvent): void {
     vault,
     supplySideRevenueUSD,
     constants.BIGDECIMAL_ZERO,
-    event.block
+    event.block,
   );
 
   updateFinancials(event.block);
@@ -141,12 +141,12 @@ export function handleUpdatedPoolRewards(event: UpdatedPoolRewardsEvent): void {
   const poolRewardsContract = PoolRewardsContract.bind(newPoolRewards);
   const vaultAddress = utils.readValue<Address>(
     poolRewardsContract.try_pool(),
-    constants.NULL.TYPE_ADDRESS
+    constants.NULL.TYPE_ADDRESS,
   );
 
   const rewardTokens = utils.readValue<Address[]>(
     poolRewardsContract.try_getRewardTokens(),
-    []
+    [],
   );
 
   for (let i = 0; i < rewardTokens.length; i += 1) {
@@ -156,7 +156,7 @@ export function handleUpdatedPoolRewards(event: UpdatedPoolRewardsEvent): void {
       rewardToken,
       vaultAddress,
       constants.BIGINT_ZERO,
-      event.block
+      event.block,
     );
   }
 

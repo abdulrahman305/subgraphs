@@ -28,7 +28,7 @@ export function createWithdrawTransaction(
   amount: BigInt,
   amountUSD: BigDecimal,
   transaction: ethereum.Transaction,
-  block: ethereum.Block
+  block: ethereum.Block,
 ): WithdrawTransaction {
   let withdrawTransactionId = "withdraw-" + transaction.hash.toHexString();
 
@@ -78,7 +78,7 @@ export function UpdateMetricsAfterWithdraw(block: ethereum.Block): void {
 export function getWithdrawFeePercentage(vaultContract: VaultContract): BigInt {
   let withdrawFeePercentage = utils.readValue<BigInt>(
     vaultContract.try_withdrawFee(),
-    constants.BIGINT_ZERO
+    constants.BIGINT_ZERO,
   );
 
   if (withdrawFeePercentage.gt(constants.BIGINT_TEN.pow(14 as u8))) {
@@ -95,7 +95,7 @@ export function Withdraw(
   withdrawAmount: BigInt,
   sharesBurnt: BigInt,
   transaction: ethereum.Transaction,
-  block: ethereum.Block
+  block: ethereum.Block,
 ): void {
   const vault = getOrCreateVault(vaultAddress, block);
   let vaultContract = VaultContract.bind(vaultAddress);
@@ -119,23 +119,23 @@ export function Withdraw(
 
   vault.outputTokenSupply = utils.readValue<BigInt>(
     vaultContract.try_totalSupply(),
-    constants.BIGINT_ZERO
+    constants.BIGINT_ZERO,
   );
 
   let totalValue = utils.readValue<BigInt>(
     vaultContract.try_totalValue(),
-    constants.BIGINT_ZERO
+    constants.BIGINT_ZERO,
   );
 
   if (totalValue.equals(constants.BIGINT_ZERO)) {
     let vaultTokenLocked = utils.readValue<BigInt>(
       vaultContract.try_tokenLocked(),
-      constants.BIGINT_ZERO
+      constants.BIGINT_ZERO,
     );
 
     let tokenInVault = utils.readValue<BigInt>(
       vaultContract.try_tokensHere(),
-      constants.BIGINT_ZERO
+      constants.BIGINT_ZERO,
     );
 
     totalValue = vaultTokenLocked.plus(tokenInVault);
@@ -165,14 +165,14 @@ export function Withdraw(
     withdrawAmount,
     withdrawAmountUSD,
     transaction,
-    block
+    block,
   );
 
   updateRevenueSnapshots(
     vault,
     constants.BIGDECIMAL_ZERO,
     withdrawalFeeUSD,
-    block
+    block,
   );
 
   utils.updateProtocolTotalValueLockedUSD();
@@ -189,6 +189,6 @@ export function Withdraw(
       withdrawAmountUSD.toString(),
       vault.outputTokenPriceUSD!.toString(),
       transaction.hash.toHexString(),
-    ]
+    ],
   );
 }

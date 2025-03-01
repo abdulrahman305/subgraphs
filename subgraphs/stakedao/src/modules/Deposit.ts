@@ -28,7 +28,7 @@ export function createDepositTransaction(
   block: ethereum.Block,
   assetId: string,
   amount: BigInt,
-  amountUSD: BigDecimal
+  amountUSD: BigDecimal,
 ): DepositTransaction {
   let transactionId = "deposit-" + transaction.hash.toHexString();
 
@@ -64,7 +64,7 @@ export function _Deposit(
   transaction: ethereum.Transaction,
   block: ethereum.Block,
   vault: VaultStore,
-  depositAmount: BigInt
+  depositAmount: BigInt,
 ): void {
   const vaultAddress = Address.fromString(vault.id);
   const vaultContract = VaultContract.bind(vaultAddress);
@@ -88,7 +88,7 @@ export function _Deposit(
   let inputTokenAddress = Address.fromString(vault.inputToken);
   let inputTokenPrice = getUsdPricePerToken(inputTokenAddress);
   let inputTokenDecimals = constants.BIGINT_TEN.pow(
-    inputToken!.decimals as u8
+    inputToken!.decimals as u8,
   ).toBigDecimal();
 
   let depositAmountUSD = depositAmount
@@ -109,13 +109,13 @@ export function _Deposit(
   vault.outputTokenPriceUSD = getPriceOfOutputTokens(
     vaultAddress,
     inputTokenAddress,
-    inputTokenDecimals
+    inputTokenDecimals,
   );
 
   vault.pricePerShare = utils
     .readValue<BigInt>(
       vaultContract.try_getPricePerFullShare(),
-      constants.BIGINT_ZERO
+      constants.BIGINT_ZERO,
     )
     .toBigDecimal();
 
@@ -139,7 +139,7 @@ export function _Deposit(
     block,
     vault.inputToken,
     depositAmount,
-    depositAmountUSD
+    depositAmountUSD,
   );
 
   log.warning(
@@ -149,6 +149,6 @@ export function _Deposit(
       vault.id,
       sharesMinted.toString(),
       depositAmount.toString(),
-    ]
+    ],
   );
 }

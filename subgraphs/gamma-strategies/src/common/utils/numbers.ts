@@ -1,7 +1,10 @@
 import { BigDecimal, BigInt } from "@graphprotocol/graph-ts";
 import { BIGDECIMAL_ONE, BIGINT_TWO, BIGINT_ZERO } from "../constants";
 
-export function bigIntToBigDecimal(quantity: BigInt, decimals: i32 = 18): BigDecimal {
+export function bigIntToBigDecimal(
+  quantity: BigInt,
+  decimals: i32 = 18,
+): BigDecimal {
   return quantity.divDecimal(
     BigInt.fromI32(10)
       .pow(decimals as u8)
@@ -25,7 +28,9 @@ export function calculateAverage(prices: BigDecimal[]): BigDecimal {
     sum = sum.plus(prices[i]);
   }
 
-  return sum.div(BigDecimal.fromString(BigInt.fromI32(prices.length).toString()));
+  return sum.div(
+    BigDecimal.fromString(BigInt.fromI32(prices.length).toString()),
+  );
 }
 
 export function calculateMedian(prices: BigDecimal[]): BigDecimal {

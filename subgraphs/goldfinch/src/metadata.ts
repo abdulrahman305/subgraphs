@@ -1,4 +1,4 @@
-import {json} from "@graphprotocol/graph-ts"
+import { json } from "@graphprotocol/graph-ts";
 
 export const MAINNET_METADATA = json
   .fromString(
@@ -63,6 +63,6 @@ export const MAINNET_METADATA = json
     "createdAt": 1630632626
   }
 }
-`
+`,
   )
-  .toObject()
+  .toObject();

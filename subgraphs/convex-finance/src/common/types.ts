@@ -54,7 +54,7 @@ export class CustomFeesType {
     lockIncentive: BigInt,
     callIncentive: BigInt,
     stakerIncentive: BigInt,
-    platformFee: BigInt
+    platformFee: BigInt,
   ) {
     this._lockIncentive = lockIncentive;
     this._callIncentive = callIncentive;

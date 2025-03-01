@@ -9,25 +9,25 @@ export function getTotalFees(): CustomFeesType {
 
   const lockIncentive = utils.readValue<BigInt>(
     contract.try_lockIncentive(),
-    constants.BIGINT_ZERO
+    constants.BIGINT_ZERO,
   );
   const callIncentive = utils.readValue<BigInt>(
     contract.try_earmarkIncentive(),
-    constants.BIGINT_ZERO
+    constants.BIGINT_ZERO,
   );
   const stakerIncentive = utils.readValue<BigInt>(
     contract.try_stakerIncentive(),
-    constants.BIGINT_ZERO
+    constants.BIGINT_ZERO,
   );
   const platformFee = utils.readValue<BigInt>(
     contract.try_platformFee(),
-    constants.BIGINT_ZERO
+    constants.BIGINT_ZERO,
   );
 
   return new CustomFeesType(
     lockIncentive,
     callIncentive,
     stakerIncentive,
-    platformFee
+    platformFee,
   );
 }

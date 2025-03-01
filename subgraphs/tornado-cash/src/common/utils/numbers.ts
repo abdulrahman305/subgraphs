@@ -3,12 +3,12 @@ import { BIGDECIMAL_ONE, BIGINT_TWO, BIGINT_ZERO } from "../constants";
 
 export function bigIntToBigDecimal(
   quantity: BigInt,
-  decimals: i32 = 18
+  decimals: i32 = 18,
 ): BigDecimal {
   return quantity.divDecimal(
     BigInt.fromI32(10)
       .pow(decimals as u8)
-      .toBigDecimal()
+      .toBigDecimal(),
   );
 }
 
@@ -34,7 +34,7 @@ export function calculateAverage(prices: BigDecimal[]): BigDecimal {
   }
 
   return sum.div(
-    BigDecimal.fromString(BigInt.fromI32(prices.length).toString())
+    BigDecimal.fromString(BigInt.fromI32(prices.length).toString()),
   );
 }
 
@@ -56,9 +56,7 @@ export function calculateMedian(prices: BigDecimal[]): BigDecimal {
 // https://docs.aave.com/developers/v/2.0/glossary
 
 export function rayToWad(a: BigInt): BigInt {
-  const halfRatio = BigInt.fromI32(10)
-    .pow(9)
-    .div(BigInt.fromI32(2));
+  const halfRatio = BigInt.fromI32(10).pow(9).div(BigInt.fromI32(2));
   return halfRatio.plus(a).div(BigInt.fromI32(10).pow(9));
 }
 

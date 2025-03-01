@@ -14,7 +14,7 @@ export function enumToPrefix(snake: string): string {
 
 export function readValue<T>(
   callResult: ethereum.CallResult<T>,
-  defaultValue: T
+  defaultValue: T,
 ): T {
   return callResult.reverted ? defaultValue : callResult.value;
 }
@@ -30,7 +30,7 @@ export function getTokenDecimals(tokenAddr: Address): BigDecimal {
 export function createFeeType(
   feeId: string,
   feeType: string,
-  feePercentage: BigDecimal
+  feePercentage: BigDecimal,
 ): void {
   let fees = VaultFee.load(feeId);
 
@@ -45,13 +45,13 @@ export function createFeeType(
 
 export function getPoolFromLpToken(
   lpToken: Address,
-  registryAddress: Address
+  registryAddress: Address,
 ): Address {
   const curveRegistryContract = CurveRegistryContract.bind(registryAddress);
 
   let poolAddress = readValue<Address>(
     curveRegistryContract.try_get_pool_from_lp_token(lpToken),
-    constants.NULL.TYPE_ADDRESS
+    constants.NULL.TYPE_ADDRESS,
   );
 
   return poolAddress;
@@ -86,7 +86,7 @@ export function getPool(lpToken: Address): Address {
 
 export function getPoolInfoFromPoolId(poolId: BigInt): PoolInfoType | null {
   const boosterContract = BoosterContract.bind(
-    constants.CONVEX_BOOSTER_ADDRESS
+    constants.CONVEX_BOOSTER_ADDRESS,
   );
   const poolInfo = boosterContract.try_poolInfo(poolId);
   if (poolInfo.reverted) return null;
@@ -124,30 +124,28 @@ export function updateProtocolAfterNewVault(vaultAddress: string): void {
 
 export function getConvexTokenMintAmount(crvRewardAmount: BigInt): BigDecimal {
   const convexTokenContract = ERC20Contract.bind(
-    constants.CONVEX_TOKEN_ADDRESS
+    constants.CONVEX_TOKEN_ADDRESS,
   );
   let cvxTokenDecimals = getTokenDecimals(constants.CONVEX_TOKEN_ADDRESS);
   let cvxTokenSupply = readValue<BigInt>(
     convexTokenContract.try_totalSupply(),
-    constants.BIGINT_ZERO
+    constants.BIGINT_ZERO,
   ).toBigDecimal();
 
   let currentCliff = cvxTokenSupply.div(constants.CVX_CLIFF_SIZE);
 
   let cvxRewardAmount: BigDecimal = constants.BIGDECIMAL_ZERO;
   if (currentCliff.lt(constants.CVX_CLIFF_COUNT.times(cvxTokenDecimals))) {
-    let remaining = constants.CVX_CLIFF_COUNT.times(cvxTokenDecimals).minus(
-      currentCliff
-    );
+    let remaining =
+      constants.CVX_CLIFF_COUNT.times(cvxTokenDecimals).minus(currentCliff);
 
     cvxRewardAmount = crvRewardAmount
       .toBigDecimal()
       .times(remaining)
       .div(constants.CVX_CLIFF_COUNT.times(cvxTokenDecimals));
 
-    let amountTillMax = constants.CVX_MAX_SUPPLY.times(cvxTokenDecimals).minus(
-      cvxTokenSupply
-    );
+    let amountTillMax =
+      constants.CVX_MAX_SUPPLY.times(cvxTokenDecimals).minus(cvxTokenSupply);
     if (cvxRewardAmount.gt(amountTillMax)) {
       cvxRewardAmount = amountTillMax;
     }

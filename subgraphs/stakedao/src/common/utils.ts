@@ -1,9 +1,4 @@
-import {
-  BigInt,
-  Address,
-  ethereum,
-  BigDecimal,
-} from "@graphprotocol/graph-ts";
+import { BigInt, Address, ethereum, BigDecimal } from "@graphprotocol/graph-ts";
 import * as constants from "./constants";
 import { getOrCreateYieldAggregator } from "./initializers";
 import { VaultFee, Vault as VaultStore } from "../../generated/schema";
@@ -19,7 +14,7 @@ export function prefixID(enumString: string, ID: string): string {
 
 export function readValue<T>(
   callResult: ethereum.CallResult<T>,
-  defaultValue: T
+  defaultValue: T,
 ): T {
   return callResult.reverted ? defaultValue : callResult.value;
 }
@@ -29,7 +24,7 @@ export function getTokenDecimals(tokenAddr: Address): BigInt {
 
   let decimals = readValue<BigInt>(
     token.try_decimals(),
-    constants.DEFAULT_DECIMALS
+    constants.DEFAULT_DECIMALS,
   );
 
   return decimals;
@@ -38,7 +33,7 @@ export function getTokenDecimals(tokenAddr: Address): BigInt {
 export function createFeeType(
   feeId: string,
   feeType: string,
-  feePercentage: BigInt
+  feePercentage: BigInt,
 ): void {
   const fees = new VaultFee(feeId);
 
@@ -52,7 +47,7 @@ export function createFeeType(
 
 export function getFeePercentage(
   vaultAddress: string,
-  feeType: string
+  feeType: string,
 ): BigDecimal {
   let feesPercentage: BigDecimal = constants.BIGDECIMAL_ZERO;
   const vault = VaultStore.load(vaultAddress);
@@ -76,9 +71,7 @@ export function updateProtocolTotalValueLockedUSD(): void {
   for (let vaultIdx = 0; vaultIdx < vaultIds.length; vaultIdx++) {
     const vault = VaultStore.load(vaultIds[vaultIdx]);
 
-    totalValueLockedUSD = totalValueLockedUSD.plus(
-      vault!.totalValueLockedUSD
-    );
+    totalValueLockedUSD = totalValueLockedUSD.plus(vault!.totalValueLockedUSD);
   }
 
   protocol.totalValueLockedUSD = totalValueLockedUSD;

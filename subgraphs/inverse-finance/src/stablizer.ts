@@ -15,19 +15,13 @@ import { decimalsToBigDecimal } from "./common/utils";
 export function handleSell(event: Sell): void {
   // assume price of DOLA/DAI equal $1
   let token = getOrCreateToken(Address.fromString(DOLA_ADDRESS));
-  let fees = event.params.sold
-    .minus(event.params.received)
-    .toBigDecimal()
-    .div(decimalsToBigDecimal(token.decimals));
+  let fees = event.params.sold.minus(event.params.received).toBigDecimal().div(decimalsToBigDecimal(token.decimals));
   updateStablizerFees(fees, event);
 }
 
 export function handleBuy(event: Buy): void {
   // assume price of DOLA/DAI equal $1
   let token = getOrCreateToken(Address.fromString(DOLA_ADDRESS));
-  let fees = event.params.spent
-    .minus(event.params.purchased)
-    .toBigDecimal()
-    .div(decimalsToBigDecimal(token.decimals));
+  let fees = event.params.spent.minus(event.params.purchased).toBigDecimal().div(decimalsToBigDecimal(token.decimals));
   updateStablizerFees(fees, event);
 }

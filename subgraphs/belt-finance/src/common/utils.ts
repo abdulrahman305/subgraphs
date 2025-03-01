@@ -24,7 +24,7 @@ export function prefixID(enumString: string, ID: string): string {
 
 export function readValue<T>(
   callResult: ethereum.CallResult<T>,
-  defaultValue: T
+  defaultValue: T,
 ): T {
   return callResult.reverted ? defaultValue : callResult.value;
 }
@@ -34,7 +34,7 @@ export function getTokenDecimals(tokenAddr: Address): BigDecimal {
 
   const decimals = readValue<BigInt>(
     token.try_decimals(),
-    constants.DEFAULT_DECIMALS
+    constants.DEFAULT_DECIMALS,
   );
 
   return constants.BIGINT_TEN.pow(decimals.toI32() as u8).toBigDecimal();
@@ -48,7 +48,7 @@ export function isVaultRegistered(vaultAddress: Address): boolean {
 }
 
 export function isBuyBackTransactionPresent(
-  transaction: ethereum.Transaction
+  transaction: ethereum.Transaction,
 ): boolean {
   let buyBackStore = _BuyBack.load(transaction.hash.toHexString());
 
@@ -67,14 +67,14 @@ export function getVaultStrategies(vaultAddress: Address): Address[] {
 
   const strategyCount = readValue<BigInt>(
     vaultContract.try_strategyCount(),
-    constants.BIGINT_ZERO
+    constants.BIGINT_ZERO,
   ).toI32();
 
   const vaultStrategies = new Array<Address>();
   for (let idx = 0; idx < strategyCount; idx++) {
     const strategyAddress = readValue<Address>(
       vaultContract.try_strategies(BigInt.fromI32(idx)),
-      constants.NULL.TYPE_ADDRESS
+      constants.NULL.TYPE_ADDRESS,
     );
 
     if (strategyAddress.equals(constants.NULL.TYPE_ADDRESS)) continue;
@@ -90,7 +90,7 @@ export function getUnderlyingStrategy(strategyAddress: Address): Address {
 
   const underlyingStrategyAddress = readValue<Address>(
     strategyContract.try_strategy(),
-    strategyAddress
+    strategyAddress,
   );
 
   return underlyingStrategyAddress;
@@ -98,17 +98,17 @@ export function getUnderlyingStrategy(strategyAddress: Address): Address {
 
 export function getStrategyDepositFees(
   vaultAddress: Address,
-  strategyAddress: Address
+  strategyAddress: Address,
 ): VaultFee {
   const strategyContract = StrategyContract.bind(strategyAddress);
 
   const entranceFeeNumer = readValue<BigInt>(
     strategyContract.try_entranceFeeNumer(),
-    constants.BIGINT_ZERO
+    constants.BIGINT_ZERO,
   );
   const entranceFeeDenom = readValue<BigInt>(
     strategyContract.try_entranceFeeDenom(),
-    constants.BIGINT_ONE
+    constants.BIGINT_ONE,
   );
 
   const depositFees = getOrCreateVaultFee(
@@ -119,7 +119,7 @@ export function getStrategyDepositFees(
     constants.VaultFeeType.DEPOSIT_FEE,
     entranceFeeNumer
       .divDecimal(entranceFeeDenom.toBigDecimal())
-      .times(constants.BIGDECIMAL_HUNDRED)
+      .times(constants.BIGDECIMAL_HUNDRED),
   );
 
   return depositFees;
@@ -127,18 +127,18 @@ export function getStrategyDepositFees(
 
 export function getStrategyWithdrawalFees(
   vaultAddress: Address,
-  strategyAddress: Address
+  strategyAddress: Address,
 ): VaultFee {
   const underlyingStrategyAddress = getUnderlyingStrategy(strategyAddress);
   const strategyContract = StrategyContract.bind(underlyingStrategyAddress);
 
   const withdrawFeeNumer = readValue<BigInt>(
     strategyContract.try_withdrawFeeNumer(),
-    constants.BIGINT_ZERO
+    constants.BIGINT_ZERO,
   );
   const withdrawFeeDenom = readValue<BigInt>(
     strategyContract.try_withdrawFeeDenom(),
-    constants.BIGINT_ONE
+    constants.BIGINT_ONE,
   );
 
   const withdrawalFees = getOrCreateVaultFee(
@@ -149,7 +149,7 @@ export function getStrategyWithdrawalFees(
     constants.VaultFeeType.WITHDRAWAL_FEE,
     withdrawFeeNumer
       .divDecimal(withdrawFeeDenom.toBigDecimal())
-      .times(constants.BIGDECIMAL_HUNDRED)
+      .times(constants.BIGDECIMAL_HUNDRED),
   );
 
   return withdrawalFees;
@@ -157,22 +157,22 @@ export function getStrategyWithdrawalFees(
 
 export function getStrategyPerformaceFees(
   vaultAddress: Address,
-  strategyAddress: Address
+  strategyAddress: Address,
 ): VaultFee {
   const underlyingStrategyAddress = getUnderlyingStrategy(strategyAddress);
   const strategyContract = StrategyContract.bind(underlyingStrategyAddress);
 
   const buyBackRate = readValue<BigInt>(
     strategyContract.try_buyBackRate(),
-    constants.BIGINT_ZERO
+    constants.BIGINT_ZERO,
   );
   const buyBackPoolRate = readValue<BigInt>(
     strategyContract.try_buyBackPoolRate(),
-    constants.BIGINT_ZERO
+    constants.BIGINT_ZERO,
   );
   const buyBackRateMax = readValue<BigInt>(
     strategyContract.try_buyBackRateMax(),
-    constants.BIGINT_ONE
+    constants.BIGINT_ONE,
   );
 
   const performanceFees = getOrCreateVaultFee(
@@ -184,7 +184,7 @@ export function getStrategyPerformaceFees(
     buyBackRate
       .plus(buyBackPoolRate)
       .divDecimal(buyBackRateMax.toBigDecimal())
-      .times(constants.BIGDECIMAL_HUNDRED)
+      .times(constants.BIGDECIMAL_HUNDRED),
   );
 
   return performanceFees;
@@ -192,13 +192,16 @@ export function getStrategyPerformaceFees(
 
 export function getStrategyFees(
   vaultAddress: Address,
-  strategyAddress: Address
+  strategyAddress: Address,
 ): PoolFeesType {
   const depositFees = getStrategyDepositFees(vaultAddress, strategyAddress);
-  const withdrawalFees = getStrategyWithdrawalFees(vaultAddress, strategyAddress);
+  const withdrawalFees = getStrategyWithdrawalFees(
+    vaultAddress,
+    strategyAddress,
+  );
   const performanceFees = getStrategyPerformaceFees(
     vaultAddress,
-    strategyAddress
+    strategyAddress,
   );
 
   return new PoolFeesType(depositFees, withdrawalFees, performanceFees);
@@ -211,7 +214,7 @@ export function getVaultFees(vaultAddress: Address): string[] {
 
   for (let idx = 0; idx < vaultStrategies.length; idx++) {
     vaulFees = vaulFees.concat(
-      getStrategyFees(vaultAddress, vaultStrategies.at(idx)).stringIds()
+      getStrategyFees(vaultAddress, vaultStrategies.at(idx)).stringIds(),
     );
   }
 

@@ -6,7 +6,10 @@ import { createWithdraw } from "../entities/event";
 import { getOrCreateTrove, getOrCreateTroveToken } from "../entities/trove";
 import { getUSDPriceWithoutDecimals } from "../utils/price";
 import { BIGINT_ZERO } from "../utils/constants";
-import { incrementProtocolWithdrawCount, updateUsageMetrics } from "../entities/protocol";
+import {
+  incrementProtocolWithdrawCount,
+  updateUsageMetrics,
+} from "../entities/protocol";
 
 /**
  * Whenever a borrower's trove is closed by a non-owner address because of either:
@@ -29,18 +32,18 @@ export function handleCollBalanceUpdated(event: CollBalanceUpdated): void {
     const troveToken = getOrCreateTroveToken(trove, token);
     if (amount > troveToken.collateralSurplus) {
       troveToken.collateralSurplusChange = amount.minus(
-        troveToken.collateralSurplus
+        troveToken.collateralSurplus,
       );
       const collateralSurplusUSD = getUSDPriceWithoutDecimals(
         token,
-        amount.toBigDecimal()
+        amount.toBigDecimal(),
       );
       createWithdraw(
         event,
         troveToken.collateralSurplusChange,
         collateralSurplusUSD,
         borrower,
-        token
+        token,
       );
     } else {
       troveToken.collateralSurplusChange = BIGINT_ZERO;
@@ -52,5 +55,4 @@ export function handleCollBalanceUpdated(event: CollBalanceUpdated): void {
   trove.save();
   updateUsageMetrics(event, borrower);
   incrementProtocolWithdrawCount(event);
-
 }

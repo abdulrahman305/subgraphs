@@ -14,13 +14,13 @@ export function getPricePerShare(vaultAddress: Address): BigInt {
 
   let pricePerShare = utils.readValue<BigInt>(
     vaultContract.try_pricePerShare(),
-    constants.BIGINT_ZERO
+    constants.BIGINT_ZERO,
   );
 
   if (pricePerShare.equals(constants.BIGINT_ZERO)) {
     pricePerShare = utils.readValue<BigInt>(
       vaultContract.try_getPricePerShare(),
-      constants.BIGINT_ZERO
+      constants.BIGINT_ZERO,
     );
   }
 
@@ -35,7 +35,7 @@ export function getPriceOfOutputTokens(vaultAddress: Address): BigDecimal {
 
   const tokenAddress = utils.readValue<Address>(
     vaultContract.try_token(),
-    constants.NULL.TYPE_ADDRESS
+    constants.NULL.TYPE_ADDRESS,
   );
 
   let virtualPrice = getPriceUsdcRecommended(tokenAddress, network);

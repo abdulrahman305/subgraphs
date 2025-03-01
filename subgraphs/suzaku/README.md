@@ -12,6 +12,6 @@
 
 ## Useful Links
 
-- Landing Page: 
-- Docs: 
-- Contracts: 
+- Landing Page:
+- Docs:
+- Contracts:

@@ -27,7 +27,7 @@ function createSwapTransaction(
   amountInUSD: BigDecimal,
   outputToken: string,
   outputTokenAmount: BigInt,
-  amountOutUSD: BigDecimal
+  amountOutUSD: BigDecimal,
 ): void {
   if (!transaction) {
     return;
@@ -58,7 +58,7 @@ function createSwapTransaction(
 
 export function msgSwapExactAmountHandler(
   msgValue: Uint8Array,
-  data: cosmos.TransactionData
+  data: cosmos.TransactionData,
 ): void {
   const events = data.tx.result.events;
   for (let idx = 0; idx < events.length; idx++) {
@@ -71,7 +71,7 @@ export function msgSwapExactAmountHandler(
 function swapHandler(
   data: cosmos.Event,
   tx: cosmos.TxResult,
-  block: cosmos.HeaderOnlyBlock
+  block: cosmos.HeaderOnlyBlock,
 ): void {
   const attributes = data.attributes;
   let poolId: string = "";
@@ -112,7 +112,7 @@ function swapHandler(
     tokenOutDenom,
     data,
     tx,
-    block
+    block,
   );
 }
 
@@ -149,7 +149,7 @@ function swap(
   tokenOutDenom: string,
   data: cosmos.Event,
   tx: cosmos.TxResult,
-  block: cosmos.HeaderOnlyBlock
+  block: cosmos.HeaderOnlyBlock,
 ): void {
   const liquidityPoolId = constants.Protocol.NAME.concat("-").concat(poolId);
   const liquidityPool = LiquidityPoolStore.load(liquidityPoolId);
@@ -159,19 +159,18 @@ function swap(
 
   const inputTokenBalances = liquidityPool.inputTokenBalances;
   const inputTokenAmounts = new Array<BigInt>(inputTokenBalances.length).fill(
-    constants.BIGINT_ZERO
+    constants.BIGINT_ZERO,
   );
   const inputTokens = liquidityPool.inputTokens;
   const tokenInIndex = inputTokens.indexOf(tokenInDenom);
   if (tokenInIndex >= 0) {
-    inputTokenBalances[tokenInIndex] = inputTokenBalances[tokenInIndex].plus(
-      tokenInAmount
-    );
+    inputTokenBalances[tokenInIndex] =
+      inputTokenBalances[tokenInIndex].plus(tokenInAmount);
     // The input token balance should always be positive, so put a defensive checking here in case something is wrong.
     if (inputTokenBalances[tokenInIndex] <= constants.BIGINT_ZERO) {
       log.error(
         "[swap] token balance is not postive, this SHOULD NOT happen",
-        []
+        [],
       );
       return;
     }
@@ -180,14 +179,13 @@ function swap(
 
   const tokenOutIndex = inputTokens.indexOf(tokenOutDenom);
   if (tokenOutIndex >= 0) {
-    inputTokenBalances[tokenOutIndex] = inputTokenBalances[tokenOutIndex].minus(
-      tokenOutAmount
-    );
+    inputTokenBalances[tokenOutIndex] =
+      inputTokenBalances[tokenOutIndex].minus(tokenOutAmount);
     // The input token balance should always be positive, so put a defensive checking here in case something is wrong.
     if (inputTokenBalances[tokenOutIndex] <= constants.BIGINT_ZERO) {
       log.error(
         "[swap] token balance is not postive, this SHOULD NOT happen",
-        []
+        [],
       );
       return;
     }
@@ -208,11 +206,10 @@ function swap(
       tokenInAmount,
       tokenOutDenom,
       tokenOutAmount,
-      block.header
+      block.header,
     );
-    liquidityPool.cumulativeVolumeUSD = liquidityPool.cumulativeVolumeUSD.plus(
-      volumeUSD
-    );
+    liquidityPool.cumulativeVolumeUSD =
+      liquidityPool.cumulativeVolumeUSD.plus(volumeUSD);
     liquidityPool.save();
   }
   const sender = data.getAttributeValue("sender");
@@ -226,24 +223,24 @@ function swap(
     volumeUSD,
     tokenOutDenom,
     tokenOutAmount,
-    volumeUSD
+    volumeUSD,
   );
   updateTokenVolumeAndBalance(
     liquidityPoolId,
     tokenInDenom,
     tokenInAmount,
     volumeUSD,
-    block
+    block,
   );
   updateTokenVolumeAndBalance(
     liquidityPoolId,
     tokenOutDenom,
     tokenOutAmount,
     volumeUSD,
-    block
+    block,
   );
   utils.updateProtocolTotalValueLockedUSD(
-    liquidityPool.totalValueLockedUSD.minus(prevTVL)
+    liquidityPool.totalValueLockedUSD.minus(prevTVL),
   );
   updateSupplySideRevenue(liquidityPoolId, volumeUSD, block);
   updateSnapshotsVolume(liquidityPoolId, volumeUSD, block);
@@ -256,7 +253,7 @@ function updatePriceForSwap(
   tokenInAmount: BigInt,
   tokenOutDenom: string,
   tokenOutAmount: BigInt,
-  header: cosmos.Header
+  header: cosmos.Header,
 ): BigDecimal {
   let volumeUSD = constants.BIGDECIMAL_ZERO;
   const tokenIn = getOrCreateToken(tokenInDenom);
@@ -269,7 +266,7 @@ function updatePriceForSwap(
       tokenInAmount,
       tokenOut,
       tokenOutAmount,
-      header
+      header,
     );
   } else if (!tokenIn._isStableCoin && tokenOut._isStableCoin) {
     volumeUSD = updateOtherTokenPrice(
@@ -278,7 +275,7 @@ function updatePriceForSwap(
       tokenOutAmount,
       tokenIn,
       tokenInAmount,
-      header
+      header,
     );
   } else if (
     (tokenIn.id == constants.ATOM_DENOM &&
@@ -291,7 +288,7 @@ function updatePriceForSwap(
       tokenInAmount,
       tokenOut,
       tokenOutAmount,
-      header
+      header,
     );
   } else if (
     (tokenIn.id != constants.ATOM_DENOM &&
@@ -304,7 +301,7 @@ function updatePriceForSwap(
       tokenOutAmount,
       tokenIn,
       tokenInAmount,
-      header
+      header,
     );
   }
   return volumeUSD;
@@ -316,7 +313,7 @@ function updateOtherTokenPrice(
   baseTokenAmount: BigInt,
   otherToken: Token,
   otherTokenAmount: BigInt,
-  header: cosmos.Header
+  header: cosmos.Header,
 ): BigDecimal {
   const id = (header.time.seconds / constants.SECONDS_PER_DAY).toString();
   if (
@@ -336,7 +333,7 @@ function updateOtherTokenPrice(
     (!otherToken._lastPriceDate || otherToken._lastPriceDate != id)
   ) {
     otherToken.lastPriceUSD = baseTokenAmountInUSD.div(
-      utils.convertTokenToDecimal(otherTokenAmount, otherToken.decimals)
+      utils.convertTokenToDecimal(otherTokenAmount, otherToken.decimals),
     );
     otherToken.lastPriceBlockNumber = BigInt.fromI32(header.height as i32);
     otherToken._lastPriceDate = id;

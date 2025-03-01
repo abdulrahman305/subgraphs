@@ -67,22 +67,22 @@ function App() {
             setLoading(false);
             // Hacky fix for the subgraph status API returning an error response, setting protocols to empty object.
             // Status Page Will Not Load With This Condition, but the charting will work.
-            if (JSON.stringify(Object.keys(json)) == JSON.stringify(['error', 'data'])) {
+            if (JSON.stringify(Object.keys(json)) == JSON.stringify(["error", "data"])) {
               console.log("Error Response from Messari Subgraph Status API. Setting protocols to empty object.");
               json = {};
             }
-            
+
             // Process the data to ensure all health metrics are properly populated
-            if (json && typeof json === 'object') {
+            if (json && typeof json === "object") {
               try {
-                Object.keys(json).forEach(protocolName => {
+                Object.keys(json).forEach((protocolName) => {
                   const protocol = json[protocolName];
                   if (protocol.deployments) {
-                    Object.keys(protocol.deployments).forEach(deploymentKey => {
+                    Object.keys(protocol.deployments).forEach((deploymentKey) => {
                       // Enhance the health metrics of each deployment
                       protocol.deployments[deploymentKey] = enhanceHealthMetrics(protocol.deployments[deploymentKey]);
                     });
-                    
+
                     // Debug the first protocol's health metrics
                     if (Object.keys(json).length > 0) {
                       debugHealthMetrics(protocol);
@@ -93,7 +93,7 @@ function App() {
                 console.error("Error enhancing health metrics:", err);
               }
             }
-            
+
             setProtocolsToQuery(json);
           })
           .catch((err) => {
@@ -127,7 +127,7 @@ function App() {
           subgraphEndpoints[schemaType][protocolName] = {};
         }
       }
-      if (protocol.deployments && typeof protocol.deployments === 'object') {
+      if (protocol.deployments && typeof protocol.deployments === "object") {
         Object.values(protocol.deployments).forEach((depoData: any) => {
           if (!depoData?.services) {
             return;
@@ -226,7 +226,7 @@ function App() {
       console.warn("No protocol or deployments data found for debugging");
       return;
     }
-    
+
     try {
       // Log a sample of health metrics for the first deployment
       const firstDeploymentKey = Object.keys(protocol.deployments)[0];
@@ -234,16 +234,15 @@ function App() {
         console.warn("No deployments found for debugging");
         return;
       }
-      
+
       const deployment = protocol.deployments[firstDeploymentKey];
       if (!deployment || !deployment.services) {
         console.warn("Invalid deployment data for debugging");
         return;
       }
-      
+
       const hostedService = deployment.services["hosted-service"];
       const decentralizedNetwork = deployment.services["decentralized-network"];
-
     } catch (err) {
       console.error("Error in debug health metrics:", err);
     }

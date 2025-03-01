@@ -1,4 +1,4 @@
- import {
+import {
   updateFinancials,
   updatePoolSnapshots,
   updateUsageMetrics,
@@ -34,7 +34,7 @@ export function handleAddLiquidity(event: AddLiquidity): void {
     totalSupply,
     provider,
     event.transaction,
-    event.block
+    event.block,
   );
 
   updateUsageMetrics(event.block, provider);
@@ -42,7 +42,7 @@ export function handleAddLiquidity(event: AddLiquidity): void {
   updateFinancials(event.block);
 }
 export function handleAddLiquidityWithSingleFee(
-  event: AddLiquidityWithSingleFee
+  event: AddLiquidityWithSingleFee,
 ): void {
   const liquidityPoolAddress = event.address;
 
@@ -56,7 +56,7 @@ export function handleAddLiquidityWithSingleFee(
     totalSupply,
     provider,
     event.transaction,
-    event.block
+    event.block,
   );
 
   updateUsageMetrics(event.block, provider);
@@ -78,7 +78,7 @@ export function handleRemoveLiquidity(event: RemoveLiquidity): void {
     provider,
     event.transaction,
     event.block,
-    event
+    event,
   );
 
   updateUsageMetrics(event.block, provider);
@@ -86,7 +86,7 @@ export function handleRemoveLiquidity(event: RemoveLiquidity): void {
   updateFinancials(event.block);
 }
 export function handleRemoveLiquidityWithoutFee(
-  event: RemoveLiquidityWithoutFee
+  event: RemoveLiquidityWithoutFee,
 ): void {
   const provider = event.params.provider;
   const liquidityPoolAddress = event.address;
@@ -101,7 +101,7 @@ export function handleRemoveLiquidityWithoutFee(
     provider,
     event.transaction,
     event.block,
-    event
+    event,
   );
 
   updateUsageMetrics(event.block, provider);
@@ -109,7 +109,7 @@ export function handleRemoveLiquidityWithoutFee(
   updateFinancials(event.block);
 }
 export function handleRemoveLiquidityImbalance(
-  event: RemoveLiquidityImbalance
+  event: RemoveLiquidityImbalance,
 ): void {
   const provider = event.params.provider;
   const liquidityPoolAddress = event.address;
@@ -124,7 +124,7 @@ export function handleRemoveLiquidityImbalance(
     provider,
     event.transaction,
     event.block,
-    event
+    event,
   );
 
   updateUsageMetrics(event.block, provider);
@@ -145,7 +145,7 @@ export function handleRemoveLiquidityOne(event: RemoveLiquidityOne): void {
     provider,
     event.transaction,
     event.block,
-    event
+    event,
   );
 
   updateUsageMetrics(event.block, provider);
@@ -153,7 +153,7 @@ export function handleRemoveLiquidityOne(event: RemoveLiquidityOne): void {
   updateFinancials(event.block);
 }
 export function handleRemoveLiquidityOneWithoutTokenSupply(
-  event: RemoveLiquidityOneWithoutTokenSupply
+  event: RemoveLiquidityOneWithoutTokenSupply,
 ): void {
   const provider = event.params.provider;
   const liquidityPoolAddress = event.address;
@@ -168,7 +168,7 @@ export function handleRemoveLiquidityOneWithoutTokenSupply(
     provider,
     event.transaction,
     event.block,
-    event
+    event,
   );
 
   updateUsageMetrics(event.block, provider);
@@ -193,7 +193,7 @@ export function handleTokenExchange(event: TokenExchange): void {
     amountOut,
     buyer,
     event.transaction,
-    event.block
+    event.block,
   );
 
   updateUsageMetrics(event.block, buyer);
@@ -202,7 +202,7 @@ export function handleTokenExchange(event: TokenExchange): void {
 }
 
 export function handleTokenExchangeWithUintSoldId(
-  event: TokenExchaneWithUintSoldId
+  event: TokenExchaneWithUintSoldId,
 ): void {
   const buyer = event.params.buyer;
   const liquidityPoolAddress = event.address;
@@ -221,7 +221,7 @@ export function handleTokenExchangeWithUintSoldId(
     amountOut,
     buyer,
     event.transaction,
-    event.block
+    event.block,
   );
 
   updateUsageMetrics(event.block, buyer);
@@ -230,7 +230,7 @@ export function handleTokenExchangeWithUintSoldId(
 }
 
 export function handleTokenExchangeUnderlying(
-  event: TokenExchangeUnderlying
+  event: TokenExchangeUnderlying,
 ): void {
   const buyer = event.params.buyer;
   const liquidityPoolAddress = event.address;
@@ -238,8 +238,21 @@ export function handleTokenExchangeUnderlying(
   const amountIn = event.params.tokens_sold;
   const boughtId = event.params.bought_id;
   const amountOut = event.params.tokens_bought;
-  if(liquidityPoolAddress.equals(Address.fromString("0x19ec9e3f7b21dd27598e7ad5aae7dc0db00a806d"))){
-    log.warning("[TokenExchangeUnderlying] Pool {} soldId {} boughtId {} amountIn {} amountOut {}",[liquidityPoolAddress.toHexString(),soldId.toString(),boughtId.toString(),amountIn.toString(),amountOut.toString()])
+  if (
+    liquidityPoolAddress.equals(
+      Address.fromString("0x19ec9e3f7b21dd27598e7ad5aae7dc0db00a806d"),
+    )
+  ) {
+    log.warning(
+      "[TokenExchangeUnderlying] Pool {} soldId {} boughtId {} amountIn {} amountOut {}",
+      [
+        liquidityPoolAddress.toHexString(),
+        soldId.toString(),
+        boughtId.toString(),
+        amountIn.toString(),
+        amountOut.toString(),
+      ],
+    );
   }
   Swap(
     liquidityPoolAddress,
@@ -250,7 +263,7 @@ export function handleTokenExchangeUnderlying(
     buyer,
     event.transaction,
     event.block,
-    true
+    true,
   );
 
   updateUsageMetrics(event.block, buyer);

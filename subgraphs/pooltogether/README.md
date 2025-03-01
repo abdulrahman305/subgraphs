@@ -1,7 +1,8 @@
 # PoolTogether v4 Subgraph Methodology v1.0.0
+
 (Ethereum, Polygon, Avalanche)
-Briefly, PoolTogetherv4 is a lottery where users deposit their funds into a prize pool, 
-the funds in said prize pool are put into protocols like Compound and Aave to generate yield, 
+Briefly, PoolTogetherv4 is a lottery where users deposit their funds into a prize pool,
+the funds in said prize pool are put into protocols like Compound and Aave to generate yield,
 and then the yield (+ some protocol treasury) is distributed as prizes to the users. Users also get their original deposits back.
 
 ## Calculation Methodology v1.0.0
@@ -30,7 +31,6 @@ Total Revenue is the yield generated on the Deposits into the Prize Pool across 
 
 `Supply Side Revenue = Total Revenue`
 
-
 ### Protocol Revenue USD
 
 PoolTogether does not have any Protocol Revenue at this time.
@@ -41,7 +41,7 @@ PoolTogether does not have any Protocol Revenue at this time.
 
 There are no Pools outside of the Prize Pools in PoolTogether, so
 
-Pool Total Value Locked = Total Value Locked 
+Pool Total Value Locked = Total Value Locked
 
 ### Reward Tokens & Reward Token Emissions Amount
 
@@ -49,7 +49,8 @@ The V4 Design requires that prize liquidity reserves are maintained to fulfill a
 A ~6k USDC per day burn of the treasury subsidy was seen up until at least March 22nd, 2022, after which a PTIP was passed to reduce this to ~2K USDC per day. More details can be found here: https://gov.pooltogether.com/t/rfc-prize-liquidity/2102
 And here: https://gov.pooltogether.com/t/prize-adjustment-3/2097
 
-## Links 
+## Links
+
 Protocol
 https://app.pooltogether.com/deposit
 
@@ -63,5 +64,5 @@ Messari Reports (a bit dated)
 https://messari.io/article/how-pooltogether-is-building-a-sustainable-lottery-at-the-protocol-level (Oct, 2020)
 https://messari.io/article/pooltogether-launches-new-no-loss-protocol (Oct, 2020)
 
-Dune Dashboards 
+Dune Dashboards
 https://dune.com/sarfang/PoolTogetherV4

@@ -18,21 +18,23 @@ Sum across all Pools:
 
 `PoolFee * Pool Volume`
 
-Note - Bancor supplies BNT liquidity. Fees on this liquidity go to covering IL losses of outside LPs. As such, this would still be considered revenue (and protocol revenue). Each pool can have its own fee 
+Note - Bancor supplies BNT liquidity. Fees on this liquidity go to covering IL losses of outside LPs. As such, this would still be considered revenue (and protocol revenue). Each pool can have its own fee
 
 https://bancor-network.gitbook.io/v2.1/guides/measuring-trading-volume
 
 ### Protocol-Side Revenue USD
+
 Portion of the Total Revenue allocated to the Protocol
 
 Sum across all Pools:
 
 `PoolFee * Pool Volume * (Protocol BNT / Total TVL)`
 
-This should be the fee revenue attributed to Bancor-supplied BNT 
--- future note: LP fees are subsequently used to compensate users for IL. This should be a operating expense in the future. If Fee Income > IL payouts, then native tokens dumped for more BNT by the protocol. 
+This should be the fee revenue attributed to Bancor-supplied BNT
+-- future note: LP fees are subsequently used to compensate users for IL. This should be a operating expense in the future. If Fee Income > IL payouts, then native tokens dumped for more BNT by the protocol.
 
 ### Supply-Side Revenue USD
+
 Portion of the Total Revenue allocated to the Supply-Side
 
 Sum across all Pools
@@ -43,7 +45,7 @@ This should be fee income not given to Bancor
 
 ### Total Unique Users
 
-Count of  Unique Addresses which have interacted with the protocol via any transaction
+Count of Unique Addresses which have interacted with the protocol via any transaction
 
 `Swaps`
 
@@ -51,11 +53,9 @@ Count of  Unique Addresses which have interacted with the protocol via any trans
 
 `Withdraws`
 
-###  Reward Token Emissions Amount
+### Reward Token Emissions Amount
 
 To be added
-
-  
 
 ## Links
 

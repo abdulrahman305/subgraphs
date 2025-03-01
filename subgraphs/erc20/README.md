@@ -29,6 +29,7 @@ ERC20 Token Standard
 - https://ethereum.org/en/developers/docs/standards/tokens/erc-20/
 
 ## Building/Deployment
+
 ```bash
 # Prepare Token Registry
 npm run prepare:constants --NETWORK=mainnet --YEAR=2022

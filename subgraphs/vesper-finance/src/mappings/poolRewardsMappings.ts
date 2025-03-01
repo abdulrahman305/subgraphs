@@ -25,7 +25,7 @@ export function handleRewardAdded(event: RewardAddedEvent): void {
 
   const vaultAddress = utils.readValue<Address>(
     poolRewardsContract.try_pool(),
-    constants.NULL.TYPE_ADDRESS
+    constants.NULL.TYPE_ADDRESS,
   );
   const vault = getOrCreateVault(vaultAddress, event.block);
 
@@ -41,7 +41,7 @@ export function handleRewardAdded(event: RewardAddedEvent): void {
     vault,
     supplySideRevenueUSD,
     constants.BIGDECIMAL_ZERO,
-    event.block
+    event.block,
   );
   updateRewardToken(vaultAddress, poolRewardsAddress, event.block);
 }
@@ -52,7 +52,7 @@ export function handleRewardPaid(event: RewardPaidEvent): void {
 
   const vaultAddress = utils.readValue<Address>(
     poolRewardsContract.try_pool(),
-    constants.NULL.TYPE_ADDRESS
+    constants.NULL.TYPE_ADDRESS,
   );
 
   updateFinancials(event.block);
@@ -68,13 +68,13 @@ export function handleRewardTokenAdded(event: RewardTokenAddedEvent): void {
 
   const vaultAddress = utils.readValue<Address>(
     poolRewardsContract.try_pool(),
-    constants.NULL.TYPE_ADDRESS
+    constants.NULL.TYPE_ADDRESS,
   );
 
   updateRewardTokenEmissions(
     newRewardsAddress,
     vaultAddress,
     constants.BIGINT_ZERO,
-    event.block
+    event.block,
   );
 }

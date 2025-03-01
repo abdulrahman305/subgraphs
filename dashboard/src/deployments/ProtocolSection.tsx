@@ -17,47 +17,47 @@ interface ProtocolSection {
 }
 
 // Utility function to format large numbers with K, M, B notation
-export const formatLargeNumber = (num: number | string | undefined): { formattedValue: string, fullValue: string } => {
+export const formatLargeNumber = (num: number | string | undefined): { formattedValue: string; fullValue: string } => {
   if (num === undefined || num === null) {
     return { formattedValue: "N/A", fullValue: "N/A" };
   }
-  
+
   // Convert string to number if needed
-  const numValue = typeof num === 'string' ? parseFloat(num) : num;
-  
+  const numValue = typeof num === "string" ? parseFloat(num) : num;
+
   // Format the full value with commas for tooltip
-  const fullValue = typeof numValue === 'number' ? numValue.toLocaleString() : String(num);
-  
+  const fullValue = typeof numValue === "number" ? numValue.toLocaleString() : String(num);
+
   // Early return for small numbers or non-numbers
-  if (typeof numValue !== 'number' || isNaN(numValue)) {
+  if (typeof numValue !== "number" || isNaN(numValue)) {
     return { formattedValue: String(num), fullValue };
   }
-  
+
   // Format with abbreviations based on magnitude
   if (numValue >= 1_000_000_000) {
-    return { 
-      formattedValue: (numValue / 1_000_000_000).toFixed(1) + 'B', 
-      fullValue 
+    return {
+      formattedValue: (numValue / 1_000_000_000).toFixed(1) + "B",
+      fullValue,
     };
   } else if (numValue >= 1_000_000) {
-    return { 
-      formattedValue: (numValue / 1_000_000).toFixed(1) + 'M', 
-      fullValue 
+    return {
+      formattedValue: (numValue / 1_000_000).toFixed(1) + "M",
+      fullValue,
     };
   } else if (numValue >= 1_000) {
-    return { 
-      formattedValue: (numValue / 1_000).toFixed(1) + 'K', 
-      fullValue 
+    return {
+      formattedValue: (numValue / 1_000).toFixed(1) + "K",
+      fullValue,
     };
   }
-  
+
   return { formattedValue: fullValue, fullValue };
 };
 
 // Component to display a number with formatting and tooltip
 export const FormattedNumber = ({ value }: { value: number | string | undefined }) => {
   const { formattedValue, fullValue } = formatLargeNumber(value);
-  
+
   return (
     <Tooltip title={fullValue} placement="top">
       <span>{formattedValue}</span>
@@ -70,11 +70,11 @@ const safeDisplayMetric = (value: any, defaultValue: string = "N/A"): string => 
   if (value === undefined || value === null) {
     return defaultValue;
   }
-  
-  if (typeof value === 'number') {
+
+  if (typeof value === "number") {
     return value.toLocaleString();
   }
-  
+
   return String(value);
 };
 
@@ -83,11 +83,11 @@ const getSafeMetric = (depoObject: any, property: string, defaultValue: string =
   if (!depoObject || depoObject[property] === undefined || depoObject[property] === null) {
     return defaultValue;
   }
-  
-  if (typeof depoObject[property] === 'number') {
+
+  if (typeof depoObject[property] === "number") {
     return depoObject[property].toLocaleString();
   }
-  
+
   return String(depoObject[property]);
 };
 
@@ -101,7 +101,7 @@ function ProtocolSection({
   validationSupported,
 }: ProtocolSection) {
   // NOTE: We now ONLY show decentralized network deployments as the hosted service is being deprecated
-  
+
   const navigate = useNavigate();
 
   const [showDeposDropDown, toggleShowDeposDropDown] = useState<boolean>(false);
@@ -113,19 +113,17 @@ function ProtocolSection({
   const subNameUpper = subgraphName.toUpperCase();
 
   // Filter to only show networks with decentralizedNetworkId
-  const decentralizedNetworks = protocol.networks.filter((depo: any) => 
-    !!depo?.decentralizedNetworkId
-  );
-  
+  const decentralizedNetworks = protocol.networks.filter((depo: any) => !!depo?.decentralizedNetworkId);
+
   // If no networks have decentralizedNetworkId, don't render this protocol
   if (decentralizedNetworks.length === 0) {
     return null;
   }
-  
+
   let hasDecentralizedDepo = decentralizedNetworks.length > 0;
   let prodStatusIcon = "https://images.emojiterra.com/twitter/v13.1/512px/2705.png";
   let prodStatusHover = "Subgraph is frozen";
-  
+
   decentralizedNetworks.forEach((depo: any) => {
     if (Array.isArray(issuesTitles)) {
       const openRepoIssue = issuesTitles.find((x: any) => {
@@ -157,24 +155,31 @@ function ProtocolSection({
           }
           return x;
         });
-        
+
         schemaCell = (
-          <div style={{ 
-            display: "flex", 
-            flexWrap: "wrap", 
-            justifyContent: "flex-end",
-            maxWidth: "180px",
-            gap: "4px"
-          }}>
+          <div
+            style={{
+              display: "flex",
+              flexWrap: "wrap",
+              justifyContent: "flex-end",
+              maxWidth: "180px",
+              gap: "4px",
+            }}
+          >
             {schemaVersOnProtocol.map((version: string, index: number) => (
-              <span key={index} style={{ 
-                backgroundColor: "#2D3142", 
-                padding: "2px 4px", 
-                borderRadius: "4px",
-                fontSize: "12px",
-                whiteSpace: "nowrap",
-                ...(!(latestSchemaVersions(schemaType, version) || schemaType === "governance") ? { color: "#FFA500" } : {})
-              }}>
+              <span
+                key={index}
+                style={{
+                  backgroundColor: "#2D3142",
+                  padding: "2px 4px",
+                  borderRadius: "4px",
+                  fontSize: "12px",
+                  whiteSpace: "nowrap",
+                  ...(!(latestSchemaVersions(schemaType, version) || schemaType === "governance")
+                    ? { color: "#FFA500" }
+                    : {}),
+                }}
+              >
                 {version}
               </span>
             ))}
@@ -184,7 +189,7 @@ function ProtocolSection({
     } catch (err: any) {
       console.error(err.message);
     }
-    
+
     const depoRowsOnProtocol = decentralizedNetworks.map((depo: any) => {
       let chainLabel = depo.chain;
       if (decentralizedNetworks.filter((x: any) => x.chain === depo.chain).length > 1) {
@@ -200,9 +205,10 @@ function ProtocolSection({
           let highlightColor = "#3f51b5";
           const depoObject = depo.decentralizedIndexStatus;
           let synced = depoObject ? depoObject["synced"] : false;
-          let indexedPercentage = depoObject && typeof depoObject["indexed-percentage"] === "number"
-            ? formatIntToFixed2(depoObject["indexed-percentage"])
-            : "0.00";
+          let indexedPercentage =
+            depoObject && typeof depoObject["indexed-percentage"] === "number"
+              ? formatIntToFixed2(depoObject["indexed-percentage"])
+              : "0.00";
 
           if (synced && Number(indexedPercentage) > 99) {
             highlightColor = "#58BC82";
@@ -216,17 +222,17 @@ function ProtocolSection({
           if (decenSubgraphKey) {
             decenSubgraphId = decenDeposToSubgraphIds[decenSubgraphKey]?.id;
           }
-          
+
           // Get the deployment ID from the decentralized network service
           // This retrieves the actual deployment ID from the API response
-          const deploymentId = depo.decentralizedIndexStatus && 
-            depo.decentralizedIndexStatus["deployment-id"] ? 
-            depo.decentralizedIndexStatus["deployment-id"] : 
-            depo.decentralizedNetworkId || "";
-          
+          const deploymentId =
+            depo.decentralizedIndexStatus && depo.decentralizedIndexStatus["deployment-id"]
+              ? depo.decentralizedIndexStatus["deployment-id"]
+              : depo.decentralizedNetworkId || "";
+
           // Use the deployment ID directly as the endpoint URL
           let endpointURL = deploymentId;
-          
+
           // Keep a reference to the old URL construction for logging/debugging purposes
           /*
           let oldEndpointURL =
@@ -280,37 +286,34 @@ function ProtocolSection({
                   if (!validationSupported) {
                     window.open(
                       process.env.REACT_APP_GRAPH_EXPLORER_URL! + "/subgraphs/" + depo.decentralizedNetworkId,
-                      "_blank"
+                      "_blank",
                     );
                     return;
                   }
                   if (depoObject["is-healthy"]) {
                     window.open(`${window.location.href}subgraph?endpoint=${endpointURL}&tab=protocol`, "_blank");
                   } else {
-                    window.open(
-                      process.env.REACT_APP_OKGRAPH_BASE_URL! + "/?q=" + deploymentId,
-                      "_blank",
-                    );
+                    window.open(process.env.REACT_APP_OKGRAPH_BASE_URL! + "/?q=" + deploymentId, "_blank");
                   }
                 } else {
                   if (!validationSupported) {
-                    window.location.href = process.env.REACT_APP_GRAPH_EXPLORER_URL! + "/subgraphs/" + depo.decentralizedNetworkId;
+                    window.location.href =
+                      process.env.REACT_APP_GRAPH_EXPLORER_URL! + "/subgraphs/" + depo.decentralizedNetworkId;
                     return;
                   }
                   if (depoObject["is-healthy"]) {
                     navigate(`/subgraph?endpoint=${endpointURL}&tab=protocol`);
                   } else {
-                    window.location.href =
-                      process.env.REACT_APP_OKGRAPH_BASE_URL! + "/?q=" + deploymentId;
+                    window.location.href = process.env.REACT_APP_OKGRAPH_BASE_URL! + "/?q=" + deploymentId;
                   }
                 }
                 return;
               }}
               key={subgraphName + depo.decentralizedNetworkId + "DepInDevRow-DECEN"}
-              sx={{ 
-                height: "10px", 
-                width: "100%", 
-                backgroundColor: "rgba(22,24,29,0.9)", 
+              sx={{
+                height: "10px",
+                width: "100%",
+                backgroundColor: "rgba(22,24,29,0.9)",
                 cursor: "pointer",
                 position: "relative",
                 "&::before": {
@@ -320,14 +323,16 @@ function ProtocolSection({
                   top: 0,
                   bottom: 0,
                   width: "4px",
-                  backgroundColor: depoObject && !depoObject["is-healthy"]
-                    ? "#B8301C" // Red for unhealthy
-                    : depoObject && depoObject["synced"] && 
-                      typeof depoObject["indexed-percentage"] === "number" &&
-                      Number(formatIntToFixed2(depoObject["indexed-percentage"])) > 99
-                      ? "#58BC82" // Green for synced
-                      : "#EFCB68", // Yellow/orange for in-progress
-                }
+                  backgroundColor:
+                    depoObject && !depoObject["is-healthy"]
+                      ? "#B8301C" // Red for unhealthy
+                      : depoObject &&
+                          depoObject["synced"] &&
+                          typeof depoObject["indexed-percentage"] === "number" &&
+                          Number(formatIntToFixed2(depoObject["indexed-percentage"])) > 99
+                        ? "#58BC82" // Green for synced
+                        : "#EFCB68", // Yellow/orange for in-progress
+                },
               }}
             >
               <TableCell
@@ -338,7 +343,7 @@ function ProtocolSection({
                   paddingLeft: "6px",
                   verticalAlign: "middle",
                   display: "flex",
-                  alignItems: "center"
+                  alignItems: "center",
                 }}
               >
                 <SubgraphLogo name={subgraphName} size={30} />
@@ -424,8 +429,9 @@ function ProtocolSection({
                   textAlign: "right",
                 }}
               >
-                {depo.decentralizedIndexStatus && typeof depo.decentralizedIndexStatus["indexed-percentage"] === "number" 
-                  ? formatIntToFixed2(depo.decentralizedIndexStatus["indexed-percentage"]) + "%" 
+                {depo.decentralizedIndexStatus &&
+                typeof depo.decentralizedIndexStatus["indexed-percentage"] === "number"
+                  ? formatIntToFixed2(depo.decentralizedIndexStatus["indexed-percentage"]) + "%"
                   : "N/A"}
               </TableCell>
               <TableCell
@@ -437,8 +443,11 @@ function ProtocolSection({
                   textAlign: "right",
                 }}
               >
-                {depo.decentralizedIndexStatus ? 
-                  <FormattedNumber value={depo.decentralizedIndexStatus["start-block"]} /> : "N/A"}
+                {depo.decentralizedIndexStatus ? (
+                  <FormattedNumber value={depo.decentralizedIndexStatus["start-block"]} />
+                ) : (
+                  "N/A"
+                )}
               </TableCell>
               <TableCell
                 sx={{
@@ -449,8 +458,11 @@ function ProtocolSection({
                   textAlign: "right",
                 }}
               >
-                {depo.decentralizedIndexStatus ? 
-                  <FormattedNumber value={depo.decentralizedIndexStatus["latest-block"]} /> : "N/A"}
+                {depo.decentralizedIndexStatus ? (
+                  <FormattedNumber value={depo.decentralizedIndexStatus["latest-block"]} />
+                ) : (
+                  "N/A"
+                )}
               </TableCell>
               <TableCell
                 sx={{
@@ -461,8 +473,11 @@ function ProtocolSection({
                   textAlign: "right",
                 }}
               >
-                {depo.decentralizedIndexStatus ? 
-                  <FormattedNumber value={depo.decentralizedIndexStatus["chain-head-block"]} /> : "N/A"}
+                {depo.decentralizedIndexStatus ? (
+                  <FormattedNumber value={depo.decentralizedIndexStatus["chain-head-block"]} />
+                ) : (
+                  "N/A"
+                )}
               </TableCell>
               <TableCell
                 sx={{
@@ -488,17 +503,21 @@ function ProtocolSection({
               >
                 <Typography variant="h5" sx={{ width: "100%" }} fontSize={14}>
                   {depo?.versions?.subgraph ? (
-                    <span style={{ 
-                      backgroundColor: "#2D3142", 
-                      padding: "2px 4px", 
-                      borderRadius: "4px",
-                      fontSize: "12px",
-                      whiteSpace: "nowrap",
-                      display: "inline-block"
-                    }}>
+                    <span
+                      style={{
+                        backgroundColor: "#2D3142",
+                        padding: "2px 4px",
+                        borderRadius: "4px",
+                        fontSize: "12px",
+                        whiteSpace: "nowrap",
+                        display: "inline-block",
+                      }}
+                    >
                       {depo?.versions?.subgraph}
                     </span>
-                  ) : "N/A"}
+                  ) : (
+                    "N/A"
+                  )}
                 </Typography>
               </TableCell>
 
@@ -512,8 +531,11 @@ function ProtocolSection({
                 }}
               >
                 <Typography variant="h5" sx={{ width: "100%" }} fontSize={14}>
-                  {depo.decentralizedIndexStatus ? 
-                    <FormattedNumber value={depo.decentralizedIndexStatus["entity-count"]} /> : "N/A"}
+                  {depo.decentralizedIndexStatus ? (
+                    <FormattedNumber value={depo.decentralizedIndexStatus["entity-count"]} />
+                  ) : (
+                    "N/A"
+                  )}
                 </Typography>
               </TableCell>
             </TableRow>
@@ -533,14 +555,22 @@ function ProtocolSection({
             toggleShowDeposDropDown(!showDeposDropDown);
           }}
           key={subgraphName + "DepInDevRow"}
-          sx={{ 
-            cursor: "pointer", 
-            height: "10px", 
-            width: "100%", 
-            backgroundColor: "rgba(22,24,29,0.9)"
+          sx={{
+            cursor: "pointer",
+            height: "10px",
+            width: "100%",
+            backgroundColor: "rgba(22,24,29,0.9)",
           }}
         >
-          <TableCell sx={{ padding: "0 0 0 6px", verticalAlign: "middle", display: "flex", alignItems: "center", height: "35px" }}>
+          <TableCell
+            sx={{
+              padding: "0 0 0 6px",
+              verticalAlign: "middle",
+              display: "flex",
+              alignItems: "center",
+              height: "35px",
+            }}
+          >
             <Tooltip title="Click To View All Deployments On This Protocol" placement="top">
               <SubgraphLogo name={subgraphName} size={30} />
             </Tooltip>
@@ -567,10 +597,11 @@ function ProtocolSection({
               const depoObject = x.decentralizedIndexStatus;
               if (depoObject) {
                 let synced = depoObject["synced"];
-                indexedPercentage = typeof depoObject["indexed-percentage"] === "number"
-                  ? formatIntToFixed2(depoObject["indexed-percentage"])
-                  : "0.00";
-                
+                indexedPercentage =
+                  typeof depoObject["indexed-percentage"] === "number"
+                    ? formatIntToFixed2(depoObject["indexed-percentage"])
+                    : "0.00";
+
                 if (!depoObject["is-healthy"]) {
                   borderColor = "#B8301C";
                 } else {
@@ -584,10 +615,10 @@ function ProtocolSection({
               return (
                 <a
                   key={subgraphName + x.decentralizedNetworkId + "Logo"}
-                  style={{ 
-                    height: "100%", 
-                    border: showDeposDropDown ? "transparent 4px solid" : `${borderColor} 4px solid`, 
-                    borderRadius: "50%"
+                  style={{
+                    height: "100%",
+                    border: showDeposDropDown ? "transparent 4px solid" : `${borderColor} 4px solid`,
+                    borderRadius: "50%",
                   }}
                   href={process.env.REACT_APP_GRAPH_EXPLORER_URL! + "/subgraphs/" + x.decentralizedNetworkId}
                 >
@@ -626,26 +657,33 @@ function ProtocolSection({
             <Tooltip title="Click To View All Deployments On This Protocol" placement="top">
               <Typography variant="h5" sx={{ width: "100%" }} fontSize={14}>
                 {protocol?.subgraphVersions?.length > 0 ? (
-                  <div style={{ 
-                    display: "flex", 
-                    flexWrap: "wrap", 
-                    justifyContent: "flex-end",
-                    maxWidth: "180px",
-                    gap: "4px"
-                  }}>
+                  <div
+                    style={{
+                      display: "flex",
+                      flexWrap: "wrap",
+                      justifyContent: "flex-end",
+                      maxWidth: "180px",
+                      gap: "4px",
+                    }}
+                  >
                     {protocol?.subgraphVersions.map((version: string, index: number) => (
-                      <span key={index} style={{ 
-                        backgroundColor: "#2D3142", 
-                        padding: "2px 4px", 
-                        borderRadius: "4px",
-                        fontSize: "12px",
-                        whiteSpace: "nowrap"
-                      }}>
+                      <span
+                        key={index}
+                        style={{
+                          backgroundColor: "#2D3142",
+                          padding: "2px 4px",
+                          borderRadius: "4px",
+                          fontSize: "12px",
+                          whiteSpace: "nowrap",
+                        }}
+                      >
                         {version}
                       </span>
                     ))}
                   </div>
-                ) : "N/A"}
+                ) : (
+                  "N/A"
+                )}
               </Typography>
             </Tooltip>
           </TableCell>
@@ -669,24 +707,31 @@ function ProtocolSection({
         }
         return x;
       });
-      
+
       schemaCell = (
-        <div style={{ 
-          display: "flex", 
-          flexWrap: "wrap", 
-          justifyContent: "flex-end",
-          maxWidth: "180px",
-          gap: "4px"
-        }}>
+        <div
+          style={{
+            display: "flex",
+            flexWrap: "wrap",
+            justifyContent: "flex-end",
+            maxWidth: "180px",
+            gap: "4px",
+          }}
+        >
           {schemaVersOnProtocol.map((version: string, index: number) => (
-            <span key={index} style={{ 
-              backgroundColor: "#2D3142", 
-              padding: "2px 4px", 
-              borderRadius: "4px",
-              fontSize: "12px",
-              whiteSpace: "nowrap",
-              ...(!(latestSchemaVersions(schemaType, version) || schemaType === "governance") ? { color: "#FFA500" } : {})
-            }}>
+            <span
+              key={index}
+              style={{
+                backgroundColor: "#2D3142",
+                padding: "2px 4px",
+                borderRadius: "4px",
+                fontSize: "12px",
+                whiteSpace: "nowrap",
+                ...(!(latestSchemaVersions(schemaType, version) || schemaType === "governance")
+                  ? { color: "#FFA500" }
+                  : {}),
+              }}
+            >
               {version}
             </span>
           ))}
@@ -726,14 +771,16 @@ function ProtocolSection({
         toggleShowDeposDropDown(!showDeposDropDown);
       }}
       key={subgraphName + "DepInDevRow"}
-      sx={{ 
-        cursor: "pointer", 
-        height: "10px", 
-        width: "100%", 
-        backgroundColor: "rgba(22,24,29,0.9)"
+      sx={{
+        cursor: "pointer",
+        height: "10px",
+        width: "100%",
+        backgroundColor: "rgba(22,24,29,0.9)",
       }}
     >
-      <TableCell sx={{ padding: "0 0 0 6px", verticalAlign: "middle", display: "flex", alignItems: "center", height: "35px" }}>
+      <TableCell
+        sx={{ padding: "0 0 0 6px", verticalAlign: "middle", display: "flex", alignItems: "center", height: "35px" }}
+      >
         <Tooltip title="Click To View All Deployments On This Protocol" placement="top">
           <SubgraphLogo name={subgraphName} size={30} />
         </Tooltip>
@@ -762,10 +809,11 @@ function ProtocolSection({
               const depoObject = x.decentralizedIndexStatus;
               if (depoObject) {
                 let synced = depoObject["synced"];
-                indexedPercentage = typeof depoObject["indexed-percentage"] === "number"
-                  ? formatIntToFixed2(depoObject["indexed-percentage"])
-                  : "0.00";
-                
+                indexedPercentage =
+                  typeof depoObject["indexed-percentage"] === "number"
+                    ? formatIntToFixed2(depoObject["indexed-percentage"])
+                    : "0.00";
+
                 if (!depoObject["is-healthy"]) {
                   borderColor = "#B8301C";
                 } else {
@@ -779,10 +827,10 @@ function ProtocolSection({
               return (
                 <a
                   key={subgraphName + x.decentralizedNetworkId + "Logo"}
-                  style={{ 
-                    height: "100%", 
-                    border: showDeposDropDown ? "transparent 4px solid" : `${borderColor} 4px solid`, 
-                    borderRadius: "50%"
+                  style={{
+                    height: "100%",
+                    border: showDeposDropDown ? "transparent 4px solid" : `${borderColor} 4px solid`,
+                    borderRadius: "50%",
                   }}
                   href={process.env.REACT_APP_GRAPH_EXPLORER_URL! + "/subgraphs/" + x.decentralizedNetworkId}
                 >
@@ -823,26 +871,33 @@ function ProtocolSection({
         <Tooltip title="Click To View All Deployments On This Protocol" placement="top">
           <Typography variant="h5" sx={{ width: "100%" }} fontSize={14}>
             {protocol?.subgraphVersions?.length > 0 ? (
-              <div style={{ 
-                display: "flex", 
-                flexWrap: "wrap", 
-                justifyContent: "flex-end",
-                maxWidth: "180px",
-                gap: "4px"
-              }}>
+              <div
+                style={{
+                  display: "flex",
+                  flexWrap: "wrap",
+                  justifyContent: "flex-end",
+                  maxWidth: "180px",
+                  gap: "4px",
+                }}
+              >
                 {protocol?.subgraphVersions.map((version: string, index: number) => (
-                  <span key={index} style={{ 
-                    backgroundColor: "#2D3142", 
-                    padding: "2px 4px", 
-                    borderRadius: "4px",
-                    fontSize: "12px",
-                    whiteSpace: "nowrap"
-                  }}>
+                  <span
+                    key={index}
+                    style={{
+                      backgroundColor: "#2D3142",
+                      padding: "2px 4px",
+                      borderRadius: "4px",
+                      fontSize: "12px",
+                      whiteSpace: "nowrap",
+                    }}
+                  >
                     {version}
                   </span>
                 ))}
               </div>
-            ) : "N/A"}
+            ) : (
+              "N/A"
+            )}
           </Typography>
         </Tooltip>
       </TableCell>
@@ -853,4 +908,3 @@ function ProtocolSection({
 }
 
 export default ProtocolSection;
-

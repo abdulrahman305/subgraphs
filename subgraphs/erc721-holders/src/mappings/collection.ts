@@ -56,7 +56,7 @@ export function handleTransfer(event: TransferEvent): void {
     tokenCollection = getOrCreateCollection(
       contract,
       collectionId,
-      supportsERC721Metadata
+      supportsERC721Metadata,
     );
   }
 
@@ -70,17 +70,15 @@ export function handleTransfer(event: TransferEvent): void {
     let currentAccountBalanceId = from + "-" + collectionId;
     let currentAccountBalance = AccountBalance.load(currentAccountBalanceId);
     if (currentAccountBalance != null) {
-      currentAccountBalance.tokenCount = currentAccountBalance.tokenCount.minus(
-        BIGINT_ONE
-      );
+      currentAccountBalance.tokenCount =
+        currentAccountBalance.tokenCount.minus(BIGINT_ONE);
       currentAccountBalance.blockNumber = event.block.number;
       currentAccountBalance.timestamp = event.block.timestamp;
       currentAccountBalance.save();
 
       if (currentAccountBalance.tokenCount.equals(BIGINT_ZERO)) {
-        tokenCollection.ownerCount = tokenCollection.ownerCount.minus(
-          BIGINT_ONE
-        );
+        tokenCollection.ownerCount =
+          tokenCollection.ownerCount.minus(BIGINT_ONE);
       }
 
       // provide information about evolution of account balances
@@ -108,15 +106,14 @@ export function handleTransfer(event: TransferEvent): void {
       contract,
       tokenCollection,
       tokenId,
-      event.block.timestamp
+      event.block.timestamp,
     );
     token.owner = newOwner.id;
     token.save();
 
     let newAccountBalance = getOrCreateAccountBalance(to, collectionId);
-    newAccountBalance.tokenCount = newAccountBalance.tokenCount.plus(
-      BIGINT_ONE
-    );
+    newAccountBalance.tokenCount =
+      newAccountBalance.tokenCount.plus(BIGINT_ONE);
     newAccountBalance.blockNumber = event.block.number;
     newAccountBalance.timestamp = event.block.timestamp;
     newAccountBalance.save();
@@ -130,14 +127,13 @@ export function handleTransfer(event: TransferEvent): void {
   }
 
   // update aggregate data for sender and receiver
-  tokenCollection.transferCount = tokenCollection.transferCount.plus(
-    BIGINT_ONE
-  );
+  tokenCollection.transferCount =
+    tokenCollection.transferCount.plus(BIGINT_ONE);
   tokenCollection.save();
 
   let dailySnapshot = getOrCreateCollectionDailySnapshot(
     tokenCollection,
-    event.block
+    event.block,
   );
   dailySnapshot.dailyTransferCount += 1;
   dailySnapshot.save();
@@ -148,10 +144,10 @@ export function handleTransfer(event: TransferEvent): void {
 function supportsInterface(
   contract: ERC721,
   interfaceId: string,
-  expected: boolean = true
+  expected: boolean = true,
 ): boolean {
   let supports = contract.try_supportsInterface(
-    Bytes.fromHexString(interfaceId)
+    Bytes.fromHexString(interfaceId),
   );
   return !supports.reverted && supports.value == expected;
 }
@@ -170,7 +166,7 @@ function isERC721Supported(contract: ERC721): boolean {
   let supportsNullIdentifierFalse = supportsInterface(
     contract,
     "00000000",
-    false
+    false,
   );
   if (!supportsNullIdentifierFalse) {
     return false;
@@ -182,7 +178,7 @@ function isERC721Supported(contract: ERC721): boolean {
 function getOrCreateCollection(
   contract: ERC721,
   CollectionAddress: string,
-  supportsERC721Metadata: boolean
+  supportsERC721Metadata: boolean,
 ): Collection {
   let previousTokenCollection = Collection.load(CollectionAddress);
 
@@ -210,7 +206,7 @@ function getOrCreateCollection(
 
 function getOrCreateCollectionDailySnapshot(
   collection: Collection,
-  block: ethereum.Block
+  block: ethereum.Block,
 ): CollectionDailySnapshot {
   let snapshotId =
     collection.id +
@@ -239,7 +235,7 @@ function createTransfer(event: TransferEvent): Transfer {
       "-" +
       event.transaction.hash.toHex() +
       "-" +
-      event.logIndex.toString()
+      event.logIndex.toString(),
   );
   transfer.hash = event.transaction.hash.toHex();
   transfer.logIndex = event.logIndex.toI32();

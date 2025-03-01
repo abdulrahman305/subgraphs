@@ -4,7 +4,7 @@
 
 ### Total Value Locked (TVL) USD
 
-Sum across all Vaults: 
+Sum across all Vaults:
 
 `Vault TVL`
 
@@ -15,6 +15,7 @@ Sum across all Vaults:
 `Total Yield`
 
 ### Protocol-Side Revenue USD
+
 Portion of the Total Revenue allocated to the Protocol
 
 Sum across all Pools:
@@ -23,11 +24,12 @@ Sum across all Pools:
 
 Note that different fees are applied:
 
-- Passive Vaults: Performance Fee +  Withdrawal fee
-- Option Vaults: Performance Fee + Withdrawal Fee 
+- Passive Vaults: Performance Fee + Withdrawal fee
+- Option Vaults: Performance Fee + Withdrawal Fee
 - (Fees can vary between vaults - standard is 15% performance, 0.5% withdrawal)
 
 ### Supply-Side Revenue USD
+
 Portion of the Total Revenue allocated to the Supply-Side
 
 Sum across all Pools
@@ -38,17 +40,17 @@ Note that this is the remaining yield after protocol fees
 
 ### Total Unique Users
 
-Count of  Unique Addresses which have interacted with the protocol via any transaction
+Count of Unique Addresses which have interacted with the protocol via any transaction
 
 `Deposit`
 
 `Withdraw`
 
-###  Reward Token Emissions Amount
+### Reward Token Emissions Amount
 
 To be added
 
-###  Protocol Controlled Value
+### Protocol Controlled Value
 
 To be added
 

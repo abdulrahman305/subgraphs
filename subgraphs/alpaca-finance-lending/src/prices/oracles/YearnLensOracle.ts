@@ -5,7 +5,7 @@ import { Address, BigDecimal, BigInt } from "@graphprotocol/graph-ts";
 import { YearnLensContract } from "../../../generated/ibALPACA/YearnLensContract";
 
 export function getYearnLensContract(
-  contractAddress: Address
+  contractAddress: Address,
 ): YearnLensContract | null {
   if (utils.isNullAddress(contractAddress)) return null;
 
@@ -24,12 +24,12 @@ export function getTokenPriceUSDC(tokenAddr: Address): CustomPriceType {
   const tokenPrice: BigDecimal = utils
     .readValue<BigInt>(
       yearnLensContract.try_getPriceUsdcRecommended(tokenAddr),
-      constants.BIGINT_ZERO
+      constants.BIGINT_ZERO,
     )
     .toBigDecimal();
 
   return CustomPriceType.initialize(
     tokenPrice,
-    constants.DEFAULT_USDC_DECIMALS
+    constants.DEFAULT_USDC_DECIMALS,
   );
 }

@@ -41,7 +41,7 @@ export function createDeposit(
   amount: BigInt,
   amountUSD: BigDecimal,
   sender: Address,
-  asset: Address
+  asset: Address,
 ): void {
   if (amount.le(BIGINT_ZERO)) {
     log.critical("Invalid deposit amount: {}", [amount.toString()]);
@@ -49,8 +49,8 @@ export function createDeposit(
   const deposit = new Deposit(
     prefixID(
       "deposit",
-      `${event.transaction.hash.toHexString()}-${event.logIndex.toString()}-${asset.toHexString()}`
-    )
+      `${event.transaction.hash.toHexString()}-${event.logIndex.toString()}-${asset.toHexString()}`,
+    ),
   );
   deposit.hash = event.transaction.hash.toHexString();
   deposit.logIndex = event.logIndex.toI32();
@@ -72,7 +72,7 @@ export function createWithdraw(
   amount: BigInt,
   amountUSD: BigDecimal,
   recipient: Address,
-  asset: Address
+  asset: Address,
 ): void {
   if (amount.le(BIGINT_ZERO)) {
     log.critical("Invalid withdraw amount: {}", [amount.toString()]);
@@ -80,8 +80,8 @@ export function createWithdraw(
   const withdraw = new Withdraw(
     prefixID(
       "withdraw",
-      `${event.transaction.hash.toHexString()}-${event.logIndex.toString()}-${asset.toHexString()}`
-    )
+      `${event.transaction.hash.toHexString()}-${event.logIndex.toString()}-${asset.toHexString()}`,
+    ),
   );
   withdraw.hash = event.transaction.hash.toHexString();
   withdraw.logIndex = event.logIndex.toI32();
@@ -101,7 +101,7 @@ export function createBorrow(
   event: ethereum.Event,
   amountYUSD: BigInt,
   amountUSD: BigDecimal,
-  recipient: Address
+  recipient: Address,
 ): void {
   if (amountYUSD.le(BIGINT_ZERO)) {
     log.critical("Invalid borrow amount: {}", [amountYUSD.toString()]);
@@ -109,8 +109,8 @@ export function createBorrow(
   const borrow = new Borrow(
     prefixID(
       "borrow",
-      `${event.transaction.hash.toHexString()}-${event.logIndex.toString()}`
-    )
+      `${event.transaction.hash.toHexString()}-${event.logIndex.toString()}`,
+    ),
   );
   borrow.hash = event.transaction.hash.toHexString();
   borrow.logIndex = event.logIndex.toI32();
@@ -130,7 +130,7 @@ export function createRepay(
   event: ethereum.Event,
   amountYUSD: BigInt,
   amountUSD: BigDecimal,
-  sender: Address
+  sender: Address,
 ): void {
   if (amountYUSD.le(BIGINT_ZERO)) {
     log.critical("Invalid repay amount: {}", [amountYUSD.toString()]);
@@ -138,8 +138,8 @@ export function createRepay(
   const repay = new Repay(
     prefixID(
       "repay",
-      `${event.transaction.hash.toHexString()}-${event.logIndex.toString()}`
-    )
+      `${event.transaction.hash.toHexString()}-${event.logIndex.toString()}`,
+    ),
   );
   repay.hash = event.transaction.hash.toHexString();
   repay.logIndex = event.logIndex.toI32();
@@ -153,7 +153,6 @@ export function createRepay(
   repay.amountUSD = amountUSD;
   repay.save();
   incrementProtocolRepayCount(event);
-
 }
 
 export function createLiquidate(
@@ -162,13 +161,13 @@ export function createLiquidate(
   amountLiquidatedUSD: BigDecimal,
   profitUSD: BigDecimal,
   liquidator: Address,
-  asset: Address
+  asset: Address,
 ): void {
   const liquidate = new Liquidate(
     prefixID(
       "liquidate",
-      `${event.transaction.hash.toHexString()}-${event.logIndex.toString()}-${asset.toHexString()}`
-    )
+      `${event.transaction.hash.toHexString()}-${event.logIndex.toString()}-${asset.toHexString()}`,
+    ),
   );
   liquidate.hash = event.transaction.hash.toHexString();
   liquidate.logIndex = event.logIndex.toI32();

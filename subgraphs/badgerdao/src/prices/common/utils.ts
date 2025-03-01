@@ -10,7 +10,7 @@ export function isNullAddress(tokenAddr: Address): boolean {
 
 export function readValue<T>(
   callResult: ethereum.CallResult<T>,
-  defaultValue: T
+  defaultValue: T,
 ): T {
   return callResult.reverted ? defaultValue : callResult.value;
 }
@@ -35,7 +35,7 @@ export function exponentToBigDecimal(decimals: i32): BigDecimal {
 
 export function getContract(
   contractInfo: ContractInfo | null,
-  block: ethereum.Block | null = null
+  block: ethereum.Block | null = null,
 ): Address | null {
   if (!contractInfo || (block && contractInfo.startBlock.gt(block.number)))
     return null;
@@ -55,7 +55,7 @@ export function getTokenDecimals(tokenAddr: Address): BigInt {
 
   const decimals = readValue<BigInt>(
     tokenContract.try_decimals(),
-    constants.DEFAULT_DECIMALS
+    constants.DEFAULT_DECIMALS,
   );
 
   return decimals;
@@ -66,7 +66,7 @@ export function getTokenSupply(tokenAddr: Address): BigInt {
 
   const totalSupply = readValue<BigInt>(
     tokenContract.try_totalSupply(),
-    constants.BIGINT_ONE
+    constants.BIGINT_ONE,
   );
 
   return totalSupply;

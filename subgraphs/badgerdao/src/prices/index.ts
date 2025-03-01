@@ -13,7 +13,7 @@ import { log, Address, BigDecimal, ethereum } from "@graphprotocol/graph-ts";
 
 export function getUsdPricePerToken(
   tokenAddr: Address,
-  block: ethereum.Block | null = null
+  block: ethereum.Block | null = null,
 ): CustomPriceType {
   const config = utils.getConfig();
 
@@ -26,7 +26,7 @@ export function getUsdPricePerToken(
   if (tokenAddr.equals(constants.ETH_ADDRESS))
     return getUsdPricePerToken(
       config.whitelistedTokens().mustGet("WETH").address,
-      block
+      block,
     );
 
   // 1. YearnLens Oracle
@@ -71,7 +71,7 @@ export function getUsdPricePerToken(
 export function getUsdPrice(
   tokenAddr: Address,
   amount: BigDecimal,
-  block: ethereum.Block
+  block: ethereum.Block,
 ): BigDecimal {
   const tokenPrice = getUsdPricePerToken(tokenAddr, block);
 

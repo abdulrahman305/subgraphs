@@ -26,7 +26,8 @@ export function fetchTokenSymbol(tokenAddress: Address): string {
       symbolValue = symbolResultBytes.value.toString();
     } else {
       // try with the static definition
-      let staticTokenDefinition = StaticTokenDefinition.fromAddress(tokenAddress);
+      let staticTokenDefinition =
+        StaticTokenDefinition.fromAddress(tokenAddress);
       if (staticTokenDefinition != null) {
         symbolValue = staticTokenDefinition.symbol;
       }
@@ -55,7 +56,8 @@ export function fetchTokenName(tokenAddress: Address): string {
       nameValue = nameResultBytes.value.toString();
     } else {
       // try with the static definition
-      let staticTokenDefinition = StaticTokenDefinition.fromAddress(tokenAddress);
+      let staticTokenDefinition =
+        StaticTokenDefinition.fromAddress(tokenAddress);
       if (staticTokenDefinition != null) {
         nameValue = staticTokenDefinition.name;
       }
@@ -85,7 +87,10 @@ export function fetchTokenDecimals(tokenAddress: Address): i32 {
 }
 
 export function isNullEthValue(value: string): boolean {
-  return value == "0x0000000000000000000000000000000000000000000000000000000000000001";
+  return (
+    value ==
+    "0x0000000000000000000000000000000000000000000000000000000000000001"
+  );
 }
 
 // Initialize a Token Definition with the attributes

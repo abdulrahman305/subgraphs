@@ -14,7 +14,7 @@
 
 ## Useful Links
 
-- Landing Page: 
-- Staking App: 
-- Docs: 
-- Contracts: 
+- Landing Page:
+- Staking App:
+- Docs:
+- Contracts:
